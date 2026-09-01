@@ -1,75 +1,572 @@
-# React + TypeScript + Vite
+# 🎓 نَشَاط | Nashat
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+> **منصة ذكية لإنشاء وإدارة المحتوى والأنشطة المدرسية**
 
-Currently, two official plugins are available:
+**نَشَاط** هي منصة ويب مصممة لتسهيل إعداد المحتوى المدرسي، وتقليل الوقت والجهد الذي يحتاجه المعلم أو مسؤول النشاط لإنشاء **التقارير المدرسية والإذاعات المدرسية**.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+بدلًا من كتابة المحتوى وتنسيقه يدويًا في كل مرة، توفر المنصة واجهة حديثة تساعد المستخدم على إنشاء المحتوى باستخدام **الذكاء الاصطناعي**، ثم مراجعته وتعديله وتجهيزه للطباعة.
 
-## React Compiler
+---
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 🌐 Live Demo
 
-## Expanding the ESLint configuration
+> 🚀 **جرّب نَشَاط مباشرة**
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### [🔗 فتح الموقع](YOUR_PRODUCTION_URL_HERE)
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+> استبدل `YOUR_PRODUCTION_URL_HERE` برابط الموقع بعد رفعه على Production.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+---
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## ✨ لماذا نَشَاط؟
 
+إعداد التقارير والإذاعات المدرسية بشكل تقليدي قد يتطلب:
+
+```text
+البحث عن المحتوى
+       ↓
+كتابة المحتوى
+       ↓
+تنسيق المستند
+       ↓
+تعديل البيانات
+       ↓
+إضافة الصور
+       ↓
+إعادة التنسيق
+       ↓
+الطباعة
 ```
 
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
+نَشَاط يحاول اختصار هذه العملية إلى:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```text
+📝 أدخل طلبك
+      ↓
+🤖 AI يولد المحتوى
+      ↓
+✏️ راجع وعدّل
+      ↓
+🖨️ اطبع التقرير
 ```
+
+---
+
+# 🚀 Features
+
+## 🤖 AI Content Generation
+
+أحد أهم أجزاء المشروع هو دمج الذكاء الاصطناعي داخل المنصة.
+
+يمكن للمستخدم وصف ما يريده باللغة الطبيعية، والمنصة تقوم بتحويل الطلب إلى محتوى منظم وفق Schema محددة.
+
+### الإذاعات المدرسية
+
+يمكن للذكاء الاصطناعي إنشاء إذاعة مدرسية متكاملة تحتوي على:
+
+* المقدمة
+* القرآن الكريم
+* الحديث الشريف
+* كلمة الصباح
+* هل تعلم
+* الخاتمة
+* مستوى المرحلة الدراسية
+* نوع وموضوع الإذاعة
+
+مثال:
+
+```text
+"أريد إذاعة مدرسية عن الانضباط المدرسي لطلاب المرحلة الثانوية"
+```
+
+ثم يتم تحويل الطلب إلى نموذج إذاعة منظم يمكن للواجهة التعامل معه مباشرة.
+
+---
+
+## 📄 Smart School Reports
+
+تسمح المنصة بإنشاء تقارير مدرسية رسمية تحتوي على:
+
+| الحقل         | الوصف                       |
+| ------------- | --------------------------- |
+| اسم المدرسة   | المدرسة المنفذة للنشاط      |
+| المنطقة       | الإدارة التعليمية / المنطقة |
+| عنوان التقرير | عنوان النشاط                |
+| المنفذ        | المعلم أو المسؤول           |
+| مكان التنفيذ  | مكان النشاط                 |
+| المستهدفون    | الفئة المستهدفة             |
+| المستفيدون    | عدد المستفيدين              |
+| التاريخ       | تاريخ تنفيذ النشاط          |
+| الأهداف       | أهداف النشاط                |
+| الشواهد       | الصور والمرفقات             |
+
+كما يمكن للمستخدم تعديل جميع البيانات قبل اعتماد التقرير.
+
+---
+
+# 🧠 AI Architecture
+
+المشروع لا يعتمد على استدعاء نموذج الذكاء الاصطناعي مباشرة من الواجهة.
+
+تم بناء **AI API مستقل باستخدام ASP.NET Core** للتعامل مع طلبات الذكاء الاصطناعي.
+
+```text
+┌──────────────────────┐
+│      React App       │
+│      Frontend        │
+└──────────┬───────────┘
+           │
+           │ HTTP Request
+           ▼
+┌──────────────────────┐
+│      AI API          │
+│    ASP.NET Core      │
+└──────────┬───────────┘
+           │
+           │ AI Request
+           ▼
+┌──────────────────────┐
+│   Generative AI      │
+│       Model          │
+└──────────┬───────────┘
+           │
+           │ Structured JSON
+           ▼
+┌──────────────────────┐
+│      AI API          │
+│   Response Handling  │
+└──────────┬───────────┘
+           │
+           ▼
+┌──────────────────────┐
+│      React App       │
+│ Render Structured UI │
+└──────────────────────┘
+```
+
+هذا التصميم يفصل مسؤولية الذكاء الاصطناعي عن الـFrontend ويجعل الـAPI قابلًا لإعادة الاستخدام من تطبيقات أخرى مستقبلًا.
+
+---
+
+# 🧩 Structured AI Output
+
+بدل الاعتماد على نص عشوائي من النموذج، يستخدم المشروع **JSON Schema** لضمان أن البيانات الناتجة تتوافق مع الـModels التي تتوقعها الواجهة.
+
+### Broadcast Schema
+
+```text
+Broadcast
+├── title
+├── type
+├── level
+└── content[]
+    ├── section
+    └── content
+```
+
+### Report Schema
+
+```text
+Report
+├── schoolName
+├── region
+├── reportTitle
+├── implementer
+├── location
+├── target
+├── beneficiaries
+├── date
+└── objectives
+```
+
+وهذا يجعل عملية:
+
+```text
+AI → API → TypeScript → React
+```
+
+أكثر استقرارًا وقابلية للصيانة.
+
+---
+
+# 📝 Report Editor
+
+التقارير لا يتم توليدها فقط، بل يمكن للمستخدم تعديلها قبل الطباعة.
+
+يتضمن محرر التقرير:
+
+* تعديل بيانات المدرسة
+* تعديل المنطقة
+* تعديل عنوان التقرير
+* تعديل المنفذ
+* تعديل مكان التنفيذ
+* تعديل المستهدفين
+* تعديل عدد المستفيدين
+* اختيار التاريخ الهجري
+* كتابة الأهداف
+* رفع الشواهد والصور
+* حذف الصور
+* معاينة التقرير
+* تجهيز التقرير للطباعة
+
+---
+
+# 🖼️ Evidence Management
+
+يدعم التقرير إضافة الصور كشواهد على تنفيذ النشاط.
+
+يمكن للمستخدم:
+
+```text
+➕ إضافة صورة
+        ↓
+🖼️ معاينة الصورة
+        ↓
+❌ حذف الصورة
+```
+
+كما يتم تغيير توزيع الصور تلقائيًا حسب عدد الشواهد المضافة.
+
+---
+
+# 🎨 Report Themes
+
+يوفر المشروع مجموعة من التصاميم الجاهزة للتقرير.
+
+حاليًا تتوفر عدة Themes، منها:
+
+| Theme              | الوصف                      |
+| ------------------ | -------------------------- |
+| 🌿 Emerald Teal    | التصميم التعليمي الافتراضي |
+| 👑 Royal Navy      | الكحلي والذهبي             |
+| 🍷 Burgundy Luxury | العنابي الدافئ             |
+
+وتم تصميم نظام الـThemes بحيث تكون ألوان التقرير معرفة في Object واحد بدل توزيعها عشوائيًا داخل المكونات.
+
+```ts
+type Theme = {
+  id: string;
+  name: string;
+  headerGradient: string;
+  darkAccent: string;
+  primaryBorder: string;
+  labelColor: string;
+  titleBorder: string;
+  btnBg: string;
+  swatches: string[];
+};
+```
+
+وهذا يجعل إضافة Theme جديدة مستقبلًا بسيطة نسبيًا.
+
+---
+
+# 💾 Local Storage
+
+يستخدم المشروع `localStorage` للاحتفاظ ببعض بيانات المستخدم محليًا.
+
+مثل:
+
+```text
+schoolName
+teacherName
+region
+```
+
+بالإضافة إلى حفظ سجل المحادثات الخاص بمولد الذكاء الاصطناعي.
+
+الهدف هو عدم إجبار المستخدم على إعادة إدخال معلومات المدرسة في كل مرة.
+
+---
+
+# 🗂️ Project Structure
+
+المشروع مبني بطريقة تفصل المسؤوليات بين أجزاء التطبيق.
+
+بشكل تقريبي:
+
+```text
+src/
+│
+├── Api/
+│   └── AiApi.ts
+│
+├── context/
+│   └── Context.tsx
+│
+├── Pages/
+│   ├── Reports/
+│   │   └── Report.tsx
+│   │
+│   └── ...
+│
+├── prompts/
+│   └── AiPrompts.ts
+│
+├── schemas/
+│   └── AiSchemas.ts
+│
+├── services/
+│   └── AiGeneratorService.ts
+│
+├── types/
+│   ├── BroadcastTypes.ts
+│   └── ReportsTypes.ts
+│
+├── assets/
+│
+└── ...
+```
+
+الفكرة الأساسية هي فصل:
+
+**UI**
+
+عن
+
+**Business Logic**
+
+عن
+
+**AI Integration**
+
+عن
+
+**Types / Schemas**
+
+---
+
+# 🛠️ Tech Stack
+
+## Frontend
+
+| Technology                 | الاستخدام                  |
+| -------------------------- | -------------------------- |
+| ⚛️ React                   | بناء واجهة المستخدم        |
+| 📘 TypeScript              | Type Safety                |
+| 🎨 Tailwind CSS            | Styling & Responsive UI    |
+| ⚡ Vite                     | Build Tool & Development   |
+| 📅 react-multi-date-picker | اختيار وتحويل التواريخ     |
+| 💾 LocalStorage            | حفظ بيانات المستخدم محليًا |
+
+## Backend / AI
+
+| Technology       | الاستخدام                      |
+| ---------------- | ------------------------------ |
+| 🟣 ASP.NET Core  | بناء AI API                    |
+| 🔌 REST API      | التواصل بين Frontend و Backend |
+| 🤖 Generative AI | توليد المحتوى                  |
+| 📋 JSON Schema   | Structured AI Responses        |
+
+---
+
+# 🔐 Separation of Responsibilities
+
+من القرارات المهمة في المشروع فصل الـAI API عن تطبيق React.
+
+بدل:
+
+```text
+React
+  ↓
+AI Provider
+```
+
+تم استخدام:
+
+```text
+React
+  ↓
+AI API
+  ↓
+AI Provider
+```
+
+وهذا يسمح مستقبلًا بتغيير مزود الذكاء الاصطناعي أو إضافة:
+
+* Authentication
+* Rate Limiting
+* Logging
+* Caching
+* Usage Tracking
+* Multiple AI Providers
+
+دون الحاجة إلى إعادة بناء الـFrontend بالكامل.
+
+---
+
+# 📱 Responsive Design
+
+تم تصميم الواجهة لتعمل على أحجام شاشات مختلفة:
+
+```text
+Desktop 🖥️
+      ↓
+Tablet 📱
+      ↓
+Mobile 📱
+```
+
+مع مراعاة أن التقرير النهائي مخصص للطباعة بحجم:
+
+```text
+A4 Portrait
+```
+
+---
+
+# 🖨️ Printing
+
+التقرير مصمم ليكون مناسبًا للطباعة مباشرة من المتصفح.
+
+يتم استخدام CSS Print Rules لإخفاء عناصر التحكم غير المطلوبة أثناء الطباعة والحفاظ على تصميم التقرير.
+
+```css
+@page {
+  size: A4 portrait;
+  margin: 0;
+}
+```
+
+وبذلك يتحول محرر التقرير داخل الموقع إلى مستند جاهز للطباعة.
+
+---
+
+# ⚙️ How It Works
+
+### 1. المستخدم يفتح المنصة
+
+يدخل إلى نَشَاط ويحدد ما يريد إنشاءه.
+
+### 2. يكتب الطلب
+
+مثال:
+
+```text
+إنشاء تقرير عن نشاط اليوم الوطني
+```
+
+### 3. يتم بناء Prompt
+
+الـFrontend يحول الطلب إلى Prompt متخصص حسب نوع المحتوى.
+
+```text
+User Input
+    ↓
+Prompt Builder
+    ↓
+AI Instruction
+```
+
+### 4. إرسال الطلب إلى AI API
+
+```text
+React
+  ↓
+ASP.NET Core AI API
+  ↓
+Generative AI
+```
+
+### 5. الحصول على Structured Response
+
+يتم تحويل الاستجابة إلى JSON متوافق مع الـSchema.
+
+### 6. عرض النتيجة
+
+تقوم React بتحويل البيانات إلى UI قابل للتعديل.
+
+### 7. التصدير / الطباعة
+
+بعد مراجعة المستخدم للمحتوى يمكن تجهيز التقرير للطباعة.
+
+---
+
+# 📊 Project Goals
+
+المشروع مبني حول هدف بسيط:
+
+> **تقليل الوقت الذي يحتاجه العاملون في البيئة المدرسية لإنشاء المحتوى الرسمي وتنسيقه.**
+
+بدل أن يقضي المستخدم وقتًا طويلًا في:
+
+```text
+البحث + الكتابة + التنسيق + إعادة التعديل
+```
+
+يحاول نَشَاط تحويل العملية إلى:
+
+```text
+طلب → توليد → تعديل → طباعة
+```
+
+---
+
+# 🚧 Future Improvements
+
+المشروع قابل للتوسع، ومن الأفكار المستقبلية:
+
+* 🔐 نظام تسجيل دخول وحسابات مستخدمين
+* ☁️ حفظ التقارير على السحابة
+* 📚 مكتبة للتقارير السابقة
+* 📊 Dashboard للإحصائيات
+* 🗃️ تصنيف التقارير والأنشطة
+* 📄 تصدير PDF مباشر
+* 🖼️ تحسين إدارة الصور والمرفقات
+* 🤖 دعم أنواع إضافية من المحتوى باستخدام AI
+* 👥 دعم عدة مستخدمين للمدرسة
+* 🔑 Authentication & Authorization
+* ⚡ تحسين caching وتقليل طلبات AI
+* 📈 Usage Analytics
+
+---
+
+# 🎯 What I Learned
+
+هذا المشروع يمثل أول تجربة Production حقيقية لي، وكان الهدف منه ليس فقط بناء واجهة تعمل، وإنما تجربة دورة تطوير منتج حقيقي من البداية إلى النشر.
+
+خلال المشروع عملت على مفاهيم مثل:
+
+* React Architecture
+* TypeScript
+* Component Design
+* State Management
+* Context API
+* Local Storage
+* REST APIs
+* ASP.NET Core
+* AI API Integration
+* Prompt Engineering
+* JSON Schema
+* Structured AI Responses
+* Responsive Design
+* Print CSS
+* Git & GitHub
+* Deployment
+* Production Debugging
+
+كما تعلمت التعامل مع مشروع يعمل فعليًا بدل الاكتفاء بالمشاريع التعليمية الصغيرة.
+
+---
+
+# 👨‍💻 Developer
+
+Built with ❤️ and a lot of debugging.
+
+**Mohmed**
+
+> Software Developer & Computer Science Enthusiast
+
+---
+
+# 📜 License
+
+This project is currently intended for educational and personal portfolio purposes.
+
+---
+
+## ⭐ If you find the project interesting
+
+إذا أعجبك المشروع أو وجدت فيه فكرة مفيدة، يمكنك ⭐ إعطاء المشروع Star على GitHub.
+
+**نَشَاط — لأن الأعمال المدرسية تستحق أدوات أفضل.**
