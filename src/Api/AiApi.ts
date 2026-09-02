@@ -4,7 +4,7 @@ import type {
 } from "../types/AiTypes";
 
 const API_BASE_URL =
-  "http://www.my-gemini-api.somee.com/api/AiApi";
+  "https://www.my-gemini-api.somee.com/api/AiApi";
 
 export async function generateAiRequest(
   request: AiGenerateRequest
