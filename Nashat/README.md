@@ -83,7 +83,7 @@
 
 ---
 
-## 📄 Smart School Reports
+## 📄 Swift Reports
 
 تسمح المنصة بإنشاء تقارير مدرسية رسمية تحتوي على:
 
