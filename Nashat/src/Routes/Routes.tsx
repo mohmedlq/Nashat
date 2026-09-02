@@ -4,7 +4,7 @@ import Home from "../Pages/Home";
 import BroadcastsPage from "../Pages/Broadcasts/BroadcastsPage";
 import Navbar from "../Components/Navbar";
 import Footer from "../Components/Footer"
-import AiChatGenerator from "../Pages/Broadcasts/AiChatGenerator"
+import AiChatGenerator from "../Pages/Generator/AiChatGenerator"
 import ReportsPage from "../Pages/Reports/ReportsPage";
 import { UserProvider } from "../context/Context";
 

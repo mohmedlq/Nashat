@@ -4,7 +4,7 @@ import type {
 } from "../types/AiTypes";
 
 const API_BASE_URL =
-  "http://my-gemini-api.somee.com/api/AiApi";
+  "http://www.my-gemini-api.somee.com/api/AiApi";
 
 export async function generateAiRequest(
   request: AiGenerateRequest
@@ -20,11 +20,20 @@ export async function generateAiRequest(
     }
   );
 
+  const responseText =
+    await response.text();
+
   if (!response.ok) {
+    console.error(
+      "AI API Error:",
+      response.status,
+      responseText
+    );
+
     throw new Error(
-      `AI API request failed: ${response.status}`
+      `AI API request failed: ${response.status} - ${responseText}`
     );
   }
 
-  return response.json();
+  return JSON.parse(responseText);
 }

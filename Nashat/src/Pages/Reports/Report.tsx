@@ -1,11 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import DatePicker from 'react-multi-date-picker';
 import arabic from 'react-date-object/calendars/arabic';
 import arabic_ar from 'react-date-object/locales/arabic_ar';
 import type { ReportFormData } from '../../types/ReportsTypes';
 import logoImage from '../../assets/MinistrLogo.png';
-import { useUser } from "../../context/Context";
+import { useUser } from '../../context/Context';
 import DateObject from 'react-date-object';
+
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
+
 const Picker = (DatePicker as any).default || DatePicker;
 
 export type Theme = {
@@ -67,7 +71,6 @@ export interface ReportProps {
   onSubmit?: (data: ReportFormData) => void;
 }
 
-
 type FieldProps = {
   label: string;
   name: keyof ReportFormData;
@@ -95,7 +98,7 @@ function Field({
 }: FieldProps) {
   return (
     <div
-      className={`relative min-w-0 rounded-[11px] border-2 bg-white px-3 py-3 sm:px-5 sm:py-5 transition-all ${className}`}
+      className={`relative min-w-0 rounded-[11px] border-2 bg-white px-3 py-3 transition-all sm:px-5 sm:py-5 ${className}`}
       style={{
         borderColor: error ? '#ef4444' : theme.primaryBorder,
       }}
@@ -134,7 +137,7 @@ function Field({
                     name,
                     value: formatted,
                   },
-                } as any);
+                } as React.ChangeEvent<HTMLInputElement>);
               }}
               calendar={arabic}
               locale={arabic_ar}
@@ -179,6 +182,96 @@ function MinistryLogo({ src }: { src?: string }) {
   );
 }
 
+/* ============================
+ * ICONS
+ * ============================ */
+
+function PrinterIcon({ className = '' }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <polyline points="6 9 6 2 18 2 18 9" />
+      <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
+      <rect x="6" y="14" width="12" height="8" />
+    </svg>
+  );
+}
+
+function PdfDownloadIcon({ className = '' }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+      <polyline points="14 2 14 8 20 8" />
+      <line x1="12" y1="11" x2="12" y2="17" />
+      <polyline points="9 14 12 17 15 14" />
+    </svg>
+  );
+}
+
+function ImageDownloadIcon({ className = '' }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <rect x="3" y="3" width="18" height="18" rx="2" />
+      <circle cx="8.5" cy="8.5" r="1.5" />
+      <polyline points="21 15 16 10 5 21" />
+    </svg>
+  );
+}
+
+function SpinnerIcon({ className = '' }: { className?: string }) {
+  return (
+    <svg
+      className={`animate-spin ${className}`}
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      aria-hidden="true"
+    >
+      <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+    </svg>
+  );
+}
+
+/* ============================
+ * COMPONENT
+ * ============================ */
+
 export default function Report({
   initialData,
   logoUrl,
@@ -186,19 +279,28 @@ export default function Report({
   onChange,
   onSubmit,
 }: ReportProps) {
-     const {
-    schoolName,
-    teacherName,
-    region,
-  } = useUser();
-const getTodayHijri = () => {
-  const today = new DateObject({
-    calendar: arabic,
-    locale: arabic_ar,
-  });
+  const { schoolName, teacherName, region } = useUser();
 
-  return `${today.format('YYYY/MM/DD')} هـ`;
-};
+  const reportRef = useRef<HTMLFormElement>(null);
+
+  const [downloadingType, setDownloadingType] =
+    useState<'pdf' | 'png' | null>(null);
+
+  const [isExportMode, setIsExportMode] = useState(false);
+
+  /* ============================
+   * DEFAULT DATA
+   * ============================ */
+
+  const getTodayHijri = () => {
+    const today = new DateObject({
+      calendar: arabic,
+      locale: arabic_ar,
+    });
+
+    return `${today.format('YYYY/MM/DD')} هـ`;
+  };
+
   const DEFAULT_FORM_DATA: ReportFormData = {
     schoolName: schoolName || '',
     region: region || '',
@@ -211,40 +313,58 @@ const getTodayHijri = () => {
     objectives: '',
     evidences: [null, null, null, null],
   };
-  const [formData, setFormData] = useState<ReportFormData>(() => ({
-    ...DEFAULT_FORM_DATA,
-    ...initialData,
-    evidences:
-      initialData?.evidences ?? DEFAULT_FORM_DATA.evidences,
-  }));
 
-  const [currentTheme, setCurrentTheme] = useState<Theme>(
-    () =>
-      PRESET_THEMES.find(
-        (t) => t.id === initialThemeId
-      ) || PRESET_THEMES[0]
-  );
+  const [formData, setFormData] =
+    useState<ReportFormData>(() => ({
+      ...DEFAULT_FORM_DATA,
+      ...initialData,
+      evidences:
+        initialData?.evidences ??
+        DEFAULT_FORM_DATA.evidences,
+    }));
+
+  const [currentTheme, setCurrentTheme] =
+    useState<Theme>(
+      () =>
+        PRESET_THEMES.find(
+          (theme) =>
+            theme.id === initialThemeId
+        ) || PRESET_THEMES[0]
+    );
 
   const [errors, setErrors] =
     useState<Record<string, string>>({});
 
+  /* ============================
+   * INITIAL DATA SYNC
+   * ============================ */
+
   useEffect(() => {
-    if (initialData) {
-      setFormData((prev) => ({
-        ...prev,
-        ...initialData,
-        evidences:
-          initialData.evidences ?? prev.evidences,
-      }));
-    }
+    if (!initialData) return;
+
+    setFormData((prev) => ({
+      ...prev,
+      ...initialData,
+      evidences:
+        initialData.evidences ??
+        prev.evidences,
+    }));
   }, [initialData]);
 
+  /* ============================
+   * FORM UPDATE
+   * ============================ */
+
   const updateFormData = (
-    updater: (prev: ReportFormData) => ReportFormData
+    updater: (
+      prev: ReportFormData
+    ) => ReportFormData
   ) => {
     setFormData((prev) => {
       const updated = updater(prev);
+
       onChange?.(updated);
+
       return updated;
     });
   };
@@ -269,6 +389,10 @@ const getTodayHijri = () => {
     }
   };
 
+  /* ============================
+   * IMAGE UPLOAD
+   * ============================ */
+
   const handleImageUpload = (
     e: React.ChangeEvent<HTMLInputElement>,
     index: number
@@ -277,10 +401,26 @@ const getTodayHijri = () => {
 
     if (!file) return;
 
+    if (!file.type.startsWith('image/')) {
+      alert('الرجاء اختيار ملف صورة فقط.');
+      e.target.value = '';
+      return;
+    }
+
     const imageUrl = URL.createObjectURL(file);
 
     updateFormData((prev) => {
       const newEvidences = [...prev.evidences];
+
+      const oldImage = newEvidences[index];
+
+      if (
+        oldImage &&
+        oldImage.startsWith('blob:')
+      ) {
+        URL.revokeObjectURL(oldImage);
+      }
+
       newEvidences[index] = imageUrl;
 
       return {
@@ -288,11 +428,26 @@ const getTodayHijri = () => {
         evidences: newEvidences,
       };
     });
+
+    e.target.value = '';
   };
 
-  const handleRemoveImage = (index: number) => {
+  const handleRemoveImage = (
+    index: number
+  ) => {
+    const oldImage =
+      formData.evidences[index];
+
+    if (
+      oldImage &&
+      oldImage.startsWith('blob:')
+    ) {
+      URL.revokeObjectURL(oldImage);
+    }
+
     updateFormData((prev) => {
       const newEvidences = [...prev.evidences];
+
       newEvidences[index] = null;
 
       return {
@@ -302,60 +457,410 @@ const getTodayHijri = () => {
     });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  /* ============================
+   * VALIDATION
+   * ============================ */
 
-    const newErrors: Record<string, string> = {};
+ const validateForm = () => {
+  const newErrors: Record<string, string> = {};
 
-    if (!formData.schoolName.trim())
-      newErrors.schoolName = 'مطلوب';
+  const hasEvidence = formData.evidences.some(
+    (src) => Boolean(src)
+  );
 
-    if (!formData.reportTitle.trim())
-      newErrors.reportTitle = 'مطلوب';
+  if (!hasEvidence) {
+    newErrors.evidences =
+      'يجب إضافة صورة شاهد واحدة على الأقل .';
+      alert('يجب إضافة صورة شاهد واحدة على الأقل .')
+  }
 
-    if (!formData.implementer.trim())
-      newErrors.implementer = 'مطلوب';
+  setErrors(newErrors);
 
-    if (!formData.location.trim())
-      newErrors.location = 'مطلوب';
+  return Object.keys(newErrors).length === 0;
+};
 
-    if (!formData.target.trim())
-      newErrors.target = 'مطلوب';
+  /* ============================
+   * PRINT
+   * ============================ */
 
-    if (!formData.date.trim())
-      newErrors.date = 'مطلوب';
+  useEffect(() => {
+    const handleBeforePrint = () => {
+      const element = reportRef.current;
 
-    if (!formData.objectives.trim())
-      newErrors.objectives = 'مطلوب';
+      if (!element) return;
 
-    if (!formData.beneficiaries.trim()) {
-      newErrors.beneficiaries = 'مطلوب';
-    } else if (!/\d/.test(formData.beneficiaries)) {
-      newErrors.beneficiaries = 'يجب أن يحتوي على رقم';
-    }
+      element.style.zoom = '1';
 
-    setErrors(newErrors);
+      requestAnimationFrame(() => {
+        const width = element.offsetWidth;
+        const height = element.scrollHeight;
 
-    if (Object.keys(newErrors).length === 0) {
-      onSubmit?.(formData);
+        if (!width || !height) return;
 
-      alert(
-        'البيانات مكتملة! سيتم تجهيز التقرير للطباعة.'
+        const pageWidthPx =
+          width;
+
+        const pageHeightPx =
+          pageWidthPx * (297 / 210);
+
+        const scale =
+          height > pageHeightPx
+            ? pageHeightPx / height
+            : 1;
+
+        element.style.zoom =
+          String(scale);
+      });
+    };
+
+    const handleAfterPrint = () => {
+      const element = reportRef.current;
+
+      if (element) {
+        element.style.zoom = '';
+      }
+    };
+
+    window.addEventListener(
+      'beforeprint',
+      handleBeforePrint
+    );
+
+    window.addEventListener(
+      'afterprint',
+      handleAfterPrint
+    );
+
+    return () => {
+      window.removeEventListener(
+        'beforeprint',
+        handleBeforePrint
       );
 
+      window.removeEventListener(
+        'afterprint',
+        handleAfterPrint
+      );
+    };
+  }, []);
+
+  const handlePrint = () => {
+    if (!validateForm()) return;
+
+    onSubmit?.(formData);
+
+    requestAnimationFrame(() => {
       window.print();
+    });
+  };
+
+  /* ============================
+   * IMAGE LOADING
+   * ============================ */
+
+  const waitForImages = async (
+    element: HTMLElement
+  ) => {
+    const images =
+      Array.from(
+        element.querySelectorAll('img')
+      );
+
+    await Promise.all(
+      images.map((img) => {
+        if (
+          img.complete &&
+          img.naturalWidth > 0
+        ) {
+          return Promise.resolve();
+        }
+
+        return new Promise<void>(
+          (resolve) => {
+            const finish = () => {
+              img.removeEventListener(
+                'load',
+                finish
+              );
+
+              img.removeEventListener(
+                'error',
+                finish
+              );
+
+              resolve();
+            };
+
+            img.addEventListener(
+              'load',
+              finish
+            );
+
+            img.addEventListener(
+              'error',
+              finish
+            );
+          }
+        );
+      })
+    );
+  };
+
+  /* ============================
+   * CANVAS
+   * ============================ */
+
+  const captureReportCanvas = async (
+    element: HTMLElement,
+    scale: number
+  ) => {
+    await waitForImages(element);
+
+    return html2canvas(element, {
+      scale,
+      useCORS: true,
+      allowTaint: false,
+      backgroundColor: '#ffffff',
+      logging: false,
+      imageTimeout: 15000,
+
+      ignoreElements: (el) => {
+        return (
+          el.hasAttribute(
+            'data-pdf-ignore'
+          ) ||
+          el.classList.contains(
+            'export-ignore'
+          )
+        );
+      },
+    });
+  };
+
+  /* ============================
+   * FILE NAME
+   * ============================ */
+
+  const getSafeFileName = () => {
+    const title =
+      formData.reportTitle
+        .trim()
+        .replace(
+          /[\\/:*?"<>|]/g,
+          ''
+        )
+        .replace(/\s+/g, '-');
+
+    return title || 'تقرير';
+  };
+
+  /* ============================
+   * PDF
+   * ============================ */
+
+  const handleDownloadPDF = async () => {
+    if (!validateForm()) return;
+
+    if (!reportRef.current) return;
+
+    try {
+      setDownloadingType('pdf');
+
+      onSubmit?.(formData);
+
+      setIsExportMode(true);
+
+      await new Promise<void>(
+        (resolve) =>
+          requestAnimationFrame(() =>
+            requestAnimationFrame(() =>
+              resolve()
+            )
+          )
+      );
+
+      if (!reportRef.current) {
+        throw new Error(
+          'Report element not found.'
+        );
+      }
+
+      const canvas =
+        await captureReportCanvas(
+          reportRef.current,
+          3
+        );
+
+      const pdf = new jsPDF({
+        orientation: 'portrait',
+        unit: 'mm',
+        format: 'a4',
+        compress: true,
+      });
+
+      const pageWidth = 210;
+      const pageHeight = 297;
+
+      const scaleX =
+        pageWidth / canvas.width;
+
+      const scaleY =
+        pageHeight / canvas.height;
+
+      const scale = Math.min(
+        scaleX,
+        scaleY
+      );
+
+      const imgWidth =
+        canvas.width * scale;
+
+      const imgHeight =
+        canvas.height * scale;
+
+      const x =
+        (pageWidth - imgWidth) / 2;
+
+      const y =
+        (pageHeight - imgHeight) / 2;
+
+      const imageData =
+        canvas.toDataURL(
+          'image/jpeg',
+          0.96
+        );
+
+      pdf.addImage(
+        imageData,
+        'JPEG',
+        x,
+        y,
+        imgWidth,
+        imgHeight,
+        undefined,
+        'FAST'
+      );
+
+      pdf.save(
+        `${getSafeFileName()}.pdf`
+      );
+    } catch (error) {
+      console.error(
+        'PDF generation failed:',
+        error
+      );
+
+      alert(
+        'تعذر تحميل التقرير كملف PDF. حاول مرة أخرى.'
+      );
+    } finally {
+      setIsExportMode(false);
+      setDownloadingType(null);
     }
   };
 
-  const activeEvidencesCount =
-    formData.evidences.filter(Boolean).length;
+  /* ============================
+   * PNG
+   * ============================ */
+
+  const handleDownloadPNG = async () => {
+    if (!validateForm()) return;
+
+    if (!reportRef.current) return;
+
+    try {
+      setDownloadingType('png');
+
+      onSubmit?.(formData);
+
+      setIsExportMode(true);
+
+      await new Promise<void>(
+        (resolve) =>
+          requestAnimationFrame(() =>
+            requestAnimationFrame(() =>
+              resolve()
+            )
+          )
+      );
+
+      if (!reportRef.current) {
+        throw new Error(
+          'Report element not found.'
+        );
+      }
+
+      const canvas =
+        await captureReportCanvas(
+          reportRef.current,
+          3
+        );
+
+      const imageData =
+        canvas.toDataURL(
+          'image/png'
+        );
+
+      const link =
+        document.createElement('a');
+
+      link.href = imageData;
+
+      link.download =
+        `${getSafeFileName()}.png`;
+
+      document.body.appendChild(link);
+
+      link.click();
+
+      link.remove();
+    } catch (error) {
+      console.error(
+        'PNG generation failed:',
+        error
+      );
+
+      alert(
+        'تعذر تحميل التقرير كصورة PNG. حاول مرة أخرى.'
+      );
+    } finally {
+      setIsExportMode(false);
+      setDownloadingType(null);
+    }
+  };
+
+  /* ============================
+   * EVIDENCE DATA
+   * ============================ */
+
+  const activeImages =
+    formData.evidences.filter(
+      (src): src is string =>
+        Boolean(src)
+    );
+
+  const activeCount =
+    activeImages.length;
+
+  /*
+   * في وضع التعديل:
+   *
+   * 0 صور = خانة إضافة واحدة
+   * 1 صورة = الصورة + خانة إضافة
+   * 2 صور = الصورتان + خانة إضافة
+   * 3 صور = 3 صور + خانة إضافة
+   * 4 صور = 4 صور فقط
+   */
 
   const displayCount =
-    activeEvidencesCount === 0
+    activeCount === 0
       ? 1
-      : Math.min(activeEvidencesCount + 1, 4);
+      : Math.min(
+          activeCount + 1,
+          4
+        );
 
-  const getGridItemClass = (
+  const getEditGridItemClass = (
     index: number,
     total: number
   ) => {
@@ -363,18 +868,84 @@ const getTodayHijri = () => {
       return 'sm:col-span-2 max-w-[500px] mx-auto w-full';
     }
 
-    if (total === 3 && index === 2) {
+    if (
+      total === 3 &&
+      index === 2
+    ) {
       return 'sm:col-span-2 w-full';
     }
 
     return 'w-full';
   };
 
+  /*
+   * في الطباعة والتصدير:
+   *
+   * 1 = صورة كبيرة
+   * 2 = صورتان بجانب بعض
+   * 3 = صورتان فوق + صورة وسط تحت
+   * 4 = 2 × 2
+   */
+
+  const getExportItemClass = (
+    index: number,
+    total: number
+  ) => {
+    if (total === 1) {
+      return 'col-span-2 w-full';
+    }
+
+    if (
+      total === 3 &&
+      index === 2
+    ) {
+      return 'col-span-2 mx-auto w-[60%]';
+    }
+
+    return 'w-full';
+  };
+
+  const getExportItemHeight = (
+    total: number
+  ) => {
+    if (total === 1) {
+      return 'h-[400px]';
+    }
+
+    if (total === 2) {
+      return 'h-[250px]';
+    }
+
+    if (total === 3) {
+      return 'h-[190px]';
+    }
+
+    return 'h-[175px]';
+  };
+
   return (
     <div
       dir="rtl"
-      className="min-h-screen w-full overflow-x-hidden bg-slate-100 px-2 py-4 sm:px-4 sm:py-8 print:min-h-0 print:bg-white print:p-0 print:m-0"
+      className="
+        min-h-screen
+        w-full
+        overflow-x-hidden
+        bg-slate-100
+        px-2
+        py-4
+        sm:px-4
+        sm:py-8
+
+        print:min-h-0
+        print:bg-white
+        print:p-0
+        print:m-0
+      "
     >
+      {/* ============================
+          PRINT CSS
+          ============================ */}
+
       <style>{`
         @page {
           size: A4 portrait;
@@ -384,34 +955,190 @@ const getTodayHijri = () => {
         @media print {
           html,
           body {
+            width: 210mm !important;
+            min-width: 210mm !important;
             margin: 0 !important;
             padding: 0 !important;
             background: #ffffff !important;
+
             -webkit-print-color-adjust: exact !important;
             print-color-adjust: exact !important;
           }
 
-          .print\\:hidden {
+          body {
+            overflow: hidden !important;
+          }
+
+          body * {
+            visibility: hidden;
+          }
+
+          .report-print-area,
+          .report-print-area * {
+            visibility: visible;
+          }
+
+          .report-print-area {
+            position: absolute !important;
+
+            top: 0 !important;
+            left: 0 !important;
+
+            width: 210mm !important;
+            max-width: none !important;
+
+            height: auto !important;
+            min-height: 0 !important;
+
+            margin: 0 !important;
+            padding: 0 !important;
+
+            overflow: visible !important;
+
+            background: #ffffff !important;
+
+            box-shadow: none !important;
+            border-radius: 0 !important;
+
+            page-break-before: avoid !important;
+            page-break-after: avoid !important;
+            page-break-inside: avoid !important;
+
+            break-before: avoid !important;
+            break-after: avoid !important;
+            break-inside: avoid !important;
+
+            transform-origin: top left !important;
+          }
+
+          .print-hidden {
             display: none !important;
+          }
+
+          .print-evidence-image {
+            object-fit: contain !important;
+          }
+
+          input,
+          textarea {
+            color: inherit !important;
+          }
+
+          input::placeholder,
+          textarea::placeholder {
+            color: transparent !important;
+          }
+
+          textarea {
+            overflow: hidden !important;
+          }
+
+          .report-evidence {
+            break-inside: avoid !important;
+            page-break-inside: avoid !important;
           }
         }
       `}</style>
 
+      {/* ============================
+          REPORT
+          ============================ */}
+
       <form
-        onSubmit={handleSubmit}
-        className="mx-auto w-full max-w-[950px] overflow-hidden rounded-2xl bg-white font-[Arial,sans-serif] text-[#173f56] shadow-2xl transition-all print:w-full print:max-w-none print:rounded-none print:shadow-none print:m-0 print:p-0"
+        ref={reportRef}
+        onSubmit={(e) => {
+          e.preventDefault();
+          handlePrint();
+        }}
+        className={`
+          report-print-area
+
+          mx-auto
+          w-full
+          max-w-[950px]
+
+          overflow-hidden
+          rounded-2xl
+          bg-white
+
+          font-[Arial,sans-serif]
+          text-[#173f56]
+
+          shadow-2xl
+
+          ${
+            isExportMode
+              ? 'w-[210mm] max-w-none rounded-none shadow-none m-0'
+              : ''
+          }
+        `}
       >
         {/* ================= HEADER ================= */}
 
         <header
-          className="relative min-h-[193px] overflow-visible rounded-b-[18px] pb-10 transition-all sm:pb-0"
+          className="
+            relative
+            min-h-[193px]
+            overflow-visible
+            rounded-b-[18px]
+            pb-10
+
+            print:rounded-b-[18px]
+          "
           style={{
-            background: currentTheme.headerGradient,
+            background:
+              currentTheme.headerGradient,
           }}
         >
-          <div className="mx-auto flex h-full max-w-[760px] flex-col items-center justify-center gap-4 px-4 pb-24 pt-6 text-white sm:flex-row sm:gap-8 sm:pb-7">
-            <div className="flex items-center gap-3 border-b-2 border-white/60 pb-3 sm:gap-4 sm:border-b-0 sm:border-r-[4px] sm:border-white sm:pb-0 sm:pr-5">
-              <div className="text-center text-base font-bold leading-[1.4] sm:text-right sm:text-[21px] sm:leading-[1.55]">
+          <div
+            className="
+              mx-auto
+              flex
+              h-full
+              max-w-[760px]
+              flex-col
+              items-center
+              justify-center
+              gap-4
+              px-4
+              pb-24
+              pt-6
+              text-white
+
+              sm:flex-row
+              sm:gap-8
+              sm:pb-7
+            "
+          >
+            <div
+              className="
+                flex
+                items-center
+                gap-3
+                border-b-2
+                border-white/60
+                pb-3
+
+                sm:gap-4
+                sm:border-b-0
+                sm:border-r-[4px]
+                sm:border-white
+                sm:pb-0
+                sm:pr-5
+              "
+            >
+              <div
+                className="
+                  text-center
+                  text-base
+                  font-bold
+                  leading-[1.4]
+
+                  sm:text-right
+                  sm:text-[21px]
+                  sm:leading-[1.55]
+                "
+              >
                 وزارة التعليم
 
                 <br />
@@ -422,11 +1149,26 @@ const getTodayHijri = () => {
               </div>
 
               <div className="flex items-center justify-center pr-1 sm:pr-2">
-                <MinistryLogo src={logoUrl} />
+                <MinistryLogo
+                  src={logoUrl}
+                />
               </div>
             </div>
 
-            <div className="w-full text-center text-base font-bold leading-[1.4] sm:w-auto sm:text-right sm:text-[21px] sm:leading-[1.7]">
+            <div
+              className="
+                w-full
+                text-center
+                text-base
+                font-bold
+                leading-[1.4]
+
+                sm:w-auto
+                sm:text-right
+                sm:text-[21px]
+                sm:leading-[1.7]
+              "
+            >
               الإدارة العامة للتعليم
 
               <br />
@@ -436,20 +1178,51 @@ const getTodayHijri = () => {
                 value={formData.region}
                 onChange={handleChange}
                 placeholder="أدخل المنطقة"
-                className="w-full min-w-0 bg-transparent text-center font-bold text-white outline-none placeholder:text-white/60 sm:min-w-[180px] sm:text-right"
+                className="
+                  w-full
+                  min-w-0
+                  bg-transparent
+                  text-center
+                  font-bold
+                  text-white
+                  outline-none
+                  placeholder:text-white/60
+
+                  sm:min-w-[180px]
+                  sm:text-right
+                "
               />
             </div>
           </div>
 
-          {/* School + Title */}
+          {/* ================= SCHOOL + TITLE ================= */}
 
-          <div className="absolute -bottom-28 left-1/2 z-10 w-[92%] max-w-[742px] -translate-x-1/2 sm:-bottom-40 sm:w-[calc(100%-112px)]">
+          <div
+            className="
+              absolute
+              -bottom-28
+              left-1/2
+              z-10
+              w-[92%]
+              max-w-[742px]
+              -translate-x-1/2
+
+              sm:-bottom-40
+              sm:w-[calc(100%-112px)]
+            "
+          >
             <div
-              className={`mb-2 rounded-[12px] px-3 py-2 shadow-sm transition-all sm:mb-3 sm:px-6 sm:py-4 ${
-                errors.schoolName
-                  ? 'ring-2 ring-red-500'
-                  : ''
-              }`}
+              className="
+                mb-2
+                rounded-[12px]
+                px-3
+                py-2
+                shadow-sm
+
+                sm:mb-3
+                sm:px-6
+                sm:py-4
+              "
               style={{
                 backgroundColor:
                   currentTheme.darkAccent,
@@ -460,16 +1233,32 @@ const getTodayHijri = () => {
                 value={formData.schoolName}
                 onChange={handleChange}
                 placeholder="أدخل اسم المدرسة"
-                className="w-full min-w-0 bg-transparent text-center text-base font-bold text-white outline-none placeholder:text-white/60 sm:text-[21px]"
+                className="
+                  w-full
+                  min-w-0
+                  bg-transparent
+                  text-center
+                  text-base
+                  font-bold
+                  text-white
+                  outline-none
+                  placeholder:text-white/60
+
+                  sm:text-[21px]
+                "
               />
             </div>
 
             <div
-              className={`border-b-[4px] px-3 py-2 transition-all sm:border-b-[7px] sm:px-6 sm:py-4 ${
-                errors.reportTitle
-                  ? 'ring-2 ring-red-500'
-                  : ''
-              }`}
+              className="
+                border-b-[4px]
+                px-3
+                py-2
+
+                sm:border-b-[7px]
+                sm:px-6
+                sm:py-4
+              "
               style={{
                 backgroundColor:
                   currentTheme.darkAccent,
@@ -482,7 +1271,19 @@ const getTodayHijri = () => {
                 value={formData.reportTitle}
                 onChange={handleChange}
                 placeholder="أدخل عنوان التقرير"
-                className="w-full min-w-0 bg-transparent text-center text-lg font-bold text-white outline-none placeholder:text-white/60 sm:text-[23px]"
+                className="
+                  w-full
+                  min-w-0
+                  bg-transparent
+                  text-center
+                  text-lg
+                  font-bold
+                  text-white
+                  outline-none
+                  placeholder:text-white/60
+
+                  sm:text-[23px]
+                "
               />
             </div>
           </div>
@@ -490,8 +1291,41 @@ const getTodayHijri = () => {
 
         {/* ================= FIELDS ================= */}
 
-        <section className="mx-auto max-w-[840px] px-3 pb-8 pt-[140px] sm:px-8 sm:pt-[194px]">
-          <div className="grid grid-cols-1 gap-x-4 gap-y-6 sm:gap-y-7 md:grid-cols-[1.3fr_1fr]">
+        <section
+          className={`
+            mx-auto
+            max-w-[840px]
+            px-3
+            pb-4
+            pt-[140px]
+
+            sm:px-8
+            sm:pt-[194px]
+
+            print:max-w-none
+            print:px-[12mm]
+            print:pt-[32mm]
+            print:pb-0
+
+            ${
+              isExportMode
+                ? 'max-w-none px-[12mm] pt-[32mm] pb-0'
+                : ''
+            }
+          `}
+        >
+          <div
+            className="
+              grid
+              grid-cols-1
+              gap-x-4
+              gap-y-6
+
+              sm:gap-y-7
+
+              md:grid-cols-[1.3fr_1fr]
+            "
+          >
             <Field
               theme={currentTheme}
               name="implementer"
@@ -536,7 +1370,7 @@ const getTodayHijri = () => {
               theme={currentTheme}
               name="date"
               type="date"
-              value={formData.date}
+              value={getTodayHijri()}
               onChange={handleChange}
               error={errors.date}
               label="تاريخ التنفيذ:"
@@ -552,128 +1386,390 @@ const getTodayHijri = () => {
               label="الأهداف:"
               type="textarea"
               align="right"
-              className="min-h-[180px] sm:min-h-[237px] md:col-start-2 md:row-span-3 md:row-start-2"
+              className="
+                min-h-[180px]
+                sm:min-h-[237px]
+
+                md:col-start-2
+                md:row-span-3
+                md:row-start-2
+              "
             />
           </div>
 
-          {/* ================= EVIDENCES ================= */}
+          {/* ============================
+              EVIDENCE SECTION
+              ============================
+
+              مهم:
+              القسم موجود دائمًا في وضع التعديل،
+              حتى لو ما فيه أي صورة.
+
+              في الطباعة:
+              - 0 صور = hidden
+              - 1+ صور = يظهر فقط الصور
+          */}
 
           <div
-            className="relative mt-7 rounded-[11px] border-2 px-3 pb-5 pt-5 sm:px-5"
+            className={`
+              report-evidence
+              relative
+              mt-7
+              rounded-[11px]
+              border-2
+              px-3
+              pb-5
+              pt-5
+
+              sm:px-5
+
+              ${
+                activeCount === 0
+                  ? 'print:hidden'
+                  : ''
+              }
+
+              ${
+                isExportMode
+                  ? 'hidden'
+                  : ''
+              }
+            `}
             style={{
               borderColor:
                 currentTheme.primaryBorder,
             }}
           >
             <span
-              className="absolute -top-4 right-1/2 translate-x-1/2 bg-white px-3 text-lg font-bold sm:-top-5 sm:text-[24px]"
+              className="
+                absolute
+                -top-4
+                right-1/2
+                translate-x-1/2
+                bg-white
+                px-3
+                text-lg
+                font-bold
+
+                sm:-top-5
+                sm:text-[24px]
+              "
               style={{
-                color: currentTheme.labelColor,
+                color:
+                  currentTheme.labelColor,
               }}
             >
               الشواهد
             </span>
 
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            {/* ============================
+                EDIT MODE
+                ============================ */}
+
+            <div
+              className="
+                grid
+                grid-cols-1
+                gap-4
+                sm:grid-cols-2
+
+                print:hidden
+              "
+            >
               {Array.from({
                 length: displayCount,
-              }).map((_, boxIndex) => {
-                const imageSrc =
-                  formData.evidences[boxIndex];
+              }).map(
+                (_, boxIndex) => {
+                  const imageSrc =
+                    formData.evidences[
+                      boxIndex
+                    ];
 
-                const gridClass =
-                  getGridItemClass(
-                    boxIndex,
-                    displayCount
-                  );
+                  return (
+                    <div
+                      key={boxIndex}
+                      className={`
+                        relative
+                        min-w-0
 
-                return (
-                  <div
-                    key={boxIndex}
-                    className={`relative min-w-0 ${gridClass}`}
-                  >
-                    <label
-                      className="group relative flex h-[180px] w-full cursor-pointer items-center justify-center overflow-hidden rounded-[11px] border-2 bg-white transition-all hover:border-dashed hover:bg-gray-50 sm:h-[230px]"
-                      style={{
-                        borderColor:
-                          currentTheme.labelColor,
-                      }}
-                      aria-label={`شاهد ${
-                        boxIndex + 1
-                      }`}
+                        ${getEditGridItemClass(
+                          boxIndex,
+                          displayCount
+                        )}
+                      `}
                     >
-                      <input
-                        type="file"
-                        accept="image/*"
-                        className="hidden"
-                        onChange={(e) =>
-                          handleImageUpload(
-                            e,
-                            boxIndex
-                          )
-                        }
-                      />
+                      <label
+                        className="
+                          group
+                          relative
+                          flex
+                          h-[180px]
+                          w-full
+                          cursor-pointer
+                          items-center
+                          justify-center
+                          overflow-hidden
+                          rounded-[11px]
+                          border-2
+                          bg-white
+                          transition-all
 
-                      {imageSrc ? (
-                        <img
-                          src={imageSrc}
-                          alt={`شاهد ${
-                            boxIndex + 1
-                          }`}
-                          className="h-full w-full object-cover"
-                        />
-                      ) : (
-                        <div
-                          className="flex flex-col items-center opacity-70 transition-opacity group-hover:opacity-100"
-                          style={{
-                            color:
-                              currentTheme.labelColor,
-                          }}
-                        >
-                          <span className="text-3xl leading-none sm:text-4xl">
-                            +
-                          </span>
+                          hover:border-dashed
+                          hover:bg-gray-50
 
-                          <span className="mt-1 text-xs font-bold sm:text-sm">
-                            إضافة صورة
-                          </span>
-                        </div>
-                      )}
-                    </label>
-
-                    {imageSrc && (
-                      <button
-                        type="button"
-                        onClick={() =>
-                          handleRemoveImage(boxIndex)
-                        }
-                        className="absolute right-2 top-2 z-20 flex h-8 w-8 items-center justify-center rounded-full bg-red-500 text-sm font-bold text-white shadow-md transition-all hover:scale-105"
-                        aria-label="حذف الصورة"
+                          sm:h-[230px]
+                        "
+                        style={{
+                          borderColor:
+                            currentTheme.labelColor,
+                        }}
+                        aria-label={`إضافة شاهد ${
+                          boxIndex + 1
+                        }`}
                       >
-                        ×
-                      </button>
-                    )}
-                  </div>
-                );
-              })}
+                        <input
+                          type="file"
+                          accept="image/*"
+                          className="hidden"
+                          onChange={(e) =>
+                            handleImageUpload(
+                              e,
+                              boxIndex
+                            )
+                          }
+                        />
+
+                        {imageSrc ? (
+                          <img
+                            src={imageSrc}
+                            alt={`شاهد ${
+                              boxIndex + 1
+                            }`}
+                            className="
+                              h-full
+                              w-full
+                              object-contain
+                              bg-white
+                            "
+                          />
+                        ) : (
+                          <div
+                            className="
+                              flex
+                              flex-col
+                              items-center
+                              opacity-70
+                              transition-opacity
+
+                              group-hover:opacity-100
+                            "
+                            style={{
+                              color:
+                                currentTheme.labelColor,
+                            }}
+                          >
+                            <span className="text-4xl leading-none">
+                              +
+                            </span>
+
+                            <span className="mt-2 text-sm font-bold">
+                              إضافة صورة
+                            </span>
+                          </div>
+                        )}
+                      </label>
+
+                      {imageSrc && (
+                        <button
+                          type="button"
+                          onClick={() =>
+                            handleRemoveImage(
+                              boxIndex
+                            )
+                          }
+                          className="
+                            absolute
+                            right-2
+                            top-2
+                            z-20
+                            flex
+                            h-8
+                            w-8
+                            items-center
+                            justify-center
+                            rounded-full
+                            bg-red-500
+                            text-lg
+                            font-bold
+                            text-white
+                            shadow-md
+                            transition-all
+
+                            hover:scale-105
+                          "
+                          aria-label="حذف الصورة"
+                        >
+                          ×
+                        </button>
+                      )}
+                    </div>
+                  );
+                }
+              )}
             </div>
           </div>
 
-          {/* ================= MOBILE / FORM BUTTON ================= */}
+          {/* ============================
+              PRINT / EXPORT EVIDENCE
+              ============================ */}
 
-          <div className="mt-6 flex justify-center sm:hidden">
+          {activeCount > 0 && (
+            <div
+              className={`
+                report-evidence
+                mt-7
+                rounded-[11px]
+                border-2
+                px-3
+                pb-5
+                pt-5
+
+                sm:px-5
+
+                ${
+                  isExportMode
+                    ? 'block'
+                    : 'hidden print:block'
+                }
+              `}
+              style={{
+                borderColor:
+                  currentTheme.primaryBorder,
+              }}
+            >
+              <div
+                className="
+                  relative
+                  grid
+                  grid-cols-1
+                  gap-4
+                  sm:grid-cols-2
+                "
+              >
+                <span
+                  className="
+                    absolute
+                    -top-9
+                    right-1/2
+                    z-10
+                    translate-x-1/2
+                    bg-white
+                    px-3
+                    text-lg
+                    font-bold
+
+                    sm:-top-10
+                    sm:text-[24px]
+                  "
+                  style={{
+                    color:
+                      currentTheme.labelColor,
+                  }}
+                >
+                  الشواهد
+                </span>
+
+                {activeImages.map(
+                  (src, index) => (
+                    <div
+                      key={index}
+                      className={`
+                        overflow-hidden
+                        rounded-[11px]
+                        border-2
+                        bg-white
+
+                        ${getExportItemHeight(
+                          activeCount
+                        )}
+
+                        ${getExportItemClass(
+                          index,
+                          activeCount
+                        )}
+                      `}
+                      style={{
+                        borderColor:
+                          currentTheme.primaryBorder,
+                      }}
+                    >
+                      <img
+                        src={src}
+                        alt={`شاهد ${
+                          index + 1
+                        }`}
+                        className="
+                          print-evidence-image
+                          h-full
+                          w-full
+                          bg-white
+                          object-contain
+                        "
+                      />
+                    </div>
+                  )
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* ============================
+              MOBILE PRINT
+              ============================ */}
+
+          <div
+            className="
+              mt-6
+              flex
+              justify-center
+              sm:hidden
+              print:hidden
+            "
+          >
             <button
-              type="submit"
-              className="w-full max-w-[360px] rounded-full px-6 py-3 text-sm font-bold text-white shadow-lg transition-all active:scale-[0.98]"
+              type="button"
+              onClick={handlePrint}
+              className="
+                flex
+                w-full
+                max-w-[360px]
+                items-center
+                justify-center
+                gap-2
+                rounded-full
+                px-6
+                py-3
+                text-sm
+                font-bold
+                text-white
+                shadow-lg
+                transition-all
+                active:scale-[0.98]
+              "
               style={{
                 backgroundColor:
                   currentTheme.btnBg,
               }}
             >
-              🖨️ حفظ واعتماد التقرير
+              <PrinterIcon />
+              <span>
+                طباعة التقرير
+              </span>
             </button>
           </div>
         </section>
+
+        {/* ================= FOOTER ================= */}
 
         <footer
           className="h-[43px]"
@@ -684,62 +1780,262 @@ const getTodayHijri = () => {
         />
       </form>
 
-      {/* ================= CONTROLS ================= */}
+      {/* ============================
+          CONTROLS
+          ============================ */}
 
-      <div className="mx-auto mt-8 flex w-full max-w-[95%] flex-col items-center gap-4 rounded-2xl border border-gray-200 bg-white/95 p-4 shadow-xl backdrop-blur-md print:hidden sm:w-fit sm:flex-row sm:rounded-full sm:px-6 sm:py-3">
-        <div className="flex w-full flex-col items-center gap-2 sm:w-auto sm:flex-row sm:border-l sm:border-gray-300 sm:pl-4">
+      <div
+        className="
+          print:hidden
+
+          mx-auto
+          mt-8
+          flex
+          w-full
+          max-w-[95%]
+          flex-col
+          items-center
+          gap-4
+          rounded-2xl
+          border
+          border-gray-200
+          bg-white/95
+          p-4
+          shadow-xl
+          backdrop-blur-md
+
+          sm:w-fit
+          sm:flex-row
+          sm:rounded-full
+          sm:px-6
+          sm:py-3
+        "
+        data-pdf-ignore
+      >
+        {/* ================= THEMES ================= */}
+
+        <div
+          className="
+            flex
+            w-full
+            flex-col
+            items-center
+            gap-2
+
+            sm:w-auto
+            sm:flex-row
+            sm:border-l
+            sm:border-gray-300
+            sm:pl-4
+          "
+        >
           <span className="whitespace-nowrap text-sm font-bold text-gray-700">
             اختر الثيم:
           </span>
 
           <div className="flex flex-wrap items-center justify-center gap-2">
-            {PRESET_THEMES.map((theme) => (
-              <button
-                key={theme.id}
-                type="button"
-                onClick={() =>
-                  setCurrentTheme(theme)
-                }
-                className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-bold transition-all ${
-                  currentTheme.id === theme.id
-                    ? 'scale-105 shadow-sm ring-2 ring-blue-500 ring-offset-1'
-                    : 'hover:bg-gray-100'
-                }`}
-              >
-                <div className="flex h-3.5 w-7 overflow-hidden rounded-full border border-gray-300">
-                  {theme.swatches.map(
-                    (color, i) => (
-                      <span
-                        key={i}
-                        className="h-full flex-1"
-                        style={{
-                          backgroundColor:
-                            color,
-                        }}
-                      />
+            {PRESET_THEMES.map(
+              (theme) => (
+                <button
+                  key={theme.id}
+                  type="button"
+                  onClick={() =>
+                    setCurrentTheme(
+                      theme
                     )
-                  )}
-                </div>
+                  }
+                  className={`
+                    flex
+                    items-center
+                    gap-1.5
+                    rounded-full
+                    px-3
+                    py-1.5
+                    text-xs
+                    font-bold
+                    transition-all
 
-                <span>
-                  {theme.name.split(' ')[0]}
-                </span>
-              </button>
-            ))}
+                    ${
+                      currentTheme.id ===
+                      theme.id
+                        ? 'scale-105 shadow-sm ring-2 ring-blue-500 ring-offset-1'
+                        : 'hover:bg-gray-100'
+                    }
+                  `}
+                >
+                  <div className="flex h-3.5 w-7 overflow-hidden rounded-full border border-gray-300">
+                    {theme.swatches.map(
+                      (
+                        color,
+                        index
+                      ) => (
+                        <span
+                          key={index}
+                          className="h-full flex-1"
+                          style={{
+                            backgroundColor:
+                              color,
+                          }}
+                        />
+                      )
+                    )}
+                  </div>
+
+                  <span>
+                    {
+                      theme.name.split(
+                        ' '
+                      )[0]
+                    }
+                  </span>
+                </button>
+              )
+            )}
           </div>
         </div>
 
-        <button
-          type="submit"
-          form=""
-          onClick={handleSubmit}
-          className="hidden w-full whitespace-nowrap rounded-full px-6 py-2 text-md font-bold text-white shadow-lg transition-all hover:scale-105 sm:block sm:w-auto"
+        {/* ================= PRINT ================= */}
+
+     {/*   <button
+          type="button"
+          onClick={handlePrint}
+          className="
+            flex
+            w-full
+            items-center
+            justify-center
+            gap-2
+            whitespace-nowrap
+            rounded-full
+            px-6
+            py-2
+            text-md
+            font-bold
+            text-white
+            shadow-lg
+            transition-all
+
+            hover:scale-105
+
+            sm:w-auto
+          "
           style={{
             backgroundColor:
               currentTheme.btnBg,
           }}
         >
-          حفظ واعتماد التقرير 🖨️
+           <PrinterIcon />
+          <span>طباعة</span>
+        </button>
+          }
+        {/* ================= PDF ================= */}
+
+        <button
+          type="button"
+          onClick={
+            handleDownloadPDF
+          }
+          disabled={
+            downloadingType !== null
+          }
+          className="
+            flex
+            w-full
+            items-center
+            justify-center
+            gap-2
+            whitespace-nowrap
+            rounded-full
+            bg-slate-800
+            px-6
+            py-2
+            text-md
+            font-bold
+            text-white
+            shadow-lg
+            transition-all
+
+            hover:scale-105
+
+            disabled:cursor-not-allowed
+            disabled:opacity-60
+
+            sm:w-auto
+          "
+        >
+          {downloadingType ===
+          'pdf' ? (
+            <>
+              <SpinnerIcon />
+
+              <span>
+                جاري تجهيز PDF...
+              </span>
+            </>
+          ) : (
+            <>
+              <PdfDownloadIcon />
+
+              <span>
+                تحميل PDF
+              </span>
+            </>
+          )}
+        </button>
+
+        {/* ================= PNG ================= */}
+
+        <button
+          type="button"
+          onClick={
+            handleDownloadPNG
+          }
+          disabled={
+            downloadingType !== null
+          }
+          className="
+            flex
+            w-full
+            items-center
+            justify-center
+            gap-2
+            whitespace-nowrap
+            rounded-full
+            bg-slate-600
+            px-6
+            py-2
+            text-md
+            font-bold
+            text-white
+            shadow-lg
+            transition-all
+
+            hover:scale-105
+
+            disabled:cursor-not-allowed
+            disabled:opacity-60
+
+            sm:w-auto
+          "
+        >
+          {downloadingType ===
+          'png' ? (
+            <>
+              <SpinnerIcon />
+
+              <span>
+                جاري تجهيز PNG...
+              </span>
+            </>
+          ) : (
+            <>
+              <ImageDownloadIcon />
+
+              <span>
+                تحميل PNG
+              </span>
+            </>
+          )}
         </button>
       </div>
     </div>

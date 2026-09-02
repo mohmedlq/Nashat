@@ -9,8 +9,8 @@ import {
   useLocation,
 } from "react-router-dom";
 
-import BroadcastDetail from "./BroadcastDetail";
-import Report from "../../Pages/Reports/Report";
+import BroadcastDetail from "../Broadcasts/BroadcastDetail";
+import Report from "../Reports/Report";
 
 import type { Broadcast } from "../../types/BroadcastTypes";
 import type { ReportFormData } from "../../types/ReportsTypes";
