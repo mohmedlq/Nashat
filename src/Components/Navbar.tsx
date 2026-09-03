@@ -93,9 +93,9 @@ const Navbar: React.FC = () => {
 
             {/* Broadcast Library */}
             <Link
-              to="/broadcastsPage"
+              to="/broadcasts"
               className={`relative flex items-center gap-2 rounded-lg px-4 py-2.5 text-[13px] font-semibold transition-all duration-200 ${
-                isActive("/broadcastsPage")
+                isActive("/v")
                   ? "bg-[#202923] text-[#DCE3DD]"
                   : "text-[#89938C] hover:bg-[#1A211D] hover:text-[#D5DBD6]"
               }`}
@@ -104,7 +104,7 @@ const Navbar: React.FC = () => {
                 size={15}
                 strokeWidth={1.7}
                 className={
-                  isActive("/broadcast")
+                  isActive("/broadcasts")
                     ? "text-[#91A394]"
                     : "text-[#68756D]"
                 }
@@ -112,7 +112,7 @@ const Navbar: React.FC = () => {
 
               مكتبة الإذاعات
 
-              {isActive("/broadcast") && (
+              {isActive("/broadcasts") && (
                 <span className="absolute bottom-1 right-1/2 h-1 w-1 translate-x-1/2 rounded-full bg-[#B39A63]" />
               )}
             </Link>
@@ -299,10 +299,10 @@ const Navbar: React.FC = () => {
 
             {/* Broadcasts */}
             <Link
-              to="/broadcast"
+              to="/broadcasts"
               onClick={closeSidebar}
               className={`flex items-center justify-between rounded-xl px-4 py-3.5 text-sm font-semibold transition-all ${
-                isActive("/broadcast")
+                isActive("/broadcasts")
                   ? "bg-[#202923] text-[#E0E5E0]"
                   : "text-[#858F88] hover:bg-[#171E1A] hover:text-[#D3D9D4]"
               }`}
@@ -312,7 +312,7 @@ const Navbar: React.FC = () => {
                 مكتبة الإذاعات
               </div>
 
-              {isActive("/broadcast") && (
+              {isActive("/broadcasts") && (
                 <span className="h-1.5 w-1.5 rounded-full bg-[#B39A63]" />
               )}
             </Link>

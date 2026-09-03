@@ -80,7 +80,7 @@ const AiGenerator: React.FC = () => {
 
   const [mode, setMode] =
     useState<GeneratorMode>(
-      navigationState?.mode ?? "broadcast"
+      navigationState?.mode ?? "report"
     );
 
   const [input, setInput] =
@@ -115,7 +115,7 @@ const AiGenerator: React.FC = () => {
   ========================================================= */
 
   const scrollToBottom = (
-    behavior: ScrollBehavior = "smooth"
+    behavior: ScrollBehavior = "instant"
   ) => {
     const container =
       chatContainerRef.current;

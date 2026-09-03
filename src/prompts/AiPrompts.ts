@@ -57,6 +57,6 @@ Rules:
 - Do not invent personal information, names, numbers, dates, or specific locations.
 - Return only the JSON object required by the schema.
 -make the objectives 5 lines at least 
--on the date section return current Today date in hijri the arabic date
+-return current arabic hijri date
 `;
 }
