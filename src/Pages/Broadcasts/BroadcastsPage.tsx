@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import type { Broadcast } from "../../types/BroadcastTypes";
 import { Broadcasts } from "../../data/Data";
 import BroadcastDetail from "./BroadcastDetail";
+import { useNavigate, useParams } from "react-router-dom";
 
 const LEVEL_FILTERS = [
   "الكل",

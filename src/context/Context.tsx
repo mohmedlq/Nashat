@@ -7,7 +7,7 @@ import {
 } from "react";
 
 import type { Broadcast } from "../types/BroadcastTypes";
-import type { ReportFormData as ReportData } from "../types/ReportsTypes";
+import type { MockReport, ReportFormData as ReportData } from "../types/ReportsTypes";
 
 interface UserContextType {
   chatHistory: Message[];
@@ -29,6 +29,10 @@ interface UserContextType {
   setRegion: React.Dispatch<
     React.SetStateAction<string>
   >;
+   reports: MockReport[];
+  setNewReport: React.Dispatch<
+    React.SetStateAction<MockReport[]>
+  >;
 }
 
 interface Message {
@@ -45,7 +49,7 @@ interface UserProviderProps {
 
 const STORAGE_KEY = "school_ai_chat_history";
 const USER_INFO_KEY = "school_ai_user_info";
-
+const SAVEDREPORTS_KEY="saved_reports";
 export const UserContext =
   createContext<UserContextType | null>(null);
 
@@ -131,7 +135,25 @@ export function UserProvider({
     teacherName,
     region,
   ]);
+  const [reports, setNewReport] = useState<MockReport[]>(() => {
+  const saved = localStorage.getItem(SAVEDREPORTS_KEY);
 
+  if (!saved || saved === "undefined") {
+    return [];
+  }
+
+  try {
+    return JSON.parse(saved);
+  } catch {
+    return [];
+  }
+});
+   useEffect(() => {
+  localStorage.setItem(
+    SAVEDREPORTS_KEY,
+    JSON.stringify(reports)
+  );
+}, [reports]);
   /* =========================
      Provider
   ========================= */
@@ -150,6 +172,8 @@ export function UserProvider({
 
         region,
         setRegion,
+        reports,
+        setNewReport,
       }}
     >
       {children}

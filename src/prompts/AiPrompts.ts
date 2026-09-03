@@ -5,7 +5,8 @@ export function createBroadcastPrompt(
 Create a complete school broadcast in Arabic based on this request:
 
 "${userText}"
-
+make the introduction to introduse the topic and related to the topic 
+mimum number of lines is 5 foreach section
 Rules:
 - Understand the topic even if the request is only one or two words.
 - Generate a suitable title, main topic, and school stage.
@@ -30,10 +31,17 @@ Create a formal Arabic school activity report based on this request:
 
 Use the following school information exactly as provided:
 
+first use all the info that the user entered the are priamary
+if the user did not mention any 
+-schoolName
+- implementer or teacherName
+-region
+
+use this ones 
 - schoolName: "${schoolName}"
 - implementer: "${teacherName}"
 - region: "${region}"
-
+also the mimum number of lines in objectives is 5
 Rules:
 - Understand the activity even if the request is only one or two words.
 - Do not ask questions.

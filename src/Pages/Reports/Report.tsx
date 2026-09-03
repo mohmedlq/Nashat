@@ -2,11 +2,13 @@ import React, { useState, useEffect, useRef } from 'react';
 import DatePicker from 'react-multi-date-picker';
 import arabic from 'react-date-object/calendars/arabic';
 import arabic_ar from 'react-date-object/locales/arabic_ar';
-import type { ReportFormData } from '../../types/ReportsTypes';
+import type {
+  ReportFormData,
+  MockReport,
+} from '../../types/ReportsTypes';
 import logoImage from '../../assets/MinistrLogo.png';
 import { useUser } from '../../context/Context';
 import DateObject from 'react-date-object';
-
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 
@@ -98,6 +100,7 @@ export const PRESET_THEMES: Theme[] = [
  * ============================ */
 
 export interface ReportProps {
+  id?: string;
   initialData?: Partial<ReportFormData>;
   logoUrl?: string;
   initialThemeId?: string;
@@ -345,15 +348,28 @@ function HeaderText({
     e: React.ChangeEvent<HTMLInputElement>
   ) => void;
 }) {
+  const textClasses = `
+    ${className}
+    block
+    w-full
+    min-w-0
+    m-0
+    p-0
+    leading-[1.2]
+  `;
+
   if (isExportMode) {
     return (
-      <span
-        className={`${className} block truncate`}
+      <div
+        className={`
+          ${textClasses}
+          flex
+          items-center
+          justify-center
+        `}
       >
-        {value && value.trim()
-          ? value
-          : '\u00A0'}
-      </span>
+        {value && value.trim() ? value : '\u00A0'}
+      </div>
     );
   }
 
@@ -363,7 +379,7 @@ function HeaderText({
       value={value}
       onChange={onChange}
       placeholder={placeholder}
-      className={className}
+      className={textClasses}
     />
   );
 }
@@ -519,23 +535,50 @@ function SpinnerIcon({
  * ============================ */
 
 export default function Report({
+  id,
   initialData,
   logoUrl,
   initialThemeId = 'emerald-teal',
   onChange,
   onSubmit,
 }: ReportProps) {
+  /* ============================
+   * USER CONTEXT
+   * ============================ */
+
   const {
     schoolName,
     teacherName,
     region,
+    setSchoolName,
+    setTeacherName,
+    setRegion,
+    reports,
+    setNewReport,
   } = useUser();
+
+  /* ============================
+   * FIND EXISTING REPORT
+   * ============================ */
+
+  const report = reports.find(
+    (item) =>
+      String(item.id) === id
+  );
+
+  /* ============================
+   * REFS
+   * ============================ */
 
   const reportRef =
     useRef<HTMLDivElement>(null);
 
   const pageFrameRef =
     useRef<HTMLDivElement>(null);
+
+  /* ============================
+   * STATES
+   * ============================ */
 
   const [downloadingType, setDownloadingType] =
     useState<'pdf' | 'png' | null>(null);
@@ -579,14 +622,51 @@ export default function Report({
     ],
   };
 
+  /* ============================
+   * FORM DATA
+   * ============================ */
+
   const [formData, setFormData] =
     useState<ReportFormData>(() => ({
       ...DEFAULT_FORM_DATA,
-      ...initialData,
+
+      ...(report?.formData ?? initialData ?? {}),
+
       evidences:
+        report?.formData?.evidences ??
         initialData?.evidences ??
         DEFAULT_FORM_DATA.evidences,
     }));
+
+  /* ============================
+   * LOAD REPORT DATA
+   * ============================ */
+
+  useEffect(() => {
+    if (report) {
+setFormData((prev) => ({
+  ...prev,
+  ...report.formData,
+  evidences:
+    report.formData.evidences ??
+    prev.evidences,
+}));      return;
+    }
+
+    if (initialData) {
+      setFormData((prev) => ({
+        ...prev,
+        ...initialData,
+        evidences:
+          initialData.evidences ??
+          prev.evidences,
+      }));
+    }
+  }, [report, initialData]);
+
+  /* ============================
+   * THEME
+   * ============================ */
 
   const [currentTheme, setCurrentTheme] =
     useState<Theme>(
@@ -597,25 +677,78 @@ export default function Report({
         ) || PRESET_THEMES[0]
     );
 
+  /* ============================
+   * ERRORS
+   * ============================ */
+
   const [errors, setErrors] = useState<
     Record<string, string>
   >({});
 
   /* ============================
-   * INITIAL DATA SYNC
+   * UPDATE USER VALUES
    * ============================ */
 
-  useEffect(() => {
-    if (!initialData) return;
+  const updateUserValue = () => {
+    setSchoolName(formData.schoolName);
+    setTeacherName(formData.implementer);
+    setRegion(formData.region);
+  };
 
-    setFormData((prev) => ({
+  /* ============================
+   * SAVE REPORT
+   * ============================ */
+
+  function onSave() {
+    /*
+     * إذا كان عندنا تقرير موجود
+     * نحدث نفس التقرير.
+     */
+    if (report) {
+      setNewReport((prev) =>
+        prev.map((item) =>
+          String(item.id) === id
+            ? {
+                ...item,
+                formData,
+              }
+            : item
+        )
+      );
+
+      return;
+    }
+
+    /*
+     * إذا لم يكن هناك تقرير موجود
+     * ننشئ تقرير جديد.
+     */
+    const newReport: MockReport = {
+      id: Date.now(),
+      category: 'مصنوعة مني',
+      type: 'عام',
+      formData,
+    };
+
+    setNewReport((prev) => [
       ...prev,
-      ...initialData,
-      evidences:
-        initialData.evidences ??
-        prev.evidences,
-    }));
-  }, [initialData]);
+      newReport,
+    ]);
+  }
+
+  /* ============================
+   * FORM SUBMIT
+   * ============================ */
+
+  const onFormSubmit = async (
+    e: React.FormEvent
+  ) => {
+    e.preventDefault();
+
+    if (!validateForm()) return;
+
+    await handlePrint();
+  };
 
   /* ============================
    * FORM UPDATE
@@ -628,7 +761,9 @@ export default function Report({
   ) => {
     setFormData((prev) => {
       const updated = updater(prev);
+
       onChange?.(updated);
+
       return updated;
     });
   };
@@ -838,6 +973,10 @@ export default function Report({
     );
   };
 
+  /* ============================
+   * FIT REPORT TO PRINT PAGE
+   * ============================ */
+
   const fitReportToPrintPage =
     async () => {
       const element =
@@ -894,6 +1033,10 @@ export default function Report({
       await waitForNextPaint();
     };
 
+  /* ============================
+   * RESET PRINT LAYOUT
+   * ============================ */
+
   const resetPrintLayout = () => {
     const element =
       reportRef.current;
@@ -906,6 +1049,10 @@ export default function Report({
     element.style.transformOrigin =
       '';
   };
+
+  /* ============================
+   * AFTER PRINT
+   * ============================ */
 
   useEffect(() => {
     const handleAfterPrint = () => {
@@ -1100,7 +1247,7 @@ export default function Report({
   };
 
   /* ============================
-   * DOWNLOAD
+   * DOWNLOAD BLOB
    * ============================ */
 
   const downloadBlob = (
@@ -1127,6 +1274,10 @@ export default function Report({
       URL.revokeObjectURL(url);
     }, 60000);
   };
+
+  /* ============================
+   * CANVAS TO BLOB
+   * ============================ */
 
   const canvasToBlob = (
     canvas: HTMLCanvasElement,
@@ -1167,6 +1318,19 @@ export default function Report({
 
       try {
         setDownloadingType('pdf');
+
+        /*
+         * تحديث معلومات المستخدم
+         * ثم حفظ التقرير.
+         *
+         * إذا كان التقرير موجودًا:
+         * سيتم تحديثه.
+         *
+         * إذا كان جديدًا:
+         * سيتم إنشاء تقرير جديد.
+         */
+        updateUserValue();
+        onSave();
 
         onSubmit?.(formData);
 
@@ -1264,6 +1428,13 @@ export default function Report({
 
       try {
         setDownloadingType('png');
+
+        /*
+         * تحديث معلومات المستخدم
+         * ثم حفظ التقرير.
+         */
+        updateUserValue();
+        onSave();
 
         onSubmit?.(formData);
 
@@ -1481,10 +1652,7 @@ export default function Report({
         className="report-page-frame"
       >
         <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            handlePrint();
-          }}
+          onSubmit={onFormSubmit}
         >
           <div
             ref={reportRef}
@@ -1630,7 +1798,7 @@ export default function Report({
               <div
                 className="
                   absolute
-                  -bottom-40
+                  translate-y-[70px]
                   left-1/2
                   z-10
                   w-[calc(100%-112px)]
@@ -1638,12 +1806,17 @@ export default function Report({
                   -translate-x-1/2
                 "
               >
+                {/* اسم المدرسة */}
+
                 <div
                   className="
                     mb-3
+                    flex
+                    h-[58px]
+                    items-center
+                    justify-center
                     rounded-[12px]
                     px-6
-                    py-4
                     shadow-sm
                   "
                   style={{
@@ -1662,12 +1835,10 @@ export default function Report({
                     onChange={handleChange}
                     placeholder="أدخل اسم المدرسة"
                     className="
-                      w-full
-                      min-w-0
-                      bg-transparent
                       text-center
                       text-[21px]
                       font-bold
+                      leading-[1.2]
                       text-white
                       outline-none
                       placeholder:text-white/60
@@ -1675,17 +1846,21 @@ export default function Report({
                   />
                 </div>
 
+                {/* عنوان التقرير */}
+
                 <div
                   className="
-                    border-b-[7px]
+                    relative
+                    flex
+                    h-[68px]
+                    items-center
+                    justify-center
                     px-6
-                    py-4
+                    pb-[7px]
                   "
                   style={{
                     backgroundColor:
                       currentTheme.darkAccent,
-                    borderColor:
-                      currentTheme.titleBorder,
                   }}
                 >
                   <HeaderText
@@ -1699,16 +1874,28 @@ export default function Report({
                     onChange={handleChange}
                     placeholder="أدخل عنوان التقرير"
                     className="
-                      w-full
-                      min-w-0
-                      bg-transparent
                       text-center
                       text-[23px]
                       font-bold
+                      leading-[1.2]
                       text-white
                       outline-none
                       placeholder:text-white/60
                     "
+                  />
+
+                  <div
+                    className="
+                      absolute
+                      bottom-0
+                      left-0
+                      right-0
+                      h-[7px]
+                    "
+                    style={{
+                      backgroundColor:
+                        currentTheme.titleBorder,
+                    }}
                   />
                 </div>
               </div>
@@ -1926,7 +2113,7 @@ export default function Report({
                   label="الأهداف:"
                   type="textarea"
                   align="right"
-                  className={`
+                  className="
                     min-h-[237px]
 
                     ${
@@ -1947,7 +2134,7 @@ export default function Report({
                           print:row-span-3
                         `
                     }
-                  `}
+                  "
                 />
               </div>
 
@@ -2233,56 +2420,6 @@ export default function Report({
               )}
             </section>
           </div>
-
-          {/* ================= MOBILE PRINT ================= */}
-
-          <div
-            className="
-              mt-6
-              flex
-              justify-center
-              sm:hidden
-              print:hidden
-            "
-          >
-            <button
-              type="button"
-              onClick={handlePrint}
-              disabled={
-                isPrinting ||
-                downloadingType !== null
-              }
-              className="
-                flex
-                w-full
-                max-w-[360px]
-                items-center
-                justify-center
-                gap-2
-                rounded-xl
-                border
-                border-[#46534B]
-                bg-[#202923]
-                px-6
-                py-3
-                text-sm
-                font-bold
-                text-[#E5E9E5]
-                shadow-[0_10px_30px_rgba(0,0,0,0.22)]
-                transition-all
-                hover:bg-[#29352E]
-                hover:border-[#B39A63]/60
-                active:scale-[0.98]
-                disabled:opacity-60
-              "
-            >
-              <PrinterIcon />
-
-              <span>
-                طباعة التقرير
-              </span>
-            </button>
-          </div>
         </form>
       </div>
 
@@ -2474,6 +2611,7 @@ export default function Report({
             disabled:cursor-not-allowed
             disabled:opacity-60
             sm:w-auto
+            cursor-pointer
           "
         >
           {downloadingType ===
@@ -2516,21 +2654,22 @@ export default function Report({
             whitespace-nowrap
             rounded-xl
             border
-            border-[#29332D]
-            bg-[#171E1A]
+            border-[#3A463F]
+            bg-[#202923]
             px-6
             py-2
             text-md
             font-bold
-            text-[#89938C]
+            text-[#DCE3DD]
             shadow-sm
             transition-all
-            hover:border-[#46534B]
-            hover:bg-[#202923]
-            hover:text-[#DCE3DD]
+            hover:border-[#B39A63]/50
+            hover:bg-[#29352E]
+            hover:text-[#E7E9E5]
             disabled:cursor-not-allowed
             disabled:opacity-60
             sm:w-auto
+            cursor-pointer
           "
         >
           {downloadingType ===

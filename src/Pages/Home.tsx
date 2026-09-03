@@ -63,7 +63,7 @@ const Home: React.FC = () => {
             <h1 className="mx-auto max-w-4xl text-5xl font-bold leading-[1.15] tracking-[-0.04em] text-[#EEF0EC] sm:text-6xl lg:text-7xl">
               اصنع محتواك المدرسي
               <span className="mt-2 block text-[#8FA495]">
-                بطريقة أسهل.
+                بطريقة سهلة.
               </span>
             </h1>
 
