@@ -26,6 +26,7 @@ import type { Broadcast } from "../../types/BroadcastTypes";
 import type { ReportFormData } from "../../types/ReportsTypes";
 
 import { useUser } from "../../context/Context";
+import { getTodayHijri } from "../../misc/miscOne";
 
 import {
   generateAiContent,
@@ -237,9 +238,10 @@ const AiGenerator: React.FC = () => {
       ===================================================== */
 
       if (result.report) {
-        botMessage.reportData =
-          result.report;
-      }
+        botMessage.reportData ={
+          ...result.report,
+          date:getTodayHijri(),
+        }}
 
       setChatHistory(
         (prev) => [

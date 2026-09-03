@@ -45,8 +45,13 @@ Provided values (used only per the priority rule above, and only if step 1 finds
 
 STRICT RULES FOR THESE THREE FIELDS:
 - Never invent, guess, or substitute a different name/school/region than what was extracted or provided.
-- Never merge or alter the provided/extracted text.
+- Never merge or alter the provided/extracted text beyond the typo correction described below.
 - If the final value is empty, keep the field as "" — do not fabricate a placeholder.
+
+TYPO CORRECTION (spelling only, not identity):
+- If the extracted/provided text contains an obvious spelling mistake in a well-known word (e.g. a city, region, or common Arabic name), correct the spelling to the standard form — e.g. "مكة المكرة" → "مكة المكرمة", "محد" → "محمد".
+- Only fix clear, obvious misspellings of recognizable words. Do not "correct" an uncommon or unfamiliar name into a different name — if it's not obviously a typo, leave it exactly as written.
+- This correction must never change the person's, school's, or region's actual identity — only fix how it is spelled.
 
 OTHER CONTENT RULES:
 1. Understand the activity from the request even if it is brief (one or two words).
@@ -55,7 +60,6 @@ OTHER CONTENT RULES:
 4. Use "الفصل الدراسي" as the default "location" only if no location is mentioned in the request.
 5. Write "objectives" (الأهداف) as concise, formal bullet-style lines — minimum 5 lines, each a distinct, meaningful objective (no repetition or filler).
 6. Do not invent personal information, names, numbers, or locations that were not provided or extracted.
-7. Include the current date converted to the Hijri calendar (التاريخ الهجري), formatted clearly in Arabic.
 8. Do not ask any questions. Generate the full report immediately.
 9. Do not add commentary, explanations, or notes outside the JSON. Do not wrap the output in markdown code fences.
 
