@@ -1,174 +1,186 @@
 import React, { useState } from "react";
+import { ArrowLeft, FileText, Mic2, Sparkles } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 type GeneratorMode = "broadcast" | "report";
 
-const SealIcon = () => (
-  <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.6">
-    <path d="M12 2 20 6v6c0 5-3.4 8.4-8 10-4.6-1.6-8-5-8-10V6l8-4Z" />
-    <path d="M9 12l2 2 4-4.5" />
-  </svg>
-);
-
-const MicIcon = () => (
-  <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.7">
-    <rect x="9" y="3" width="6" height="11" rx="3" />
-    <path d="M5.5 11a6.5 6.5 0 0 0 13 0" />
-    <path d="M12 17.5V21" />
-    <path d="M8.5 21h7" />
-  </svg>
-);
-
-const FileIcon = () => (
-  <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.7">
-    <path d="M6 3h8l4 4v14H6z" />
-    <path d="M14 3v5h5" />
-    <path d="M9 13h6" />
-    <path d="M9 17h5" />
-  </svg>
-);
-
-const ArrowIcon = () => (
-  <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8">
-    <path d="M5 12h13" />
-    <path d="m13 6 6 6-6 6" />
-  </svg>
-);
-
 const AIGenerator: React.FC = () => {
   const navigate = useNavigate();
+
   const [mode, setMode] = useState<GeneratorMode>("broadcast");
   const [prompt, setPrompt] = useState("");
 
-  const handleGenerate = () => {
-    const cleanPrompt = prompt.trim();
-    if (!cleanPrompt) return;
-    navigate("/generator", { state: { prompt: cleanPrompt, mode, autoSend: true } });
-  };
-
   const examples =
     mode === "broadcast"
-      ? ["إذاعة عن أهمية القراءة", "إذاعة عن بر الوالدين", "إذاعة عن المحافظة على الوقت"]
-      : ["تقرير عن حملة القراءة", "تقرير عن اليوم الوطني", "تقرير عن النشاط الرياضي"];
+      ? [
+          "إذاعة عن أهمية القراءة",
+          "إذاعة عن بر الوالدين",
+          "إذاعة عن المحافظة على الوقت",
+        ]
+      : [
+          "تقرير عن حملة القراءة",
+          "تقرير عن اليوم الوطني",
+          "تقرير عن النشاط الرياضي",
+        ];
+
+  const handleGenerate = () => {
+    const cleanPrompt = prompt.trim();
+
+    if (!cleanPrompt) return;
+
+    navigate("/generator", {
+      state: {
+        prompt: cleanPrompt,
+        mode,
+        autoSend: true,
+      },
+    });
+  };
+
+  const handleKeyDown = (
+    event: React.KeyboardEvent<HTMLTextAreaElement>
+  ) => {
+    if (event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault();
+      handleGenerate();
+    }
+  };
 
   return (
-    <section
+    <div
       dir="rtl"
-      className="relative overflow-hidden rounded-2xl border border-[#E4DFC9] bg-[#F7F4EA]"
-      style={{
-        backgroundImage:
-          "repeating-linear-gradient(0deg, transparent, transparent 27px, rgba(21,33,58,0.05) 28px)",
-      }}
+      className="overflow-hidden rounded-2xl border border-[#303A34] bg-[#181F1B] shadow-[0_25px_80px_rgba(0,0,0,0.18)]"
     >
-      <div className="pointer-events-none absolute inset-0">
-        <div className="absolute -right-40 -top-40 h-[500px] w-[500px] rounded-full bg-[#B8862E]/[0.06] blur-3xl" />
-        <div className="absolute left-0 top-0 h-full w-[3px] bg-gradient-to-b from-[#B8862E] via-[#E4DFC9] to-transparent" />
-      </div>
+      <div className="grid lg:grid-cols-[0.72fr_1.28fr]">
+        {/* Intro */}
+        <div className="relative overflow-hidden border-b border-[#303A34] p-7 sm:p-9 lg:border-b-0 lg:border-l">
+          <div className="absolute -left-24 -top-24 h-64 w-64 rounded-full bg-[#7F9887]/[0.05] blur-3xl" />
 
-      <div className="relative grid lg:grid-cols-[1fr_1.25fr]">
-        <div className="flex flex-col justify-between border-b border-[#E4DFC9] bg-[#F7F4EA] p-7 sm:p-10 lg:border-b-0 lg:border-l lg:p-12">
-          <div>
-            <div className="mb-8 inline-flex items-center gap-2 border-b-2 border-[#B8862E] pb-2 text-xs font-bold tracking-wide text-[#7A5A1E]">
-              <SealIcon />
-              المساعد المدرسي · نسخة أكاديمية
+          <div className="relative">
+            <div className="mb-6 flex h-11 w-11 items-center justify-center rounded-xl border border-[#3A463F] bg-[#202923] text-[#B39A63]">
+              {mode === "broadcast" ? (
+                <Mic2 size={20} />
+              ) : (
+                <FileText size={20} />
+              )}
             </div>
 
-            <h1 className="max-w-xl font-serif text-4xl font-bold leading-[1.2] tracking-[-0.02em] text-[#15213A] sm:text-5xl">
-              لا تبدأ من
+            <h3 className="text-2xl font-bold leading-tight text-[#E9ECE8]">
+              حوّل فكرتك
               <br />
-              صفحة فارغة.
-            </h1>
+              إلى محتوى جاهز.
+            </h3>
 
-            <p className="mt-6 max-w-md text-sm leading-7 text-[#5B6478] sm:text-base">
-              اكتب فكرتك فقط، وسيتولى المساعد بناء المحتوى المدرسي كاملًا بما يناسب المرحلة والموضوع.
+            <p className="mt-4 max-w-sm text-sm leading-7 text-[#929C95]">
+              اكتب الموضوع أو الفكرة التي تريد العمل عليها، وسنساعدك في
+              تجهيز المحتوى المدرسي المناسب.
             </p>
-          </div>
 
-          <div className="mt-12 hidden lg:block">
-            <div className="flex items-center gap-3 text-xs font-medium text-[#7A8194]">
-              <div className="h-px w-10 bg-[#B8862E]" />
-              صياغة ذكية · محتوى منظم · جاهز للاستخدام
+            <div className="mt-8 space-y-3">
+              {[
+                "صياغة مناسبة للبيئة المدرسية",
+                "إمكانية التعديل قبل الاستخدام",
+                "محتوى منظم وسهل القراءة",
+              ].map((item) => (
+                <div
+                  key={item}
+                  className="flex items-center gap-3 text-xs text-[#A9B1AB]"
+                >
+                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#26322B] text-[#8FA495]">
+                    ✓
+                  </span>
+                  {item}
+                </div>
+              ))}
             </div>
           </div>
         </div>
 
-        <div className="bg-white p-5 sm:p-8 lg:p-10">
-          <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <p className="font-serif text-sm font-bold text-[#15213A]">ماذا تريد أن تنشئ؟</p>
-              <p className="mt-1 text-xs text-[#858B9A]">اختر نوع المحتوى الذي تحتاجه.</p>
-            </div>
+        {/* Editor */}
+        <div className="bg-[#141A17] p-5 sm:p-7">
+          {/* Mode */}
+          <div className="mb-5 flex items-center justify-between">
+            <span className="text-xs font-semibold text-[#7F8A82]">
+              نوع المحتوى
+            </span>
 
-            <div className="flex w-full rounded-lg border border-[#E4DFC9] bg-[#F7F4EA] p-1 sm:w-auto">
+            <div className="flex rounded-lg border border-[#303A34] bg-[#1A211D] p-1">
               <button
                 type="button"
                 onClick={() => setMode("broadcast")}
-                className={`flex flex-1 items-center justify-center gap-2 rounded-md px-4 py-2.5 text-xs font-bold transition-all sm:flex-none ${
-                  mode === "broadcast" ? "bg-[#15213A] text-[#D9AE55] shadow-sm" : "text-[#6B7280] hover:text-[#15213A]"
+                className={`flex items-center gap-2 rounded-md px-3 py-2 text-xs font-semibold transition ${
+                  mode === "broadcast"
+                    ? "bg-[#DCE3DD] text-[#18211C]"
+                    : "text-[#8F9992] hover:text-[#C6CCC8]"
                 }`}
               >
-                <MicIcon />
+                <Mic2 size={14} />
                 إذاعة
               </button>
 
               <button
                 type="button"
                 onClick={() => setMode("report")}
-                className={`flex flex-1 items-center justify-center gap-2 rounded-md px-4 py-2.5 text-xs font-bold transition-all sm:flex-none ${
-                  mode === "report" ? "bg-[#15213A] text-[#D9AE55] shadow-sm" : "text-[#6B7280] hover:text-[#15213A]"
+                className={`flex items-center gap-2 rounded-md px-3 py-2 text-xs font-semibold transition ${
+                  mode === "report"
+                    ? "bg-[#DCE3DD] text-[#18211C]"
+                    : "text-[#8F9992] hover:text-[#C6CCC8]"
                 }`}
               >
-                <FileIcon />
+                <FileText size={14} />
                 تقرير
               </button>
             </div>
           </div>
 
-          <div className="rounded-xl border-2 border-[#E4DFC9] bg-white transition-all focus-within:border-[#B8862E] focus-within:ring-4 focus-within:ring-[#B8862E]/[0.08]">
+          {/* Textarea */}
+          <div className="rounded-xl border border-[#303A34] bg-[#111714] transition focus-within:border-[#526258]">
             <textarea
               value={prompt}
-              onChange={(e) => setPrompt(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" && !e.shiftKey) {
-                  e.preventDefault();
-                  handleGenerate();
-                }
-              }}
-              className="min-h-[180px] w-full resize-none bg-transparent px-5 pt-5 text-sm leading-7 text-[#1B2233] outline-none placeholder:text-[#A6ABBB]"
+              onChange={(event) => setPrompt(event.target.value)}
+              onKeyDown={handleKeyDown}
               placeholder={
                 mode === "broadcast"
-                  ? "مثال: أنشئ إذاعة مدرسية عن أهمية القراءة لطلاب المرحلة المتوسطة..."
-                  : "مثال: أنشئ تقريرًا رسميًا عن حملة القراءة الأسبوعية..."
+                  ? "مثال: أريد إذاعة مدرسية عن أهمية القراءة..."
+                  : "مثال: أريد تقريرًا عن حملة القراءة في المدرسة..."
               }
+              className="min-h-[190px] w-full resize-none bg-transparent p-5 text-sm leading-8 text-[#E4E8E4] outline-none placeholder:text-[#5F6962]"
             />
 
-            <div className="flex flex-col gap-4 border-t border-[#EEE8D6] p-4 sm:flex-row sm:items-center sm:justify-between">
-              <p className="text-[10px] leading-5 text-[#9AA0AF]">
-                اضغط Enter للبدء، أو استخدم Shift + Enter لسطر جديد.
-              </p>
+            <div className="flex items-center justify-between border-t border-[#29332D] px-4 py-3">
+              <span className="text-[11px] text-[#5F6962]">
+                Enter للإنشاء · Shift + Enter لسطر جديد
+              </span>
 
               <button
                 type="button"
                 onClick={handleGenerate}
                 disabled={!prompt.trim()}
-                className="group flex w-full items-center justify-center gap-2 rounded-lg bg-[#15213A] px-5 py-3 text-sm font-bold text-[#D9AE55] transition-all hover:-translate-y-0.5 hover:bg-[#0D1526] disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:translate-y-0 sm:w-auto"
+                className="group inline-flex items-center gap-2 rounded-lg bg-[#DCE3DD] px-4 py-2.5 text-xs font-bold text-[#18211C] transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-40"
               >
-                <SealIcon />
                 إنشاء المحتوى
-                <ArrowIcon />
+                <ArrowLeft
+                  size={15}
+                  className="transition-transform group-hover:-translate-x-0.5"
+                />
               </button>
             </div>
           </div>
 
+          {/* Examples */}
           <div className="mt-5">
-            <p className="mb-3 text-[11px] font-bold uppercase tracking-wider text-[#9AA0AF]">جرّب أحد الأمثلة</p>
+            <div className="mb-3 flex items-center gap-2 text-[11px] font-semibold text-[#68736B]">
+              <Sparkles size={13} />
+              أفكار للبدء
+            </div>
+
             <div className="flex flex-wrap gap-2">
               {examples.map((example) => (
                 <button
                   key={example}
                   type="button"
                   onClick={() => setPrompt(example)}
-                  className="rounded-md border border-[#E4DFC9] bg-[#FBF9F0] px-3 py-2 text-xs text-[#5B6478] transition-all hover:border-[#B8862E]/60 hover:bg-[#FFFCF2] hover:text-[#15213A]"
+                  className="rounded-lg border border-[#303A34] bg-[#191F1B] px-3 py-2 text-[11px] text-[#8F9992] transition hover:border-[#4A574F] hover:bg-[#202923] hover:text-[#C4CBC6]"
                 >
                   {example}
                 </button>
@@ -177,7 +189,7 @@ const AIGenerator: React.FC = () => {
           </div>
         </div>
       </div>
-    </section>
+    </div>
   );
 };
 

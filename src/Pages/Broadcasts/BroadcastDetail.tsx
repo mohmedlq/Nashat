@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import type { Broadcast } from '../../types/BroadcastTypes';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 
 interface BroadcastDetailProps {
   broadcast: Broadcast;
@@ -16,166 +18,1010 @@ const SECTION_ICONS: Record<string, string> = {
   'موقف اليوم': '🎭',
 };
 
-const getSectionIcon = (section: string): string => SECTION_ICONS[section] ?? '📌';
+const getSectionIcon = (
+  section: string
+): string => {
+  return (
+    SECTION_ICONS[section] ?? '📌'
+  );
+};
 
-const BroadcastDetail: React.FC<BroadcastDetailProps> = ({ broadcast, onBack }) => {
-  const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
+/* =========================================================
+   A4 EXPORT SETTINGS
+   ========================================================= */
 
-  const handleDownloadPDF = async () => {
-    const element = document.getElementById('printable-broadcast');
-    if (!element) return;
+const A4_WIDTH_PX = 794;
+const CAPTURE_SCALE = 3;
 
-    try {
-      setIsGeneratingPdf(true);
-      await new Promise((resolve) => setTimeout(resolve, 100));
+/* =========================================================
+   COMPONENT
+   ========================================================= */
 
-      const html2pdfModule = await import('html2pdf.js');
-      const html2pdf = html2pdfModule.default || (html2pdfModule as any);
+const BroadcastDetail: React.FC<
+  BroadcastDetailProps
+> = ({
+  broadcast,
+  onBack,
+}) => {
+  const [isExporting, setIsExporting] =
+    useState(false);
 
-      if (typeof html2pdf !== 'function') {
-        throw new Error('فشل في تهيئة مكتبة html2pdf');
-      }
+  const broadcastContentRef =
+    useRef<HTMLDivElement>(null);
 
-      const options = {
-        margin: 10,
-        filename: `إذاعة_${broadcast.title.replace(/\s+/g, '_')}.pdf`,
-        image: { type: 'jpeg' as const, quality: 0.95 },
-        html2canvas: {
-          scale: 1.5,
-          useCORS: true,
-          logging: false,
-          scrollX: 0,
-          scrollY: 0,
-        },
-        jsPDF: { unit: 'mm' as const, format: 'a4', orientation: 'portrait' as const },
-        pagebreak: { mode: ['css', 'legacy'] },
-      };
+  /* =========================================================
+     HELPERS
+     ========================================================= */
 
-      await html2pdf().from(element).set(options).save();
-    } catch (error) {
-      console.error('خطأ تفصيلي أثناء إنشاء ملف PDF:', error);
-      alert('حدث خطأ أثناء تحميل الملف.');
-    } finally {
-      setIsGeneratingPdf(false);
-    }
+  const waitForNextPaint =
+    (): Promise<void> => {
+      return new Promise(
+        (resolve) => {
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              resolve();
+            });
+          });
+        }
+      );
+    };
+
+  const waitForFonts =
+    async (): Promise<void> => {
+      try {
+        if ('fonts' in document) {
+          await document.fonts.ready;
+        }
+      } catch {}
+    };
+
+  const waitForImages = async (
+    element: HTMLElement
+  ): Promise<void> => {
+    const images = Array.from(
+      element.querySelectorAll('img')
+    );
+
+    await Promise.all(
+      images.map(
+        (img) =>
+          new Promise<void>(
+            (resolve) => {
+              if (img.complete) {
+                resolve();
+                return;
+              }
+
+              const finish = () => {
+                img.removeEventListener(
+                  'load',
+                  finish
+                );
+
+                img.removeEventListener(
+                  'error',
+                  finish
+                );
+
+                resolve();
+              };
+
+              img.addEventListener(
+                'load',
+                finish
+              );
+
+              img.addEventListener(
+                'error',
+                finish
+              );
+            }
+          )
+      )
+    );
   };
 
-  return (
-    <div dir="rtl" className="min-h-screen bg-[#F7F4EA] text-[#1B2233] font-sans antialiased selection:bg-[#D9AE55]/30 selection:text-[#15213A] print:bg-white print:min-h-0 print:py-0">
-      <main className="max-w-3xl mx-auto px-5 sm:px-8 py-10 sm:py-16 print:max-w-none print:px-0 print:py-0">
+  const getSafeFileName =
+    (): string => {
+      const title =
+        broadcast.title
+          .trim()
+          .replace(
+            /[\\/:*?"<>|]/g,
+            ''
+          )
+          .replace(
+            /\s+/g,
+            '_'
+          );
 
-        {/* Navigation Bar - Hidden on print */}
-        <div className="flex items-center justify-between mb-10 pb-6 border-b border-[#E4DFC9] print:hidden">
+      return (
+        title || 'إذاعة_مدرسية'
+      );
+    };
+
+  /* =========================================================
+     CREATE EXPORT PAGE
+     ========================================================= */
+
+  const createExportPage =
+    async (): Promise<HTMLDivElement> => {
+      const original =
+        broadcastContentRef.current;
+
+      if (!original) {
+        throw new Error(
+          'لم يتم العثور على محتوى الإذاعة.'
+        );
+      }
+
+      const wrapper =
+        document.createElement('div');
+
+      Object.assign(
+        wrapper.style,
+        {
+          position: 'fixed',
+          top: '0',
+          left: '-9999px',
+          width: `${A4_WIDTH_PX}px`,
+          overflow: 'hidden',
+          zIndex: '-9999',
+        }
+      );
+
+      const clone =
+        original.cloneNode(
+          true
+        ) as HTMLDivElement;
+
+      Object.assign(
+        clone.style,
+        {
+          width: `${A4_WIDTH_PX}px`,
+          minWidth: `${A4_WIDTH_PX}px`,
+          maxWidth: `${A4_WIDTH_PX}px`,
+          minHeight: '1123px',
+          padding: '40px',
+          margin: '0',
+          backgroundColor: '#ffffff',
+          boxSizing: 'border-box',
+          direction: 'rtl',
+        }
+      );
+
+      clone
+        .querySelectorAll('h1')
+        .forEach((el) => {
+          const e =
+            el as HTMLElement;
+
+          e.style.fontSize =
+            '40px';
+
+          e.style.lineHeight =
+            '1.4';
+
+          e.style.marginBottom =
+            '16px';
+        });
+
+      clone
+        .querySelectorAll(
+          'header p'
+        )
+        .forEach((el) => {
+          const e =
+            el as HTMLElement;
+
+          e.style.fontSize =
+            '20px';
+
+          e.style.lineHeight =
+            '1.6';
+        });
+
+      clone
+        .querySelectorAll('h2')
+        .forEach((el) => {
+          const e =
+            el as HTMLElement;
+
+          e.style.fontSize =
+            '28px';
+
+          e.style.lineHeight =
+            '1.5';
+        });
+
+      clone
+        .querySelectorAll(
+          'article p'
+        )
+        .forEach((el) => {
+          const e =
+            el as HTMLElement;
+
+          e.style.fontSize =
+            '24px';
+
+          e.style.lineHeight =
+            '1.9';
+
+          e.style.margin = '0';
+
+          e.style.fontWeight =
+            'bold';
+        });
+
+      clone
+        .querySelectorAll(
+          'article > div > div > span'
+        )
+        .forEach((el) => {
+          const e =
+            el as HTMLElement;
+
+          e.style.width =
+            '48px';
+
+          e.style.height =
+            '48px';
+
+          e.style.fontSize =
+            '24px';
+        });
+
+      clone
+        .querySelectorAll(
+          'article > div > span'
+        )
+        .forEach((el) => {
+          const e =
+            el as HTMLElement;
+
+          e.style.fontSize =
+            '18px';
+        });
+
+      clone
+        .querySelectorAll(
+          '.space-y-6'
+        )
+        .forEach((el) => {
+          const e =
+            el as HTMLElement;
+
+          e.classList.remove(
+            'space-y-6'
+          );
+
+          e.style.display =
+            'flex';
+
+          e.style.flexDirection =
+            'column';
+
+          e.style.gap = '32px';
+        });
+
+      clone
+        .querySelectorAll('article')
+        .forEach((el) => {
+          const e =
+            el as HTMLElement;
+
+          e.style.breakInside =
+            'avoid';
+
+          e.style.pageBreakInside =
+            'avoid';
+
+          e.style.padding =
+            '24px';
+
+          e.style.margin = '0';
+        });
+
+      clone
+        .querySelectorAll(
+          'article > div'
+        )
+        .forEach((el) => {
+          const e =
+            el as HTMLElement;
+
+          e.style.paddingBottom =
+            '12px';
+
+          e.style.marginBottom =
+            '16px';
+        });
+
+      clone
+        .querySelectorAll(
+          '[data-pdf-ignore], .export-ignore'
+        )
+        .forEach((el) =>
+          el.remove()
+        );
+
+      wrapper.appendChild(clone);
+
+      document.body.appendChild(
+        wrapper
+      );
+
+      await waitForFonts();
+
+      await waitForImages(clone);
+
+      await waitForNextPaint();
+
+      return wrapper;
+    };
+
+  /* =========================================================
+     GENERATE CANVAS
+     ========================================================= */
+
+  const generateCanvas =
+    async (
+      wrapper: HTMLDivElement
+    ): Promise<HTMLCanvasElement> => {
+      const clone =
+        wrapper.firstChild as HTMLElement;
+
+      return html2canvas(clone, {
+        scale: CAPTURE_SCALE,
+        width: A4_WIDTH_PX,
+        windowWidth: A4_WIDTH_PX,
+        useCORS: true,
+        backgroundColor: '#ffffff',
+        logging: false,
+        allowTaint: false,
+      });
+    };
+
+  /* =========================================================
+     DOWNLOAD PNG
+     ========================================================= */
+
+  const handleDownloadPNG =
+    async (): Promise<void> => {
+      if (isExporting) return;
+
+      let exportWrapper:
+        | HTMLDivElement
+        | null = null;
+
+      try {
+        setIsExporting(true);
+
+        await waitForNextPaint();
+
+        exportWrapper =
+          await createExportPage();
+
+        const canvas =
+          await generateCanvas(
+            exportWrapper
+          );
+
+        const image =
+          canvas.toDataURL(
+            'image/png'
+          );
+
+        const link =
+          document.createElement(
+            'a'
+          );
+
+        link.download = `${getSafeFileName()}.png`;
+
+        link.href = image;
+
+        document.body.appendChild(
+          link
+        );
+
+        link.click();
+
+        link.remove();
+      } catch (error) {
+        console.error(
+          'PNG generation failed:',
+          error
+        );
+
+        alert(
+          'حدث خطأ أثناء تحميل صورة PNG.'
+        );
+      } finally {
+        if (
+          exportWrapper?.parentNode
+        ) {
+          exportWrapper.remove();
+        }
+
+        setIsExporting(false);
+      }
+    };
+
+  /* =========================================================
+     DOWNLOAD PDF
+     ========================================================= */
+
+  const handleDownloadPDF =
+    async (): Promise<void> => {
+      if (isExporting) return;
+
+      let exportWrapper:
+        | HTMLDivElement
+        | null = null;
+
+      try {
+        setIsExporting(true);
+
+        await waitForNextPaint();
+
+        exportWrapper =
+          await createExportPage();
+
+        const canvas =
+          await generateCanvas(
+            exportWrapper
+          );
+
+        const pdfWidth = 210;
+        const pdfPageHeight =
+          297;
+
+        const imgHeight =
+          (canvas.height *
+            pdfWidth) /
+          canvas.width;
+
+        const imageData =
+          canvas.toDataURL(
+            'image/jpeg',
+            1.0
+          );
+
+        const pdf =
+          new jsPDF({
+            orientation: 'portrait',
+            unit: 'mm',
+            format: 'a4',
+            compress: true,
+          });
+
+        if (
+          imgHeight <
+          pdfPageHeight
+        ) {
+          const yOffset =
+            (pdfPageHeight -
+              imgHeight) /
+            2;
+
+          pdf.addImage(
+            imageData,
+            'JPEG',
+            0,
+            yOffset,
+            pdfWidth,
+            imgHeight,
+            undefined,
+            'FAST'
+          );
+        } else {
+          let heightLeft =
+            imgHeight;
+
+          let position = 0;
+
+          pdf.addImage(
+            imageData,
+            'JPEG',
+            0,
+            position,
+            pdfWidth,
+            imgHeight,
+            undefined,
+            'FAST'
+          );
+
+          heightLeft -=
+            pdfPageHeight;
+
+          while (
+            heightLeft >= 1
+          ) {
+            position =
+              heightLeft -
+              imgHeight;
+
+            pdf.addPage();
+
+            pdf.addImage(
+              imageData,
+              'JPEG',
+              0,
+              position,
+              pdfWidth,
+              imgHeight,
+              undefined,
+              'FAST'
+            );
+
+            heightLeft -=
+              pdfPageHeight;
+          }
+        }
+
+        pdf.save(
+          `${getSafeFileName()}.pdf`
+        );
+      } catch (error) {
+        console.error(
+          'PDF generation failed:',
+          error
+        );
+
+        alert(
+          'حدث خطأ أثناء تحميل ملف PDF.'
+        );
+      } finally {
+        if (
+          exportWrapper?.parentNode
+        ) {
+          exportWrapper.remove();
+        }
+
+        setIsExporting(false);
+      }
+    };
+
+  /* =========================================================
+     UI
+     ========================================================= */
+
+  return (
+    <div
+      dir="rtl"
+      className="
+        min-h-screen
+        bg-[#111714]
+        text-[#E5E9E5]
+        font-sans
+        antialiased
+        selection:bg-[#B39A63]/20
+        selection:text-[#E5E9E5]
+      "
+    >
+      <main
+        className="
+          mx-auto
+          max-w-3xl
+          px-5
+          py-10
+          sm:px-8
+          sm:py-16
+        "
+      >
+        {/* ================= NAVIGATION ================= */}
+
+        <div
+          className="
+            mb-10
+            flex
+            items-center
+            justify-between
+            border-b
+            border-[#29332D]
+            pb-6
+          "
+        >
           <button
             type="button"
             onClick={onBack}
-            className="inline-flex items-center gap-2 text-sm font-bold tracking-wide text-[#5B6478] hover:text-[#15213A] transition-colors cursor-pointer group"
+            disabled={isExporting}
+            className="
+              group
+              inline-flex
+              cursor-pointer
+              items-center
+              gap-2
+              text-sm
+              font-bold
+              tracking-wide
+              text-[#89938C]
+              transition-colors
+              hover:text-[#DCE3DD]
+              disabled:cursor-not-allowed
+              disabled:opacity-50
+              export-ignore
+            "
           >
-            <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-white border border-[#E4DFC9] text-lg leading-none transition-transform group-hover:-translate-x-0.5">
+            <span
+              className="
+                inline-flex
+                h-8
+                w-8
+                items-center
+                justify-center
+                rounded-full
+                border
+                border-[#303A34]
+                bg-[#171E1A]
+                text-lg
+                leading-none
+                text-[#9AAA9E]
+                transition-all
+                group-hover:-translate-x-0.5
+                group-hover:border-[#46534B]
+                group-hover:bg-[#202923]
+              "
+            >
               →
             </span>
-            <span>العودة لمكتبة الإذاعات</span>
+
+            <span>
+              العودة لمكتبة الإذاعات
+            </span>
           </button>
 
           <div className="flex items-center gap-2">
-            <span className="text-xs font-medium px-2.5 py-1.5 rounded-md bg-[#EDE7D2] text-[#15213A]">
+            <span
+              className="
+                rounded-md
+                border
+                border-[#303A34]
+                bg-[#202923]
+                px-2.5
+                py-1.5
+                text-xs
+                font-medium
+                text-[#A4AEA7]
+              "
+            >
               {broadcast.level}
             </span>
-            <span className="text-xs font-medium px-2.5 py-1.5 rounded-md bg-[#FBF3DF] text-[#8B681F] border border-[#E9D5A4]">
+
+            <span
+              className="
+                rounded-md
+                border
+                border-[#4A4638]
+                bg-[#27251F]
+                px-2.5
+                py-1.5
+                text-xs
+                font-medium
+                text-[#B9A875]
+              "
+            >
               {broadcast.type}
             </span>
           </div>
         </div>
 
-        {/* Printable Section Container */}
-        <div id="printable-broadcast" className="print:p-4">
+        {/* ================= BROADCAST CONTENT ================= */}
 
-          {/* Hero Article Header */}
-          <header className="mb-8 print:mb-6">
-            <div className="hidden print:flex items-center justify-between border-b pb-3 mb-4 border-slate-300">
-              <span className="text-xs text-slate-500">المرحلة: {broadcast.level} | النوع: {broadcast.type}</span>
-              <span className="text-xs text-slate-500">الإذاعة المدرسية</span>
-            </div>
+        <div
+          ref={broadcastContentRef}
+          className="
+            w-full
+            rounded-2xl
+            bg-[#171E1A]
+          "
+        >
+          {/* ================= HEADER ================= */}
 
-            <span className="text-xs font-semibold text-[#B8862E] tracking-wider uppercase mb-2 block print:hidden">
+          <header className="mb-8 export-ignore">
+            <span
+              className="
+                mb-2
+                block
+                text-xs
+                font-semibold
+                uppercase
+                tracking-wider
+                text-[#B39A63]
+              "
+            >
               دليل الإذاعة المدرسية
             </span>
-            <h1 className="font-serif text-3xl sm:text-4xl font-extrabold text-[#15213A] tracking-tight leading-snug sm:leading-tight mb-4 print:text-2xl print:mb-2">
+
+            <h1
+              className="
+                mb-4
+                font-serif
+                text-3xl
+                font-extrabold
+                leading-snug
+                tracking-tight
+                text-[#E7EAE6]
+                sm:text-4xl
+                sm:leading-tight
+              "
+            >
               {broadcast.title}
             </h1>
-            <p className="text-sm text-[#5B6478] leading-relaxed max-w-xl print:text-xs print:text-slate-600">
-              محتوى مجهز ومقسم حسب الفقرات الرسمية للإذاعة المدرسية، جاهز للإلقاء المباشر أو الطباعة.
+
+            <p
+              className="
+                max-w-xl
+                text-base
+                leading-relaxed
+                text-[#89938C]
+                sm:text-lg
+              "
+            >
+              محتوى مجهز ومقسم حسب
+              الفقرات الرسمية للإذاعة
+              المدرسية، جاهز للإلقاء
+              المباشر أو الاستخدام الورقي.
             </p>
           </header>
 
-          {/* Sections Flow */}
-          <div className="space-y-6 print:space-y-4">
-            {broadcast.content.map((item, index) => (
-              <article
-                key={`${item.section}-${index}`}
-                className="group bg-white rounded-xl border border-[#E4DFC9] p-6 shadow-sm print:shadow-none print:border-slate-300 print:rounded-lg print:p-4 print:break-inside-avoid"
-              >
-                {/* Section Header */}
-                <div className="flex items-center justify-between pb-4 mb-4 border-b border-[#EEE8D6] print:pb-2 print:mb-2">
-                  <div className="flex items-center gap-3">
-                    <span className="w-10 h-10 rounded-lg bg-[#F7F4EA] border border-[#E4DFC9] flex items-center justify-center text-lg shadow-sm print:w-6 print:h-6 print:text-xs">
-                      {getSectionIcon(item.section)}
+          {/* ================= SECTIONS ================= */}
+
+          <div className="space-y-6">
+            {broadcast.content.map(
+              (item, index) => (
+                <article
+                  key={`${item.section}-${index}`}
+                  className="
+                    group
+                    rounded-xl
+                    border-2
+                    border-[#303A34]
+                    bg-[#171E1A]
+                    p-8
+                    shadow-[0_10px_30px_rgba(0,0,0,0.12)]
+                    transition-all
+                    duration-300
+                    hover:border-[#46534B]
+                    hover:bg-[#1A221E]
+                    hover:shadow-[0_16px_40px_rgba(0,0,0,0.18)]
+                  "
+                >
+                  {/* Section Header */}
+
+                  <div
+                    className="
+                      mb-4
+                      flex
+                      items-center
+                      justify-between
+                      border-b
+                      border-[#29332D]
+                      pb-4
+                    "
+                  >
+                    <div
+                      className="
+                        flex
+                        items-center
+                        gap-3
+                      "
+                    >
+                      <span
+                        className="
+                          flex
+                          h-10
+                          w-10
+                          items-center
+                          justify-center
+                          rounded-lg
+                          border
+                          border-[#354039]
+                          bg-[#202923]
+                          text-lg
+                          shadow-sm
+                        "
+                      >
+                        {getSectionIcon(
+                          item.section
+                        )}
+                      </span>
+
+                      <h2
+                        className="
+                          font-serif
+                          text-2xl
+                          font-bold
+                          text-[#E3E7E3]
+                          transition-colors
+                          group-hover:text-[#B7C2BA]
+                          sm:text-3xl
+                        "
+                      >
+                        {item.section}
+                      </h2>
+                    </div>
+
+                    <span
+                      className="
+                        font-mono
+                        text-xs
+                        font-semibold
+                        tracking-wider
+                        text-[#68756D]
+                      "
+                    >
+                      #
+                      {String(
+                        index + 1
+                      ).padStart(2, '0')}
                     </span>
-                    <h2 className="font-serif font-bold text-[#15213A] text-base print:text-sm">
-                      {item.section}
-                    </h2>
                   </div>
-                  <span className="text-xs font-mono text-[#9AA0AF] font-semibold tracking-wider">
-                    #{String(index + 1).padStart(2, '0')}
-                  </span>
-                </div>
 
-                {/* Body Text */}
-                <p className="text-[#3A4256] text-sm sm:text-base leading-relaxed sm:leading-loose whitespace-pre-line print:text-xs print:leading-normal">
-                  {item.content}
-                </p>
-              </article>
-            ))}
+                  {/* Body */}
+
+                  <p
+                    className="
+                      whitespace-pre-line
+                      text-2xl
+                      font-bold
+                      leading-relaxed
+                      text-[#B6BDB8]
+                      sm:leading-loose
+                    "
+                  >
+                    {item.content}
+                  </p>
+                </article>
+              )
+            )}
           </div>
-
         </div>
 
-        {/* Action Controls - Hidden on print */}
-        <footer className="mt-12 pt-8 border-t border-[#E4DFC9] flex flex-col sm:flex-row items-center justify-between gap-4 print:hidden">
-          <p className="text-xs text-[#7A8194]">
-            يمكنك طباعة هذا النموذج أو تصديره كملف PDF لاستخدامه ورقيًا.
+        {/* ================= ACTIONS ================= */}
+
+        <footer
+          className="
+            mt-12
+            flex
+            flex-col
+            items-center
+            justify-between
+            gap-4
+            border-t
+            border-[#29332D]
+            pt-8
+            sm:flex-row
+          "
+        >
+          <p
+            className="
+              text-xs
+              text-[#68756D]
+            "
+          >
+            يمكنك تحميل الإذاعة بصيغة
+            PDF أو PNG.
           </p>
 
-          <div className="flex items-center gap-3 w-full sm:w-auto">
+          <div
+            className="
+              flex
+              w-full
+              items-center
+              gap-3
+              sm:w-auto
+            "
+          >
+            {/* BACK */}
+
             <button
               type="button"
               onClick={onBack}
-              className="flex-1 sm:flex-none px-4 py-3 rounded-lg text-sm font-bold text-[#15213A] bg-white border border-[#E4DFC9] hover:bg-[#FBF9F0] transition-colors cursor-pointer"
+              disabled={isExporting}
+              className="
+                flex-1
+                cursor-pointer
+                rounded-lg
+                border
+                border-[#303A34]
+                bg-[#171E1A]
+                px-4
+                py-3
+                text-sm
+                font-bold
+                text-[#A5AEA8]
+                transition-all
+                hover:border-[#46534B]
+                hover:bg-[#202923]
+                hover:text-[#DCE3DD]
+                disabled:cursor-not-allowed
+                disabled:opacity-50
+                sm:flex-none
+              "
             >
               العودة
             </button>
 
-            <button
-              type="button"
-              onClick={handleDownloadPDF}
-              disabled={isGeneratingPdf}
-              className="flex-1 sm:flex-none px-4 py-3 rounded-lg text-sm font-bold text-[#8B681F] bg-[#FBF3DF] border border-[#E9D5A4] hover:bg-[#F6E9C4] transition-colors cursor-pointer flex items-center justify-center gap-2 disabled:opacity-50"
-            >
-              <span className="text-base">📄</span>
-              {isGeneratingPdf ? 'جاري التحميل...' : 'تحميل PDF'}
-            </button>
+            {/* PNG */}
 
             <button
               type="button"
-              onClick={() => window.print()}
-              className="flex-1 sm:flex-none px-5 py-3 rounded-lg text-sm font-bold text-[#D9AE55] bg-[#15213A] hover:bg-[#0D1526] shadow-sm transition-all cursor-pointer flex items-center justify-center gap-2"
+              onClick={
+                handleDownloadPNG
+              }
+              disabled={isExporting}
+              className="
+                flex
+                flex-1
+                cursor-pointer
+                items-center
+                justify-center
+                gap-2
+                rounded-lg
+                border
+                border-[#303A34]
+                bg-[#171E1A]
+                px-4
+                py-3
+                text-sm
+                font-bold
+                text-[#A5AEA8]
+                transition-all
+                hover:border-[#46534B]
+                hover:bg-[#202923]
+                hover:text-[#DCE3DD]
+                disabled:cursor-not-allowed
+                disabled:opacity-50
+                sm:flex-none
+              "
             >
-              <span className="text-base">🖨️</span>
-              طباعة المسودة
+              {isExporting
+                ? 'جاري التصدير...'
+                : 'تحميل PNG'}
+            </button>
+
+            {/* PDF */}
+
+            <button
+              type="button"
+              onClick={
+                handleDownloadPDF
+              }
+              disabled={isExporting}
+              className="
+                flex
+                flex-1
+                cursor-pointer
+                items-center
+                justify-center
+                gap-2
+                rounded-lg
+                border
+                border-[#4A4638]
+                bg-[#27251F]
+                px-4
+                py-3
+                text-sm
+                font-bold
+                text-[#B9A875]
+                transition-all
+                hover:border-[#B39A63]/60
+                hover:bg-[#302D24]
+                hover:text-[#D0BC86]
+                disabled:cursor-not-allowed
+                disabled:opacity-50
+                sm:flex-none
+              "
+            >
+              {isExporting
+                ? 'جاري المعالجة...'
+                : 'تحميل PDF'}
             </button>
           </div>
         </footer>
-
       </main>
     </div>
   );

@@ -1,69 +1,117 @@
 import React from "react";
+import { ArrowUpLeft, BookOpen, Mail } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Footer: React.FC = () => {
   return (
-    <footer dir="rtl" className="border-t border-[#E4DFC9] bg-[#F7F4EA]">
-      <div className="mx-auto max-w-6xl px-5 sm:px-6">
-        <div className="grid gap-12 py-14 sm:grid-cols-2 lg:grid-cols-[1.5fr_1fr_1fr_1fr]">
+    <footer
+      dir="rtl"
+      className="border-t border-[#29332D] bg-[#0D1210]"
+    >
+      <div className="mx-auto max-w-7xl px-5 py-14 sm:px-8">
+        <div className="grid gap-12 md:grid-cols-[1.5fr_1fr_1fr]">
           {/* Brand */}
           <div>
-            <a href="/" className="inline-flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-[#B8862E]/40 bg-[#15213A] text-[#D9AE55]">
-                <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.6">
-                  <path d="M12 2 20 6v6c0 5-3.4 8.4-8 10-4.6-1.6-8-5-8-10V6l8-4Z" />
-                  <path d="M9 12l2 2 4-4.5" />
-                </svg>
-              </div>
+            <Link
+              to="/"
+              className="inline-flex items-center gap-3"
+            >
+              <span className="flex h-10 w-10 items-center justify-center rounded-xl border border-[#354039] bg-[#1A211D] text-[#B39A63]">
+                <BookOpen size={19} />
+              </span>
 
               <div>
-                <p className="font-serif text-sm font-bold text-[#15213A]">المساعد المدرسي</p>
-                <p className="mt-1 text-[9px] font-medium tracking-[0.16em] text-[#9A8A5E]">EDUCATION TOOLS</p>
-              </div>
-            </a>
+                <div className="font-bold text-[#E2E6E2]">
+                  المساعد المدرسي
+                </div>
 
-            <p className="mt-5 max-w-xs text-sm leading-7 text-[#5B6478]">
-              أدوات ذكية تساعد المعلمين ورواد النشاط على إنشاء المحتوى المدرسي بشكل أسرع وأسهل.
+                <div className="mt-0.5 text-[9px] font-semibold tracking-[0.2em] text-[#68736C]">
+                  EDUCATION TOOLS
+                </div>
+              </div>
+            </Link>
+
+            <p className="mt-5 max-w-sm text-sm leading-7 text-[#737E77]">
+              أدوات بسيطة تساعد المعلمين ورواد النشاط على إعداد المحتوى
+              المدرسي وتنظيمه واستخدامه بسهولة.
             </p>
           </div>
 
           {/* Product */}
           <div>
-            <h3 className="mb-5 font-serif text-xs font-bold text-[#15213A]">المنتج</h3>
-            <ul className="space-y-3 text-sm text-[#5B6478]">
-              <li><a href="#generator" className="transition-colors hover:text-[#15213A]">المولّد الذكي</a></li>
-              <li><a href="#levels" className="transition-colors hover:text-[#15213A]">المراحل الدراسية</a></li>
-              <li><a href="#library" className="transition-colors hover:text-[#15213A]">مكتبة الإذاعات</a></li>
-              <li><a href="/ai-generator" className="transition-colors hover:text-[#15213A]">إنشاء إذاعة</a></li>
-            </ul>
+            <h3 className="mb-5 text-xs font-bold text-[#D5DAD6]">
+              المنتج
+            </h3>
+
+            <div className="space-y-3">
+              <a
+                href="#generator"
+                className="block text-sm text-[#737E77] transition hover:text-[#B5BDB8]"
+              >
+                مولّد المحتوى
+              </a>
+
+              <a
+                href="#how-it-works"
+                className="block text-sm text-[#737E77] transition hover:text-[#B5BDB8]"
+              >
+                طريقة العمل
+              </a>
+
+              <Link
+                to="/broadcast"
+                className="block text-sm text-[#737E77] transition hover:text-[#B5BDB8]"
+              >
+                مكتبة الإذاعات
+              </Link>
+            </div>
           </div>
 
           {/* Resources */}
           <div>
-            <h3 className="mb-5 font-serif text-xs font-bold text-[#15213A]">الموارد</h3>
-            <ul className="space-y-3 text-sm text-[#5B6478]">
-              <li><a href="/broadcast" className="transition-colors hover:text-[#15213A]">جميع الإذاعات</a></li>
-              <li><a href="#library" className="transition-colors hover:text-[#15213A]">النماذج الجاهزة</a></li>
-              <li><a href="#" className="transition-colors hover:text-[#15213A]">الأسئلة الشائعة</a></li>
-            </ul>
-          </div>
+            <h3 className="mb-5 text-xs font-bold text-[#D5DAD6]">
+              روابط
+            </h3>
 
-          {/* About */}
-          <div>
-            <h3 className="mb-5 font-serif text-xs font-bold text-[#15213A]">المساعد المدرسي</h3>
-            <ul className="space-y-3 text-sm text-[#5B6478]">
-              <li><a href="#" className="transition-colors hover:text-[#15213A]">عن المشروع</a></li>
-              <li><a href="#" className="transition-colors hover:text-[#15213A]">تواصل معنا</a></li>
-              <li><a href="#" className="transition-colors hover:text-[#15213A]">الخصوصية</a></li>
-            </ul>
+            <div className="space-y-3">
+              <Link
+                to="/generator"
+                className="block text-sm text-[#737E77] transition hover:text-[#B5BDB8]"
+              >
+                إنشاء محتوى
+              </Link>
+
+              <a
+                href="#library"
+                className="block text-sm text-[#737E77] transition hover:text-[#B5BDB8]"
+              >
+                النماذج الجاهزة
+              </a>
+
+              <a
+                href="mailto:"
+                className="inline-flex items-center gap-2 text-sm text-[#737E77] transition hover:text-[#B5BDB8]"
+              >
+                <Mail size={14} />
+                تواصل معنا
+              </a>
+            </div>
           </div>
         </div>
 
-        <div className="flex flex-col gap-4 border-t border-[#E4DFC9] py-6 text-xs text-[#7A8194] sm:flex-row sm:items-center sm:justify-between">
-          <p>© {new Date().getFullYear()} المساعد المدرسي. جميع الحقوق محفوظة.</p>
-          <div className="flex items-center gap-2">
-            <span className="h-1.5 w-1.5 rounded-full bg-[#B8862E]" />
-            <span>صُنع لخدمة البيئة التعليمية</span>
-          </div>
+        {/* Bottom */}
+        <div className="mt-14 flex flex-col justify-between gap-4 border-t border-[#232C27] pt-6 text-[11px] text-[#59645D] sm:flex-row sm:items-center">
+          <p>
+            © {new Date().getFullYear()} المساعد المدرسي. جميع الحقوق محفوظة.
+          </p>
+
+          <a
+            href="#"
+            className="inline-flex items-center gap-1 transition hover:text-[#8D9890]"
+          >
+            العودة للأعلى
+            <ArrowUpLeft size={13} />
+          </a>
         </div>
       </div>
     </footer>

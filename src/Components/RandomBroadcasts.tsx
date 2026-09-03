@@ -1,115 +1,135 @@
 import React, { useState } from "react";
+import { ArrowLeft, BookOpen, RefreshCw } from "lucide-react";
+import { Link } from "react-router-dom";
 import { Broadcasts } from "../data/Data";
 import BroadcastDetail from "../Pages/Broadcasts/BroadcastDetail";
-import { Link } from "react-router-dom";
 import type { Broadcast } from "../types/BroadcastTypes";
-
-const TYPE_META: Record<string, { label: string; mark: string }> = {
-  وطني: { label: "وطني", mark: "و" },
-  ثقافي: { label: "ثقافي", mark: "ث" },
-  تربوي: { label: "تربوي", mark: "ت" },
-  صحي: { label: "صحي", mark: "ص" },
-  توعوي: { label: "توعوي", mark: "و" },
-  ديني: { label: "ديني", mark: "د" },
+const getBroadcastPreview = (broadcast: Broadcast): string => {
+  return (
+    broadcast.content?.find(
+      (item) => item.section === "كلمة الصباح"
+    )?.content ||
+    broadcast.content?.[0]?.content ||
+    "محتوى إذاعي جاهز للاستخدام والتعديل."
+  );
+};
+const pickRandomThree = (): Broadcast[] => {
+  return [...Broadcasts]
+    .sort(() => Math.random() - 0.5)
+    .slice(0, 3);
 };
 
-const pickRandomThree = (): Broadcast[] => [...Broadcasts].sort(() => Math.random() - 0.5).slice(0, 3);
-
-const ArrowIcon = () => (
-  <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8">
-    <path d="M5 12h13" />
-    <path d="m13 6 6 6-6 6" />
-  </svg>
-);
-
 const RandomBroadcasts: React.FC = () => {
-  const [featured, setFeatured] = useState<Broadcast[]>(pickRandomThree);
+  const [featured, setFeatured] = useState<Broadcast[]>(
+    pickRandomThree
+  );
+
   const [selected, setSelected] = useState<Broadcast | null>(null);
 
+  const refreshBroadcasts = (): void => {
+    setFeatured(pickRandomThree());
+  };
+
   if (selected) {
-    return <BroadcastDetail broadcast={selected} onBack={() => setSelected(null)} />;
+    return (
+      <div
+        dir="rtl"
+        className="overflow-hidden rounded-2xl border border-[#303A34] bg-[#171E1A]"
+      >
+        <BroadcastDetail
+          broadcast={selected}
+          onBack={() => setSelected(null)}
+        />
+      </div>
+    );
   }
 
-  const refreshBroadcasts = () => setFeatured(pickRandomThree());
-
   return (
-    <section dir="rtl" className="border-t border-[#E4DFC9] py-24 sm:py-28">
-      <div className="mb-10 flex flex-col justify-between gap-6 sm:flex-row sm:items-end">
+    <section dir="rtl">
+      {/* Header */}
+      <div className="mb-10 flex flex-col justify-between gap-6 md:flex-row md:items-end">
         <div>
-          <p className="mb-3 text-xs font-bold tracking-[0.15em] text-[#9A7327]">من المكتبة</p>
-          <h2 className="font-serif text-3xl font-bold tracking-[-0.02em] text-[#15213A] sm:text-4xl">
-            ابدأ من نموذج جاهز.
+          <div className="mb-3 flex items-center gap-2 text-xs font-bold text-[#B39A63]">
+            <BookOpen size={14} />
+            من المكتبة
+          </div>
+
+          <h2 className="text-3xl font-bold tracking-tight text-[#E7EAE6] sm:text-4xl">
+            نماذج جاهزة للبدء.
           </h2>
-          <p className="mt-3 max-w-lg text-sm leading-7 text-[#5B6478]">
-            نماذج مختارة يمكنك استخدامها مباشرة أو تعديلها لتناسب احتياجك.
+
+          <p className="mt-3 max-w-xl text-sm leading-7 text-[#89938C]">
+            استعرض بعض النماذج الموجودة في مكتبة الإذاعات، أو ابدأ
+            بإنشاء محتوى خاص بك.
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
           <button
             type="button"
             onClick={refreshBroadcasts}
-            className="rounded-lg border border-[#E4DFC9] bg-white px-4 py-2.5 text-xs font-bold text-[#15213A] transition-all hover:border-[#B8862E]/50 hover:bg-[#FBF9F0]"
+            className="inline-flex h-10 items-center gap-2 rounded-lg border border-[#303A34] bg-[#171E1A] px-3 text-xs font-semibold text-[#8F9992] transition hover:border-[#4A574F] hover:bg-[#1A221E] hover:text-[#D1D6D2]"
           >
-            نموذج آخر
+            <RefreshCw size={14} />
+            نماذج أخرى
           </button>
 
           <Link
             to="/broadcast"
-            className="inline-flex items-center gap-2 rounded-lg bg-[#15213A] px-4 py-2.5 text-xs font-bold text-[#D9AE55] transition-all hover:-translate-y-0.5 hover:bg-[#0D1526]"
+            className="inline-flex h-10 items-center gap-2 rounded-lg bg-[#DCE3DD] px-4 text-xs font-bold text-[#18211C] transition hover:bg-white"
           >
             المكتبة كاملة
-            <ArrowIcon />
+            <ArrowLeft size={14} />
           </Link>
         </div>
       </div>
 
+      {/* Broadcast Cards */}
       <div className="grid gap-4 md:grid-cols-3">
-        {featured.map((broadcast, index) => {
-          const { id, title, level, type, content } = broadcast;
-          const preview = content.find((item) => item.section === "كلمة الصباح")?.content ?? content[0]?.content ?? "";
-          const meta = TYPE_META[type] ?? { label: type, mark: "•" };
+        {featured.map((broadcast) => {
+          const preview = getBroadcastPreview(broadcast);
 
           return (
             <article
-              key={id}
-              className="group flex min-h-[330px] flex-col border border-[#E4DFC9] bg-white p-6 transition-all duration-300 hover:-translate-y-1 hover:border-[#B8862E]/50 hover:shadow-[0_20px_50px_rgba(21,33,58,0.08)]"
+              key={broadcast.id}
+              className="group flex min-h-[330px] flex-col rounded-2xl border border-[#303A34] bg-[#171E1A] p-6 transition duration-300 hover:-translate-y-1 hover:border-[#46534B] hover:bg-[#1A221E]"
             >
-              <div className="flex items-start justify-between">
-                <span className="flex h-10 w-10 items-center justify-center rounded-full border border-[#E4DFC9] bg-[#F7F4EA] font-serif text-sm font-bold text-[#15213A]">
-                  {meta.mark}
+              {/* Card Header */}
+              <div className="flex items-center justify-between">
+                <span className="rounded-md border border-[#354039] bg-[#202923] px-2.5 py-1 text-[10px] font-bold text-[#9AAA9E]">
+                  {broadcast.type || "عام"}
                 </span>
 
-                <div className="text-left">
-                  <p className="text-[10px] font-bold uppercase tracking-wider text-[#9AA0AF]">0{index + 1}</p>
-                  <p className="mt-1 text-[11px] text-[#858B9A]">{meta.label}</p>
-                </div>
+                <span className="text-[10px] text-[#58645C]">
+                  إذاعة مدرسية
+                </span>
               </div>
 
-              <div className="mt-auto">
-                <div className="mb-4 h-px w-full bg-[#EEE8D6]" />
+              {/* Card Content */}
+              <div className="mt-8 flex-1">
+                <h3 className="line-clamp-2 text-xl font-bold leading-8 text-[#E3E7E3]">
+                  {broadcast.title}
+                </h3>
 
-                <div className="mb-3 flex items-center gap-2 text-[11px] text-[#858B9A]">
-                  <span>{level}</span>
-                  <span className="h-1 w-1 rounded-full bg-[#B8862E]" />
-                  <span>إذاعة مدرسية</span>
-                </div>
-
-                <h3 className="font-serif text-xl font-bold tracking-[-0.015em] text-[#15213A]">{title}</h3>
-
-                <p className="mt-3 line-clamp-3 text-sm leading-7 text-[#5B6478]">{preview}</p>
-
-                <button
-                  type="button"
-                  onClick={() => setSelected(broadcast)}
-                  className="mt-6 flex w-full items-center justify-between border-t border-[#EEE8D6] pt-4 text-xs font-bold text-[#15213A] transition-colors group-hover:text-[#8B681F]"
-                >
-                  <span>استخدام هذا النموذج</span>
-                  <span className="transition-transform duration-300 group-hover:-translate-x-1">
-                    <ArrowIcon />
-                  </span>
-                </button>
+                <p className="mt-4 line-clamp-4 text-sm leading-7 text-[#7F8A82]">
+                  {preview}
+                </p>
               </div>
+
+              {/* Card Action */}
+              <button
+                type="button"
+                onClick={() => setSelected(broadcast)}
+                className="mt-8 flex w-full items-center justify-between border-t border-[#29332D] pt-5 text-xs font-bold text-[#9AA69E]"
+              >
+                <span className="transition group-hover:text-[#D5DBD6]">
+                  استخدام هذا النموذج
+                </span>
+
+                <span className="flex h-8 w-8 items-center justify-center rounded-lg border border-[#303A34] transition group-hover:border-[#4A574F] group-hover:bg-[#202923]">
+                  <ArrowLeft size={14} />
+                </span>
+              </button>
             </article>
           );
         })}

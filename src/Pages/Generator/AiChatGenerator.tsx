@@ -9,6 +9,16 @@ import {
   useLocation,
 } from "react-router-dom";
 
+import {
+  ArrowLeft,
+  FileText,
+  Lightbulb,
+  Mic2,
+  Send,
+  Sparkles,
+  Trash2,
+} from "lucide-react";
+
 import BroadcastDetail from "../Broadcasts/BroadcastDetail";
 import Report from "../Reports/Report";
 
@@ -40,128 +50,7 @@ interface GeneratorNavigationState {
   autoSend?: boolean;
 }
 
-const STORAGE_KEY =
-  "school_ai_chat_history";
-
-/* =========================================================
-   Icons
-========================================================= */
-
-const SparkIcon = ({
-  className = "h-5 w-5",
-}: {
-  className?: string;
-}) => (
-  <svg
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="1.7"
-    className={className}
-  >
-    <path d="M12 2.8l1.8 6.4L20.2 11l-6.4 1.8L12 19.2l-1.8-6.4L3.8 11l6.4-1.8L12 2.8Z" />
-  </svg>
-);
-
-const ArrowIcon = ({
-  className = "h-5 w-5",
-}: {
-  className?: string;
-}) => (
-  <svg
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="1.8"
-    className={className}
-  >
-    <path d="M5 12h14" />
-    <path d="m13 6 6 6-6 6" />
-  </svg>
-);
-
-const TrashIcon = ({
-  className = "h-5 w-5",
-}: {
-  className?: string;
-}) => (
-  <svg
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="1.7"
-    className={className}
-  >
-    <path d="M4 7h16" />
-    <path d="M9 7V4h6v3" />
-    <path d="m7 7 .8 13h8.4L17 7" />
-    <path d="M10 11v5" />
-    <path d="M14 11v5" />
-  </svg>
-);
-
-const SendIcon = ({
-  className = "h-5 w-5",
-}: {
-  className?: string;
-}) => (
-  <svg
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="1.8"
-    className={className}
-  >
-    <path d="m4 4 16 8-16 8 3-8-3-8Z" />
-    <path d="M7 12h13" />
-  </svg>
-);
-
-const BroadcastIcon = ({
-  className = "h-4 w-4",
-}: {
-  className?: string;
-}) => (
-  <svg
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="1.6"
-    className={className}
-  >
-    <path d="M7 10v4" />
-    <path d="M10 7v10" />
-    <path d="M14 7v10" />
-    <path d="M17 10v4" />
-    <path d="M4 12h1" />
-    <path d="M19 12h1" />
-  </svg>
-);
-
-const ReportIcon = ({
-  className = "h-4 w-4",
-}: {
-  className?: string;
-}) => (
-  <svg
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="1.6"
-    className={className}
-  >
-    <rect
-      x="5"
-      y="3"
-      width="14"
-      height="18"
-      rx="2"
-    />
-    <path d="M9 8h6" />
-    <path d="M9 12h6" />
-    <path d="M9 16h4" />
-  </svg>
-);
+const STORAGE_KEY = "school_ai_chat_history";
 
 /* =========================================================
    Component
@@ -191,14 +80,12 @@ const AiGenerator: React.FC = () => {
 
   const [mode, setMode] =
     useState<GeneratorMode>(
-      navigationState?.mode ??
-        "broadcast"
+      navigationState?.mode ?? "broadcast"
     );
 
   const [input, setInput] =
     useState(
-      navigationState?.prompt ??
-        ""
+      navigationState?.prompt ?? ""
     );
 
   const [isLoading, setIsLoading] =
@@ -308,9 +195,7 @@ const AiGenerator: React.FC = () => {
     setInput("");
     setIsLoading(true);
 
-    if (
-      textareaRef.current
-    ) {
+    if (textareaRef.current) {
       textareaRef.current.style.height =
         "auto";
     }
@@ -443,15 +328,14 @@ const AiGenerator: React.FC = () => {
       return;
     }
 
-    const defaultMessage: Message[] =
-      [
-        {
-          id: "welcome",
-          sender: "bot",
-          text:
-            "مرحباً بك في المساعد المدرسي. يمكنني إعداد إذاعة مدرسية متكاملة أو إنشاء تقرير نشاط رسمي جاهز للتعديل والطباعة.",
-        },
-      ];
+    const defaultMessage: Message[] = [
+      {
+        id: "welcome",
+        sender: "bot",
+        text:
+          "مرحباً بك في المساعد المدرسي. يمكنني إعداد إذاعة مدرسية متكاملة أو إنشاء تقرير نشاط رسمي جاهز للتعديل والطباعة.",
+      },
+    ];
 
     setChatHistory(
       defaultMessage
@@ -548,7 +432,10 @@ const AiGenerator: React.FC = () => {
 
   if (activeReport) {
     return (
-      <div className="relative">
+      <div
+        dir="rtl"
+        className="relative min-h-screen bg-[#111714]"
+      >
         <button
           type="button"
           onClick={() =>
@@ -563,21 +450,28 @@ const AiGenerator: React.FC = () => {
             z-50
             inline-flex
             items-center
-            gap-1.5
+            gap-2
             rounded-lg
-            bg-[#15213A]
+            border
+            border-[#3A463F]
+            bg-[#171E1A]
             px-3
             py-2
             text-xs
             font-semibold
-            text-white
+            text-[#C4CCC6]
             shadow-lg
             transition
-            hover:bg-[#0D1526]
+            hover:border-[#4A574F]
+            hover:bg-[#202923]
+            hover:text-[#E2E7E3]
             print:hidden
           "
         >
-          <ArrowIcon className="h-3 w-3 rotate-180" />
+          <ArrowLeft
+            size={13}
+            className="rotate-180"
+          />
 
           العودة للمحادثة
         </button>
@@ -605,15 +499,43 @@ const AiGenerator: React.FC = () => {
         min-h-0
         flex-col
         overflow-hidden
-        bg-[#F7F4EA]
-        text-[#1B2233]
+        bg-[#111714]
+        text-[#E5E9E5]
         antialiased
       "
       style={{
         backgroundImage:
-          "repeating-linear-gradient(0deg, transparent, transparent 27px, rgba(21,33,58,0.035) 28px)",
+          `
+            linear-gradient(
+              rgba(255,255,255,0.012) 1px,
+              transparent 1px
+            ),
+            linear-gradient(
+              90deg,
+              rgba(255,255,255,0.012) 1px,
+              transparent 1px
+            )
+          `,
+        backgroundSize:
+          "32px 32px",
       }}
     >
+
+      {/* =====================================================
+          Ambient Background
+      ===================================================== */}
+
+      <div
+        className="
+          pointer-events-none
+          absolute
+          inset-x-0
+          top-0
+          h-64
+          bg-[radial-gradient(circle_at_50%_-20%,rgba(145,163,148,0.09),transparent_65%)]
+        "
+      />
+
       {/* =====================================================
           Header
       ===================================================== */}
@@ -621,55 +543,112 @@ const AiGenerator: React.FC = () => {
       <header
         className="
           relative
+          z-10
           shrink-0
           border-b
-          border-[#E4DFC9]
-          bg-[#F7F4EA]
+          border-[#29332D]
+          bg-[#111714]/95
+          backdrop-blur-xl
         "
       >
         <div
           className="
             flex
-            min-h-[72px] sm:min-h-[76px]
+            min-h-[72px]
             w-full
             items-center
             justify-between
             gap-3
             px-3
-            sm:px-5
+            sm:min-h-[76px]
+            sm:px-6
           "
         >
-          <div className="flex min-w-0 items-center gap-3">
+
+          {/* Brand */}
+
+          <div
+            className="
+              flex
+              min-w-0
+              items-center
+              gap-3
+            "
+          >
             <div
               className="
+                relative
                 flex
-                h-11
-                w-11
+                h-10
+                w-10
                 shrink-0
                 items-center
                 justify-center
                 rounded-xl
-                bg-[#15213A]
-                text-[#D9AE55]
+                border
+                border-[#354039]
+                bg-[#1A211D]
+                text-[#B39A63]
               "
             >
-              <SparkIcon className="h-5 w-5" />
+              <Sparkles
+                size={18}
+                strokeWidth={1.7}
+              />
+
+              <span
+                className="
+                  absolute
+                  -right-0.5
+                  -top-0.5
+                  h-1.5
+                  w-1.5
+                  rounded-full
+                  bg-[#B39A63]
+                "
+              />
             </div>
 
             <div className="min-w-0">
-              <p className="truncate text-base font-bold">
+              <p
+                className="
+                  truncate
+                  text-[15px]
+                  font-bold
+                  tracking-[-0.02em]
+                  text-[#E5E9E5]
+                "
+              >
                 المساعد المدرسي
               </p>
 
-              <p className="hidden text-[10px] text-[#7A8194] sm:block">
-                إنشاء المحتوى التعليمي
+              <p
+                className="
+                  mt-0.5
+                  hidden
+                  text-[9px]
+                  font-semibold
+                  tracking-[0.12em]
+                  text-[#68756D]
+                  sm:block
+                "
+              >
+                إنشاء المحتوى المدرسي
               </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-1">
-            {chatHistory.length >
-              1 && (
+          {/* Header Actions */}
+
+          <div
+            className="
+              flex
+              items-center
+              gap-2
+            "
+          >
+
+            {chatHistory.length > 1 && (
               <button
                 type="button"
                 onClick={
@@ -677,22 +656,28 @@ const AiGenerator: React.FC = () => {
                 }
                 className="
                   inline-flex
+                  h-9
                   items-center
                   gap-2
                   rounded-lg
+                  border
+                  border-transparent
                   px-2.5
-                  py-2
                   text-xs
                   font-semibold
-                  text-[#5B6478]
+                  text-[#727E76]
                   transition
-                  hover:bg-[#FBF9F0]
-                  hover:text-[#1B2233]
+                  hover:border-[#303A34]
+                  hover:bg-[#171E1A]
+                  hover:text-[#C2CAC4]
                 "
               >
-                <TrashIcon />
+                <Trash2
+                  size={15}
+                  strokeWidth={1.7}
+                />
 
-                <span className="hidden sm:inline cursor-pointer">
+                <span className="hidden sm:inline">
                   مسح المحادثة
                 </span>
               </button>
@@ -702,23 +687,27 @@ const AiGenerator: React.FC = () => {
               to="/"
               className="
                 inline-flex
+                h-9
                 items-center
                 gap-2
                 rounded-lg
                 border
-                border-[#E4DFC9]
-                bg-white
+                border-[#303A34]
+                bg-[#171E1A]
                 px-3
-                py-2
                 text-xs
                 font-semibold
-                text-[#5B6478]
+                text-[#89938C]
                 transition
-                hover:border-[#cfd1ca]
-                hover:text-[#1B2233]
+                hover:border-[#4A574F]
+                hover:bg-[#202923]
+                hover:text-[#D8DED9]
               "
             >
-              <ArrowIcon className="h-5 w-5 rotate-180" />
+              <ArrowLeft
+                size={14}
+                className="rotate-180"
+              />
 
               <span className="hidden sm:inline">
                 الرئيسية
@@ -735,6 +724,8 @@ const AiGenerator: React.FC = () => {
       <main
         ref={chatContainerRef}
         className="
+          relative
+          z-[1]
           min-h-0
           flex-1
           overflow-y-auto
@@ -753,12 +744,12 @@ const AiGenerator: React.FC = () => {
             max-w-5xl
           "
         >
+
           {/* =================================================
               Welcome
           ================================================= */}
 
-          {chatHistory.length ===
-            1 && (
+          {chatHistory.length === 1 && (
             <div
               className="
                 flex
@@ -766,35 +757,73 @@ const AiGenerator: React.FC = () => {
                 items-center
                 px-2
                 pb-8
-                pt-4
+                pt-6
                 text-center
-                sm:pt-10
+                sm:pt-12
               "
             >
+
               <div
                 className="
-                  mb-5
+                  relative
+                  mb-6
                   flex
-                  h-14
-                  w-14
+                  h-16
+                  w-16
                   items-center
                   justify-center
                   rounded-2xl
                   border
-                  border-[#e1e2dc]
-                  bg-white
-                  text-[#D9AE55]
-                  shadow-sm
+                  border-[#354039]
+                  bg-[#171E1A]
+                  text-[#B39A63]
+                  shadow-[0_15px_40px_rgba(0,0,0,0.18)]
                 "
               >
-                <SparkIcon className="h-5 w-5" />
+                <Sparkles
+                  size={22}
+                  strokeWidth={1.6}
+                />
+
+                <span
+                  className="
+                    absolute
+                    right-2
+                    top-2
+                    h-1.5
+                    w-1.5
+                    rounded-full
+                    bg-[#B39A63]
+                  "
+                />
+              </div>
+
+              <div
+                className="
+                  mb-3
+                  flex
+                  items-center
+                  gap-2
+                  text-[10px]
+                  font-bold
+                  tracking-[0.12em]
+                  text-[#91A394]
+                "
+              >
+                <Lightbulb
+                  size={12}
+                  strokeWidth={1.7}
+                />
+
+                مساحة الإنشاء
               </div>
 
               <h1
                 className="
                   text-2xl
-                  font-extrabold
+                  font-bold
                   tracking-tight
+                  text-[#E7EAE6]
                   sm:text-3xl
                 "
               >
@@ -807,13 +836,128 @@ const AiGenerator: React.FC = () => {
                   max-w-xl
                   text-sm
                   leading-7
-                  text-[#5B6478]
+                  text-[#7F8A82]
                 "
               >
                 اكتب فكرتك وسأحوّلها
-                إلى محتوى تعليمي منظم
+                إلى محتوى مدرسي منظم
                 وجاهز للاستخدام.
               </p>
+
+              {/* Small helper cards */}
+
+              <div
+                className="
+                  mt-8
+                  grid
+                  w-full
+                  max-w-xl
+                  grid-cols-2
+                  gap-2
+                "
+              >
+                <div
+                  className="
+                    rounded-xl
+                    border
+                    border-[#29332D]
+                    bg-[#151B18]
+                    px-4
+                    py-3
+                    text-right
+                  "
+                >
+                  <div
+                    className="
+                      mb-2
+                      flex
+                      h-7
+                      w-7
+                      items-center
+                      justify-center
+                      rounded-lg
+                      bg-[#202923]
+                      text-[#91A394]
+                    "
+                  >
+                    <Mic2
+                      size={13}
+                      strokeWidth={1.7}
+                    />
+                  </div>
+
+                  <p
+                    className="
+                      text-xs
+                      font-bold
+                      text-[#C4CCC6]
+                    "
+                  >
+                    إذاعة مدرسية
+                  </p>
+
+                  <p
+                    className="
+                      mt-1
+                      text-[10px]
+                      text-[#68756D]
+                    "
+                  >
+                    محتوى متكامل ومنظم
+                  </p>
+                </div>
+
+                <div
+                  className="
+                    rounded-xl
+                    border
+                    border-[#29332D]
+                    bg-[#151B18]
+                    px-4
+                    py-3
+                    text-right
+                  "
+                >
+                  <div
+                    className="
+                      mb-2
+                      flex
+                      h-7
+                      w-7
+                      items-center
+                      justify-center
+                      rounded-lg
+                      bg-[#202923]
+                      text-[#91A394]
+                    "
+                  >
+                    <FileText
+                      size={13}
+                      strokeWidth={1.7}
+                    />
+                  </div>
+
+                  <p
+                    className="
+                      text-xs
+                      font-bold
+                      text-[#C4CCC6]
+                    "
+                  >
+                    تقرير نشاط
+                  </p>
+
+                  <p
+                    className="
+                      mt-1
+                      text-[10px]
+                      text-[#68756D]
+                    "
+                  >
+                    صياغة رسمية جاهزة
+                  </p>
+                </div>
+              </div>
             </div>
           )}
 
@@ -821,12 +965,17 @@ const AiGenerator: React.FC = () => {
               Messages
           ================================================= */}
 
-          <div className="space-y-7">
+          <div
+            className="
+              space-y-7
+            "
+          >
             {chatHistory.map(
               (msg) => (
                 <div
                   key={msg.id}
                 >
+
                   {/* =========================================
                       User Message
                   ========================================= */}
@@ -834,19 +983,26 @@ const AiGenerator: React.FC = () => {
                   {msg.sender ===
                     "user" &&
                     msg.text && (
-                      <div className="flex justify-start">
+                      <div
+                        className="
+                          flex
+                          justify-start
+                        "
+                      >
                         <div
                           className="
                             max-w-[92%]
                             rounded-2xl
                             rounded-bl-md
-                            bg-[#15213A]
+                            border
+                            border-[#303D35]
+                            bg-[#202923]
                             px-4
                             py-3.5
                             text-sm
                             leading-7
-                            text-white
-                            shadow-sm
+                            text-[#DCE3DD]
+                            shadow-[0_8px_25px_rgba(0,0,0,0.12)]
                             sm:max-w-[78%]
                             sm:px-5
                           "
@@ -863,26 +1019,39 @@ const AiGenerator: React.FC = () => {
                   {msg.sender ===
                     "bot" &&
                     msg.text && (
-                      <div className="flex justify-start">
-                        <div className="flex w-full gap-3">
+                      <div
+                        className="
+                          flex
+                          justify-start
+                        "
+                      >
+                        <div
+                          className="
+                            flex
+                            w-full
+                            gap-3
+                          "
+                        >
                           <div
                             className="
                               mt-0.5
                               flex
-                              h-10
-                              w-10
+                              h-9
+                              w-9
                               shrink-0
                               items-center
                               justify-center
-                              rounded-lg
+                              rounded-xl
                               border
-                              border-[#E4DFC9]
-                              bg-white
-                              text-[#8B681F]
-                              shadow-sm
+                              border-[#354039]
+                              bg-[#171E1A]
+                              text-[#B39A63]
                             "
                           >
-                            <SparkIcon className="h-3 w-3" />
+                            <Sparkles
+                              size={14}
+                              strokeWidth={1.6}
+                            />
                           </div>
 
                           <div
@@ -891,14 +1060,14 @@ const AiGenerator: React.FC = () => {
                               rounded-2xl
                               rounded-br-md
                               border
-                              border-[#E4DFC9]
-                              bg-white
+                              border-[#303A34]
+                              bg-[#171E1A]
                               px-4
                               py-3.5
                               text-sm
                               leading-7
-                              text-[#5B6478]
-                              shadow-sm
+                              text-[#9AA49D]
+                              shadow-[0_8px_25px_rgba(0,0,0,0.10)]
                               sm:px-5
                             "
                           >
@@ -913,8 +1082,17 @@ const AiGenerator: React.FC = () => {
                   ========================================= */}
 
                   {msg.broadcastData && (
-                    <div className="flex justify-start">
-                      <div className="w-full">
+                    <div
+                      className="
+                        flex
+                        justify-start
+                      "
+                    >
+                      <div
+                        className="
+                          w-full
+                        "
+                      >
                         <button
                           type="button"
                           onClick={() =>
@@ -928,18 +1106,41 @@ const AiGenerator: React.FC = () => {
                             overflow-hidden
                             rounded-2xl
                             border
-                            border-[#E4DFC9]
-                            bg-white
+                            border-[#303A34]
+                            bg-[#171E1A]
                             text-right
-                            shadow-sm
+                            shadow-[0_10px_35px_rgba(0,0,0,0.12)]
                             transition-all
-                            hover:border-[#B8862E]/50
-                            hover:shadow-lg
+                            duration-300
+                            hover:-translate-y-0.5
+                            hover:border-[#46534B]
+                            hover:bg-[#1A221E]
                           "
                         >
-                          <div className="border-r-4 border-[#B8862E] p-5 sm:p-6">
-                            <div className="flex items-start justify-between gap-4">
-                              <div className="flex items-start gap-3">
+                          <div
+                            className="
+                              border-r-2
+                              border-[#B39A63]
+                              p-5
+                              sm:p-6
+                            "
+                          >
+
+                            <div
+                              className="
+                                flex
+                                items-start
+                                justify-between
+                                gap-4
+                              "
+                            >
+                              <div
+                                className="
+                                  flex
+                                  items-start
+                                  gap-3
+                                "
+                              >
                                 <div
                                   className="
                                     flex
@@ -949,19 +1150,38 @@ const AiGenerator: React.FC = () => {
                                     items-center
                                     justify-center
                                     rounded-xl
-                                    bg-[#FBF3DF]
-                                    text-[#8B681F]
+                                    border
+                                    border-[#354039]
+                                    bg-[#202923]
+                                    text-[#B39A63]
                                   "
                                 >
-                                  <BroadcastIcon className="h-4 w-4" />
+                                  <Mic2
+                                    size={17}
+                                    strokeWidth={1.6}
+                                  />
                                 </div>
 
                                 <div>
-                                  <p className="text-[11px] font-bold text-[#8B681F]">
+                                  <p
+                                    className="
+                                      text-[10px]
+                                      font-bold
+                                      text-[#B39A63]
+                                    "
+                                  >
                                     إذاعة مدرسية
                                   </p>
 
-                                  <h3 className="mt-1 text-base font-bold text-[#1B2233] sm:text-lg">
+                                  <h3
+                                    className="
+                                      mt-1
+                                      text-base
+                                      font-bold
+                                      text-[#E2E7E3]
+                                      sm:text-lg
+                                    "
+                                  >
                                     {
                                       msg
                                         .broadcastData
@@ -971,13 +1191,14 @@ const AiGenerator: React.FC = () => {
                                 </div>
                               </div>
 
-                              <ArrowIcon
+                              <ArrowLeft
+                                size={15}
+                                strokeWidth={1.6}
                                 className="
-                                  h-3.5
-                                  w-3.5
                                   shrink-0
-                                  text-[#9AA0AF]
+                                  text-[#68756D]
                                   transition-transform
+                                  duration-200
                                   group-hover:-translate-x-1
                                 "
                               />
@@ -990,11 +1211,23 @@ const AiGenerator: React.FC = () => {
                                 flex-wrap
                                 gap-2
                                 border-t
-                                border-[#EEE8D6]
+                                border-[#29332D]
                                 pt-4
                               "
                             >
-                              <span className="rounded-md bg-[#F0EEE3] px-2.5 py-1.5 text-[10px] font-semibold text-[#5B6478]">
+                              <span
+                                className="
+                                  rounded-md
+                                  border
+                                  border-[#354039]
+                                  bg-[#202923]
+                                  px-2.5
+                                  py-1.5
+                                  text-[10px]
+                                  font-semibold
+                                  text-[#899A8F]
+                                "
+                              >
                                 {
                                   msg
                                     .broadcastData
@@ -1002,7 +1235,19 @@ const AiGenerator: React.FC = () => {
                                 }
                               </span>
 
-                              <span className="rounded-md bg-[#F0EEE3] px-2.5 py-1.5 text-[10px] font-semibold text-[#5B6478]">
+                              <span
+                                className="
+                                  rounded-md
+                                  border
+                                  border-[#354039]
+                                  bg-[#202923]
+                                  px-2.5
+                                  py-1.5
+                                  text-[10px]
+                                  font-semibold
+                                  text-[#899A8F]
+                                "
+                              >
                                 {
                                   msg
                                     .broadcastData
@@ -1011,7 +1256,16 @@ const AiGenerator: React.FC = () => {
                               </span>
                             </div>
 
-                            <p className="mt-4 text-xs font-semibold text-[#5B6478]">
+                            <p
+                              className="
+                                mt-4
+                                text-xs
+                                font-semibold
+                                text-[#829187]
+                                transition-colors
+                                group-hover:text-[#B6C0B8]
+                              "
+                            >
                               فتح الإذاعة واستعراض المحتوى
                             </p>
                           </div>
@@ -1025,8 +1279,17 @@ const AiGenerator: React.FC = () => {
                   ========================================= */}
 
                   {msg.reportData && (
-                    <div className="flex justify-start">
-                      <div className="w-full">
+                    <div
+                      className="
+                        flex
+                        justify-start
+                      "
+                    >
+                      <div
+                        className="
+                          w-full
+                        "
+                      >
                         <button
                           type="button"
                           onClick={() =>
@@ -1040,18 +1303,41 @@ const AiGenerator: React.FC = () => {
                             overflow-hidden
                             rounded-2xl
                             border
-                            border-[#E4DFC9]
-                            bg-white
+                            border-[#303A34]
+                            bg-[#171E1A]
                             text-right
-                            shadow-sm
+                            shadow-[0_10px_35px_rgba(0,0,0,0.12)]
                             transition-all
-                            hover:border-[#B8862E]/50
-                            hover:shadow-lg
+                            duration-300
+                            hover:-translate-y-0.5
+                            hover:border-[#46534B]
+                            hover:bg-[#1A221E]
                           "
                         >
-                          <div className="border-r-4 border-[#B8862E] p-5 sm:p-6">
-                            <div className="flex items-start justify-between gap-4">
-                              <div className="flex items-start gap-3">
+                          <div
+                            className="
+                              border-r-2
+                              border-[#B39A63]
+                              p-5
+                              sm:p-6
+                            "
+                          >
+
+                            <div
+                              className="
+                                flex
+                                items-start
+                                justify-between
+                                gap-4
+                              "
+                            >
+                              <div
+                                className="
+                                  flex
+                                  items-start
+                                  gap-3
+                                "
+                              >
                                 <div
                                   className="
                                     flex
@@ -1061,19 +1347,38 @@ const AiGenerator: React.FC = () => {
                                     items-center
                                     justify-center
                                     rounded-xl
-                                    bg-[#FBF3DF]
-                                    text-[#7A5A1E]
+                                    border
+                                    border-[#354039]
+                                    bg-[#202923]
+                                    text-[#B39A63]
                                   "
                                 >
-                                  <ReportIcon className="h-4 w-4" />
+                                  <FileText
+                                    size={17}
+                                    strokeWidth={1.6}
+                                  />
                                 </div>
 
                                 <div>
-                                  <p className="text-[11px] font-bold text-[#7A5A1E]">
+                                  <p
+                                    className="
+                                      text-[10px]
+                                      font-bold
+                                      text-[#B39A63]
+                                    "
+                                  >
                                     تقرير نشاط
                                   </p>
 
-                                  <h3 className="mt-1 text-base font-bold text-[#1B2233] sm:text-lg">
+                                  <h3
+                                    className="
+                                      mt-1
+                                      text-base
+                                      font-bold
+                                      text-[#E2E7E3]
+                                      sm:text-lg
+                                    "
+                                  >
                                     {
                                       msg
                                         .reportData
@@ -1083,20 +1388,35 @@ const AiGenerator: React.FC = () => {
                                 </div>
                               </div>
 
-                              <ArrowIcon
+                              <ArrowLeft
+                                size={15}
+                                strokeWidth={1.6}
                                 className="
-                                  h-3.5
-                                  w-3.5
                                   shrink-0
-                                  text-[#9AA0AF]
+                                  text-[#68756D]
                                   transition-transform
+                                  duration-200
                                   group-hover:-translate-x-1
                                 "
                               />
                             </div>
 
-                            <div className="mt-5 border-t border-[#EEE8D6] pt-4">
-                              <p className="line-clamp-2 text-xs leading-6 text-[#5B6478]">
+                            <div
+                              className="
+                                mt-5
+                                border-t
+                                border-[#29332D]
+                                pt-4
+                              "
+                            >
+                              <p
+                                className="
+                                  line-clamp-2
+                                  text-xs
+                                  leading-6
+                                  text-[#7F8A82]
+                                "
+                              >
                                 {
                                   msg
                                     .reportData
@@ -1105,7 +1425,16 @@ const AiGenerator: React.FC = () => {
                               </p>
                             </div>
 
-                            <p className="mt-4 text-xs font-semibold text-[#7A5A1E]">
+                            <p
+                              className="
+                                mt-4
+                                text-xs
+                                font-semibold
+                                text-[#829187]
+                                transition-colors
+                                group-hover:text-[#B6C0B8]
+                              "
+                            >
                               تعديل التقرير واستعراضه
                             </p>
                           </div>
@@ -1122,24 +1451,37 @@ const AiGenerator: React.FC = () => {
             ================================================= */}
 
             {isLoading && (
-              <div className="flex justify-start">
-                <div className="flex items-center gap-3">
+              <div
+                className="
+                  flex
+                  justify-start
+                "
+              >
+                <div
+                  className="
+                    flex
+                    items-center
+                    gap-3
+                  "
+                >
                   <div
                     className="
                       flex
-                      h-10
-                      w-10
+                      h-9
+                      w-9
                       items-center
                       justify-center
-                      rounded-lg
+                      rounded-xl
                       border
-                      border-[#E4DFC9]
-                      bg-white
-                      text-[#8B681F]
-                      shadow-sm
+                      border-[#354039]
+                      bg-[#171E1A]
+                      text-[#B39A63]
                     "
                   >
-                    <SparkIcon className="h-3 w-3" />
+                    <Sparkles
+                      size={14}
+                      strokeWidth={1.6}
+                    />
                   </div>
 
                   <div
@@ -1150,17 +1492,31 @@ const AiGenerator: React.FC = () => {
                       rounded-2xl
                       rounded-br-md
                       border
-                      border-[#E4DFC9]
-                      bg-white
+                      border-[#303A34]
+                      bg-[#171E1A]
                       px-4
                       py-4
                       shadow-sm
                     "
                   >
-                    <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#a1a69f]" />
+                    <span
+                      className="
+                        h-1.5
+                        w-1.5
+                        animate-pulse
+                        rounded-full
+                        bg-[#91A394]
+                      "
+                    />
 
                     <span
-                      className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#a1a69f]"
+                      className="
+                        h-1.5
+                        w-1.5
+                        animate-pulse
+                        rounded-full
+                        bg-[#91A394]
+                      "
                       style={{
                         animationDelay:
                           "150ms",
@@ -1168,7 +1524,13 @@ const AiGenerator: React.FC = () => {
                     />
 
                     <span
-                      className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#a1a69f]"
+                      className="
+                        h-1.5
+                        w-1.5
+                        animate-pulse
+                        rounded-full
+                        bg-[#91A394]
+                      "
                       style={{
                         animationDelay:
                           "300ms",
@@ -1191,42 +1553,55 @@ const AiGenerator: React.FC = () => {
       <footer
         className="
           relative
+          z-10
           shrink-0
           border-t
-          border-[#E4DFC9]
-          bg-[#F7F4EA]
+          border-[#29332D]
+          bg-[#111714]/95
           px-3
           pb-[max(8px,env(safe-area-inset-bottom))]
-          pt-2.5
-          sm:px-5
-          sm:pb-4
-          sm:pt-3
+          pt-3
+          backdrop-blur-xl
+          sm:px-6
+          sm:pb-5
+          sm:pt-4
         "
       >
-        <div className="mx-auto w-full max-w-4xl">
+        <div
+          className="
+            mx-auto
+            w-full
+            max-w-4xl
+          "
+        >
+
           {/* =================================================
               Mode
           ================================================= */}
 
           <div
             className="
-              mb-2
+              mb-2.5
               flex
               items-center
               justify-between
               gap-3
             "
           >
+
             <div
               className="
                 flex
-                rounded-md
+                rounded-lg
                 border
-                border-[#E4DFC9]
-                bg-[#F7F4EA]
-                p-0.5
-                         "
+                border-[#303A34]
+                bg-[#151B18]
+                p-1
+              "
             >
+
+              {/* Broadcast */}
+
               <button
                 type="button"
                 onClick={() =>
@@ -1237,28 +1612,39 @@ const AiGenerator: React.FC = () => {
                 className={`
                   inline-flex
                   items-center
-                  gap-1
-                  rounded-sm
-                 px-3.5
+                  gap-1.5
+                  rounded-md
+                  px-3
                   py-1.5
-                  text-[20px]
-                cursor-pointer     
-                  
+                  text-xs
                   font-bold
                   transition-all
+                  duration-200
+                  cursor-pointer
                   ${
                     mode ===
                     "broadcast"
-                      ? "bg-white text-[#8B681F] shadow-sm"
-                      : "text-[#7A8194]"
+                      ? "bg-[#202923] text-[#C5CEC8] shadow-sm"
+                      : "text-[#68756D] hover:text-[#9AA69E]"
                   }
                 `}
               >
-                <BroadcastIcon className="h-2.5 w-2.5" />
+                <Mic2
+                  size={13}
+                  strokeWidth={1.7}
+                  className={
+                    mode ===
+                    "broadcast"
+                      ? "text-[#B39A63]"
+                      : ""
+                  }
+                />
 
                 إذاعة
               </button>
 
+              {/* Report */}
+
               <button
                 type="button"
                 onClick={() =>
@@ -1269,30 +1655,46 @@ const AiGenerator: React.FC = () => {
                 className={`
                   inline-flex
                   items-center
-                  gap-1
-                  rounded-sm
-                  px-3.5
+                  gap-1.5
+                  rounded-md
+                  px-3
                   py-1.5
-                  text-[20px]
+                  text-xs
                   font-bold
-                cursor-pointer     
-
                   transition-all
+                  duration-200
+                  cursor-pointer
                   ${
                     mode ===
                     "report"
-                      ? "bg-white text-[#7A5A1E] shadow-sm"
-                      : "text-[#7A8194]"
+                      ? "bg-[#202923] text-[#C5CEC8] shadow-sm"
+                      : "text-[#68756D] hover:text-[#9AA69E]"
                   }
                 `}
               >
-                <ReportIcon className="h-2.5 w-2.5" />
+                <FileText
+                  size={13}
+                  strokeWidth={1.7}
+                  className={
+                    mode ===
+                    "report"
+                      ? "text-[#B39A63]"
+                      : ""
+                  }
+                />
 
                 تقرير
               </button>
             </div>
 
-            <span className="hidden text-[9px] text-[#9AA0AF] sm:block">
+            <span
+              className="
+                hidden
+                text-[9px]
+                text-[#58645C]
+                sm:block
+              "
+            >
               Enter للإرسال · Shift + Enter لسطر جديد
             </span>
           </div>
@@ -1304,16 +1706,20 @@ const AiGenerator: React.FC = () => {
           <div
             className="
               relative
-              rounded-xl
+              rounded-2xl
               border
-              border-[#E4DFC9]
-              bg-white
-              shadow-sm
+              border-[#354039]
+              bg-[#171E1A]
+              shadow-[0_10px_35px_rgba(0,0,0,0.18)]
               transition-all
-              focus-within:border-[#B8862E]
-              focus-within:ring-4 focus-within:ring-[#B8862E]/[0.08]
+              duration-200
+              focus-within:border-[#4A574F]
+              focus-within:bg-[#1A221E]
+              focus-within:ring-4
+              focus-within:ring-[#91A394]/[0.05]
             "
           >
+
             <textarea
               ref={textareaRef}
               value={input}
@@ -1339,20 +1745,20 @@ const AiGenerator: React.FC = () => {
                 resize-none
                 overflow-y-auto
                 bg-transparent
-                px-3.5
-                py-3
-                pl-12
+                px-4
+                py-3.5
+                pl-14
                 text-sm
                 leading-7
-                text-[#1B2233]
+                text-[#DCE2DD]
                 outline-none
-                placeholder:text-[#A6ABBB]
+                placeholder:text-[#59655D]
                 disabled:cursor-not-allowed
-                disabled:opacity-50
-                sm:min-h-[50px]
-                sm:px-4
-                sm:py-3
-                sm:pl-14
+                disabled:opacity-40
+                sm:min-h-[54px]
+                sm:px-5
+                sm:py-3.5
+                sm:pl-16
               "
             />
 
@@ -1375,23 +1781,36 @@ const AiGenerator: React.FC = () => {
                 w-10
                 items-center
                 justify-center
-                rounded-lg
-                bg-[#15213A]
-                text-white
+                rounded-xl
+                bg-[#DCE3DD]
+                text-[#18211C]
                 shadow-sm
-                transition
-                hover:bg-[#0D1526]
+                transition-all
+                duration-200
+                hover:-translate-y-0.5
+                hover:bg-white
                 disabled:cursor-not-allowed
-                disabled:opacity-30
-                sm:bottom-2
-                sm:left-2
+                disabled:opacity-25
+                sm:bottom-2.5
+                sm:left-2.5
               "
             >
-              <SendIcon className="h-3 w-3" />
+              <Send
+                size={14}
+                strokeWidth={1.8}
+              />
             </button>
           </div>
 
-          <p className="mt-1.5 text-center text-[8px] text-[#9AA0AF] sm:text-[9px]">
+          <p
+            className="
+              mt-2
+              text-center
+              text-[8px]
+              text-[#505B54]
+              sm:text-[9px]
+            "
+          >
             قد تحتاج النتائج المولدة إلى مراجعة بسيطة قبل الاستخدام الرسمي.
           </p>
         </div>

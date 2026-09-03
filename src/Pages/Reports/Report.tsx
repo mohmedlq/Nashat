@@ -12,6 +12,23 @@ import jsPDF from 'jspdf';
 
 const Picker = (DatePicker as any).default || DatePicker;
 
+/* ============================
+ * A4 CONSTANTS
+ * ============================ */
+
+const A4_WIDTH_MM = 210;
+const A4_HEIGHT_MM = 297;
+
+const A4_WIDTH_PX =
+  (A4_WIDTH_MM / 25.4) * 96;
+
+const A4_HEIGHT_PX =
+  (A4_HEIGHT_MM / 25.4) * 96;
+
+/* ============================
+ * THEMES
+ * ============================ */
+
 export type Theme = {
   id: string;
   name: string;
@@ -28,37 +45,57 @@ export const PRESET_THEMES: Theme[] = [
   {
     id: 'emerald-teal',
     name: 'الأخضر التعليمي (الافتراضي)',
-    headerGradient: 'linear-gradient(to left, #43bb77, #2da69f, #268bc1)',
+    headerGradient:
+      'linear-gradient(to left, #43bb77, #2da69f, #268bc1)',
     darkAccent: '#194760',
     primaryBorder: '#2b9bd4',
     labelColor: '#25b878',
     titleBorder: '#39b978',
     btnBg: '#39b978',
-    swatches: ['#43bb77', '#2da69f', '#268bc1', '#194760'],
+    swatches: [
+      '#43bb77',
+      '#2da69f',
+      '#268bc1',
+      '#194760',
+    ],
   },
   {
     id: 'royal-navy',
     name: 'الكحلي والذهبي الملكي',
-    headerGradient: 'linear-gradient(to left, #0f172a, #1e3a8a, #3b82f6)',
+    headerGradient:
+      'linear-gradient(to left, #0f172a, #1e3a8a, #3b82f6)',
     darkAccent: '#0f172a',
     primaryBorder: '#3b82f6',
     labelColor: '#d97706',
     titleBorder: '#f59e0b',
     btnBg: '#d97706',
-    swatches: ['#0f172a', '#1e3a8a', '#d97706'],
+    swatches: [
+      '#0f172a',
+      '#1e3a8a',
+      '#d97706',
+    ],
   },
   {
     id: 'burgundy-luxury',
     name: 'العنابي الدافئ',
-    headerGradient: 'linear-gradient(to left, #581c87, #831843, #be123c)',
+    headerGradient:
+      'linear-gradient(to left, #581c87, #831843, #be123c)',
     darkAccent: '#4c0519',
     primaryBorder: '#be123c',
     labelColor: '#9d174d',
     titleBorder: '#fb7185',
     btnBg: '#9d174d',
-    swatches: ['#581c87', '#831843', '#be123c'],
+    swatches: [
+      '#581c87',
+      '#831843',
+      '#be123c',
+    ],
   },
 ];
+
+/* ============================
+ * PROPS
+ * ============================ */
 
 export interface ReportProps {
   initialData?: Partial<ReportFormData>;
@@ -68,12 +105,18 @@ export interface ReportProps {
   onSubmit?: (data: ReportFormData) => void;
 }
 
+/* ============================
+ * FIELD PROPS
+ * ============================ */
+
 type FieldProps = {
   label: string;
   name: keyof ReportFormData;
   value: string;
   onChange: (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement
+    >
   ) => void;
   error?: string;
   type?: 'text' | 'textarea' | 'date';
@@ -102,28 +145,37 @@ function Field({
   return (
     <div
       className={`
-        relative min-w-0 rounded-[11px] border-2 bg-white
-        px-2.5 py-3
-        sm:px-5 sm:py-5
+        relative
+        min-w-0
+        rounded-[11px]
+        border-2
+        bg-white
+        px-5
+        py-5
         transition-all
         ${className}
       `}
       style={{
-        borderColor: error ? '#ef4444' : theme.primaryBorder,
+        borderColor: error
+          ? '#ef4444'
+          : theme.primaryBorder,
       }}
     >
       <span
-        className={`
+        className="
           absolute
-          -top-4 right-2.5
-          px-1.5
-          text-base
-          sm:-top-5 sm:right-5 sm:px-2 sm:text-[22px]
-          font-bold transition-colors
-        `}
+          -top-5
+          right-5
+          bg-white
+          px-2
+          text-[22px]
+          font-bold
+          transition-colors
+        "
         style={{
-          color: error ? '#ef4444' : theme.labelColor,
-          backgroundColor: '#ffffff',
+          color: error
+            ? '#ef4444'
+            : theme.labelColor,
         }}
       >
         {label}
@@ -133,12 +185,12 @@ function Field({
         {isExportMode ? (
           <div
             className={`
-              w-full min-w-0
+              w-full
+              min-w-0
               whitespace-pre-wrap
               break-words
-              text-base
+              text-[19px]
               leading-[1.7]
-              sm:text-[19px]
               text-[#424242]
               ${
                 type === 'textarea'
@@ -152,7 +204,9 @@ function Field({
               }
             `}
           >
-            {value && value.trim() ? value : '\u00A0'}
+            {value && value.trim()
+              ? value
+              : '\u00A0'}
           </div>
         ) : type === 'textarea' ? (
           <textarea
@@ -160,17 +214,17 @@ function Field({
             value={value}
             onChange={onChange}
             className={`
-              h-full min-h-[170px]
-              w-full resize-none
+              h-full
+              min-h-[190px]
+              w-full
+              resize-none
               overflow-auto
               bg-transparent
-              text-base
+              text-[19px]
               leading-[1.7]
               text-[#424242]
               outline-none
               placeholder:text-gray-300
-              sm:min-h-[190px]
-              sm:text-[19px]
               ${
                 align === 'right'
                   ? 'text-right'
@@ -184,12 +238,17 @@ function Field({
             <Picker
               value={
                 value
-                  ? value.replace(/[همـ\s]/g, '')
+                  ? value.replace(
+                      /[همـ\s]/g,
+                      ''
+                    )
                   : ''
               }
               onChange={(date: any) => {
                 const formatted = date
-                  ? `${date.format('YYYY/MM/DD')} هـ`
+                  ? `${date.format(
+                      'YYYY/MM/DD'
+                    )} هـ`
                   : '';
 
                 onChange({
@@ -204,14 +263,14 @@ function Field({
               calendarPosition="bottom-right"
               containerClassName="w-full"
               inputClass={`
-                w-full min-w-0
+                w-full
+                min-w-0
                 bg-transparent
-                text-base
+                text-[22px]
                 leading-8
                 text-[#424242]
                 outline-none
                 placeholder:text-gray-300
-                sm:text-[22px]
                 ${
                   align === 'right'
                     ? 'text-right'
@@ -228,14 +287,14 @@ function Field({
             value={value}
             onChange={onChange}
             className={`
-              w-full min-w-0
+              w-full
+              min-w-0
               bg-transparent
-              text-base
+              text-[22px]
               leading-8
               text-[#424242]
               outline-none
               placeholder:text-gray-300
-              sm:text-[22px]
               ${
                 align === 'right'
                   ? 'text-right'
@@ -248,7 +307,16 @@ function Field({
       </div>
 
       {error && !isExportMode && (
-        <span className="absolute -bottom-6 right-5 text-sm font-bold text-red-500">
+        <span
+          className="
+            absolute
+            -bottom-6
+            right-5
+            text-sm
+            font-bold
+            text-red-500
+          "
+        >
           {error}
         </span>
       )}
@@ -273,12 +341,18 @@ function HeaderText({
   placeholder: string;
   className: string;
   name: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange: (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => void;
 }) {
   if (isExportMode) {
     return (
-      <span className={`${className} block truncate`}>
-        {value && value.trim() ? value : '\u00A0'}
+      <span
+        className={`${className} block truncate`}
+      >
+        {value && value.trim()
+          ? value
+          : '\u00A0'}
       </span>
     );
   }
@@ -298,16 +372,21 @@ function HeaderText({
  * MINISTRY LOGO
  * ============================ */
 
-function MinistryLogo({ src }: { src?: string }) {
+function MinistryLogo({
+  src,
+}: {
+  src?: string;
+}) {
   return (
     <img
       src={src || logoImage}
       alt="شعار وزارة التعليم السعودية"
       className="
-        h-[50px] w-auto
+        h-[75px]
+        w-auto
         object-contain
-        brightness-0 invert
-        sm:h-[75px]
+        brightness-0
+        invert
       "
     />
   );
@@ -317,7 +396,11 @@ function MinistryLogo({ src }: { src?: string }) {
  * ICONS
  * ============================ */
 
-function PrinterIcon({ className = '' }: { className?: string }) {
+function PrinterIcon({
+  className = '',
+}: {
+  className?: string;
+}) {
   return (
     <svg
       className={className}
@@ -333,12 +416,21 @@ function PrinterIcon({ className = '' }: { className?: string }) {
     >
       <polyline points="6 9 6 2 18 2 18 9" />
       <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
-      <rect x="6" y="14" width="12" height="8" />
+      <rect
+        x="6"
+        y="14"
+        width="12"
+        height="8"
+      />
     </svg>
   );
 }
 
-function PdfDownloadIcon({ className = '' }: { className?: string }) {
+function PdfDownloadIcon({
+  className = '',
+}: {
+  className?: string;
+}) {
   return (
     <svg
       className={className}
@@ -354,13 +446,22 @@ function PdfDownloadIcon({ className = '' }: { className?: string }) {
     >
       <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
       <polyline points="14 2 14 8 20 8" />
-      <line x1="12" y1="11" x2="12" y2="17" />
+      <line
+        x1="12"
+        y1="11"
+        x2="12"
+        y2="17"
+      />
       <polyline points="9 14 12 17 15 14" />
     </svg>
   );
 }
 
-function ImageDownloadIcon({ className = '' }: { className?: string }) {
+function ImageDownloadIcon({
+  className = '',
+}: {
+  className?: string;
+}) {
   return (
     <svg
       className={className}
@@ -374,14 +475,28 @@ function ImageDownloadIcon({ className = '' }: { className?: string }) {
       strokeLinejoin="round"
       aria-hidden="true"
     >
-      <rect x="3" y="3" width="18" height="18" rx="2" />
-      <circle cx="8.5" cy="8.5" r="1.5" />
+      <rect
+        x="3"
+        y="3"
+        width="18"
+        height="18"
+        rx="2"
+      />
+      <circle
+        cx="8.5"
+        cy="8.5"
+        r="1.5"
+      />
       <polyline points="21 15 16 10 5 21" />
     </svg>
   );
 }
 
-function SpinnerIcon({ className = '' }: { className?: string }) {
+function SpinnerIcon({
+  className = '',
+}: {
+  className?: string;
+}) {
   return (
     <svg
       className={`animate-spin ${className}`}
@@ -410,17 +525,26 @@ export default function Report({
   onChange,
   onSubmit,
 }: ReportProps) {
-  const { schoolName, teacherName, region } = useUser();
+  const {
+    schoolName,
+    teacherName,
+    region,
+  } = useUser();
 
-  const reportRef = useRef<HTMLDivElement>(null);
-  const pageFrameRef = useRef<HTMLDivElement>(null);
+  const reportRef =
+    useRef<HTMLDivElement>(null);
 
-  const [downloadingType, setDownloadingType] = useState<
-    'pdf' | 'png' | null
-  >(null);
+  const pageFrameRef =
+    useRef<HTMLDivElement>(null);
 
-  const [isExportMode, setIsExportMode] = useState(false);
-  const [isPrinting, setIsPrinting] = useState(false);
+  const [downloadingType, setDownloadingType] =
+    useState<'pdf' | 'png' | null>(null);
+
+  const [isExportMode, setIsExportMode] =
+    useState(false);
+
+  const [isPrinting, setIsPrinting] =
+    useState(false);
 
   /* ============================
    * DEFAULT DATA
@@ -432,7 +556,9 @@ export default function Report({
       locale: arabic_ar,
     });
 
-    return `${today.format('YYYY/MM/DD')} هـ`;
+    return `${today.format(
+      'YYYY/MM/DD'
+    )} هـ`;
   };
 
   const DEFAULT_FORM_DATA: ReportFormData = {
@@ -445,24 +571,35 @@ export default function Report({
     beneficiaries: '33',
     date: getTodayHijri(),
     objectives: '',
-    evidences: [null, null, null, null],
+    evidences: [
+      null,
+      null,
+      null,
+      null,
+    ],
   };
 
-  const [formData, setFormData] = useState<ReportFormData>(() => ({
-    ...DEFAULT_FORM_DATA,
-    ...initialData,
-    evidences:
-      initialData?.evidences ?? DEFAULT_FORM_DATA.evidences,
-  }));
+  const [formData, setFormData] =
+    useState<ReportFormData>(() => ({
+      ...DEFAULT_FORM_DATA,
+      ...initialData,
+      evidences:
+        initialData?.evidences ??
+        DEFAULT_FORM_DATA.evidences,
+    }));
 
-  const [currentTheme, setCurrentTheme] = useState<Theme>(
-    () =>
-      PRESET_THEMES.find(
-        (theme) => theme.id === initialThemeId
-      ) || PRESET_THEMES[0]
-  );
+  const [currentTheme, setCurrentTheme] =
+    useState<Theme>(
+      () =>
+        PRESET_THEMES.find(
+          (theme) =>
+            theme.id === initialThemeId
+        ) || PRESET_THEMES[0]
+    );
 
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [errors, setErrors] = useState<
+    Record<string, string>
+  >({});
 
   /* ============================
    * INITIAL DATA SYNC
@@ -475,7 +612,8 @@ export default function Report({
       ...prev,
       ...initialData,
       evidences:
-        initialData.evidences ?? prev.evidences,
+        initialData.evidences ??
+        prev.evidences,
     }));
   }, [initialData]);
 
@@ -484,7 +622,9 @@ export default function Report({
    * ============================ */
 
   const updateFormData = (
-    updater: (prev: ReportFormData) => ReportFormData
+    updater: (
+      prev: ReportFormData
+    ) => ReportFormData
   ) => {
     setFormData((prev) => {
       const updated = updater(prev);
@@ -526,17 +666,24 @@ export default function Report({
     if (!file) return;
 
     if (!file.type.startsWith('image/')) {
-      alert('الرجاء اختيار ملف صورة فقط.');
+      alert(
+        'الرجاء اختيار ملف صورة فقط.'
+      );
+
       e.target.value = '';
       return;
     }
 
-    const imageUrl = URL.createObjectURL(file);
+    const imageUrl =
+      URL.createObjectURL(file);
 
     updateFormData((prev) => {
-      const newEvidences = [...prev.evidences];
+      const newEvidences = [
+        ...prev.evidences,
+      ];
 
-      const oldImage = newEvidences[index];
+      const oldImage =
+        newEvidences[index];
 
       if (
         oldImage &&
@@ -556,8 +703,11 @@ export default function Report({
     e.target.value = '';
   };
 
-  const handleRemoveImage = (index: number) => {
-    const oldImage = formData.evidences[index];
+  const handleRemoveImage = (
+    index: number
+  ) => {
+    const oldImage =
+      formData.evidences[index];
 
     if (
       oldImage &&
@@ -567,7 +717,9 @@ export default function Report({
     }
 
     updateFormData((prev) => {
-      const newEvidences = [...prev.evidences];
+      const newEvidences = [
+        ...prev.evidences,
+      ];
 
       newEvidences[index] = null;
 
@@ -583,11 +735,15 @@ export default function Report({
    * ============================ */
 
   const validateForm = () => {
-    const newErrors: Record<string, string> = {};
+    const newErrors: Record<
+      string,
+      string
+    > = {};
 
-    const hasEvidence = formData.evidences.some(
-      (src) => Boolean(src)
-    );
+    const hasEvidence =
+      formData.evidences.some(
+        (src) => Boolean(src)
+      );
 
     if (!hasEvidence) {
       newErrors.evidences =
@@ -600,39 +756,36 @@ export default function Report({
 
     setErrors(newErrors);
 
-    return Object.keys(newErrors).length === 0;
+    return (
+      Object.keys(newErrors).length === 0
+    );
   };
 
   /* ============================
-   * ASYNC HELPERS
+   * WAIT FOR RENDER
    * ============================ */
 
   const waitForNextPaint = () =>
     new Promise<void>((resolve) =>
       requestAnimationFrame(() =>
-        requestAnimationFrame(() => resolve())
+        requestAnimationFrame(() =>
+          resolve()
+        )
       )
     );
 
-  const yieldToBrowser = async () => {
-    await new Promise<void>((resolve) =>
-      setTimeout(resolve, 0)
-    );
-  };
-
-  const waitForDocumentFonts = async () => {
-    if ('fonts' in document) {
-      try {
-        await (
-          document as Document & {
-            fonts?: FontFaceSet;
-          }
-        ).fonts?.ready;
-      } catch {
-        // لا نوقف التصدير إذا لم يدعم المتصفح FontFaceSet.
+  const waitForDocumentFonts =
+    async () => {
+      if ('fonts' in document) {
+        try {
+          await (
+            document as Document & {
+              fonts?: FontFaceSet;
+            }
+          ).fonts?.ready;
+        } catch {}
       }
-    }
-  };
+    };
 
   /* ============================
    * IMAGE LOADING
@@ -654,99 +807,104 @@ export default function Report({
           return Promise.resolve();
         }
 
-        return new Promise<void>((resolve) => {
-          const finish = () => {
-            img.removeEventListener(
+        return new Promise<void>(
+          (resolve) => {
+            const finish = () => {
+              img.removeEventListener(
+                'load',
+                finish
+              );
+
+              img.removeEventListener(
+                'error',
+                finish
+              );
+
+              resolve();
+            };
+
+            img.addEventListener(
               'load',
               finish
             );
 
-            img.removeEventListener(
+            img.addEventListener(
               'error',
               finish
             );
-
-            resolve();
-          };
-
-          img.addEventListener(
-            'load',
-            finish
-          );
-
-          img.addEventListener(
-            'error',
-            finish
-          );
-        });
+          }
+        );
       })
     );
   };
 
-  /* ============================
-   * PRINT LAYOUT
-   * ============================ */
+  const fitReportToPrintPage =
+    async () => {
+      const element =
+        reportRef.current;
 
-  const fitReportToPrintPage = async () => {
-    const element = reportRef.current;
-
-    if (!element) return;
-
-    element.style.transform = 'none';
-    element.style.width = '210mm';
-    element.style.maxWidth = 'none';
-    element.style.transformOrigin = 'top right';
-
-    void element.offsetHeight;
-
-    await waitForNextPaint();
-
-    const widthPx =
-      element.getBoundingClientRect().width ||
-      element.offsetWidth;
-
-    const naturalHeightPx =
-      element.scrollHeight;
-
-    const pageHeightPx =
-      widthPx * (297 / 210);
-
-    if (
-      !widthPx ||
-      !naturalHeightPx ||
-      !pageHeightPx
-    ) {
-      return;
-    }
-
-    const scale = Math.min(
-      1,
-      pageHeightPx / naturalHeightPx
-    );
-
-    if (scale < 1) {
-      element.style.width =
-        `${210 / scale}mm`;
+      if (!element) return;
 
       element.style.transform =
-        `scale(${scale})`;
-    } else {
-      element.style.width = '210mm';
-      element.style.transform = 'none';
-    }
+        'none';
 
-    await waitForNextPaint();
-  };
+      element.style.width =
+        `${A4_WIDTH_MM}mm`;
+
+      element.style.maxWidth =
+        'none';
+
+      element.style.transformOrigin =
+        'top right';
+
+      void element.offsetHeight;
+
+      await waitForNextPaint();
+
+      const naturalHeightPx =
+        element.scrollHeight;
+
+      if (
+        !naturalHeightPx ||
+        !A4_HEIGHT_PX
+      ) {
+        return;
+      }
+
+      const scale = Math.min(
+        1,
+        A4_HEIGHT_PX /
+          naturalHeightPx
+      );
+
+      if (scale < 1) {
+        element.style.width =
+          `${A4_WIDTH_MM}mm`;
+
+        element.style.transform =
+          `scale(${scale})`;
+      } else {
+        element.style.width =
+          `${A4_WIDTH_MM}mm`;
+
+        element.style.transform =
+          'none';
+      }
+
+      await waitForNextPaint();
+    };
 
   const resetPrintLayout = () => {
-    const element = reportRef.current;
+    const element =
+      reportRef.current;
 
     if (!element) return;
 
     element.style.transform = '';
     element.style.width = '';
     element.style.maxWidth = '';
-    element.style.transformOrigin = '';
+    element.style.transformOrigin =
+      '';
   };
 
   useEffect(() => {
@@ -784,7 +942,6 @@ export default function Report({
     try {
       await waitForNextPaint();
       await waitForNextPaint();
-      await yieldToBrowser();
 
       await waitForDocumentFonts();
 
@@ -797,7 +954,6 @@ export default function Report({
       await fitReportToPrintPage();
 
       await waitForNextPaint();
-      await yieldToBrowser();
 
       window.print();
     } catch (error) {
@@ -821,29 +977,29 @@ export default function Report({
    * CANVAS
    * ============================ */
 
-  const captureReportCanvas = async (
-    element: HTMLElement,
-    scale: number
-  ) => {
-    await waitForImages(element);
-    await waitForNextPaint();
-    await yieldToBrowser();
+  const captureReportCanvas =
+    async (
+      element: HTMLElement,
+      scale: number
+    ) => {
+      await waitForImages(element);
 
-    const startX = 0;
-    const startY = 0;
+      const startX = 0;
+      const startY = 0;
 
-    const endX = element.scrollWidth;
-    const endY = element.scrollHeight;
+      const endX =
+        element.scrollWidth;
 
-    const cropWidth =
-      endX - startX;
+      const endY =
+        element.scrollHeight;
 
-    const cropHeight =
-      endY - startY;
+      const cropWidth =
+        endX - startX;
 
-    const canvas = await html2canvas(
-      element,
-      {
+      const cropHeight =
+        endY - startY;
+
+      return html2canvas(element, {
         scale,
 
         useCORS: true,
@@ -861,14 +1017,10 @@ export default function Report({
         width: cropWidth,
         height: cropHeight,
 
-        /*
-         * نستخدم عرض التقرير الحقيقي
-         * في وضع التصدير.
-         */
-        windowWidth: element.scrollWidth,
+        windowWidth: 950,
 
         windowHeight: Math.max(
-          window.innerHeight,
+          A4_HEIGHT_PX,
           element.scrollHeight
         ),
 
@@ -882,13 +1034,8 @@ export default function Report({
             )
           );
         },
-      }
-    );
-
-    await yieldToBrowser();
-
-    return canvas;
-  };
+      });
+    };
 
   /* ============================
    * FILE NAME
@@ -914,29 +1061,38 @@ export default function Report({
    * EXPORT MODE
    * ============================ */
 
-  const enterExportMode = async () => {
-    setIsExportMode(true);
+  const enterExportMode =
+    async () => {
+      setIsExportMode(true);
 
-    const element =
-      reportRef.current;
+      const element =
+        reportRef.current;
 
-    if (element) {
-      element.style.transform =
-        'none';
+      if (element) {
+        element.style.transform =
+          'none';
 
-      element.style.width = '';
+        element.style.width =
+          `${A4_WIDTH_MM}mm`;
 
-      element.style.maxWidth =
-        '';
+        element.style.maxWidth =
+          'none';
 
-      element.style.transformOrigin =
-        '';
-    }
+        element.style.transformOrigin =
+          'top right';
+      }
 
-    await waitForNextPaint();
-    await waitForNextPaint();
-    await yieldToBrowser();
-  };
+      await waitForNextPaint();
+      await waitForNextPaint();
+
+      await waitForDocumentFonts();
+
+      if (reportRef.current) {
+        await waitForImages(
+          reportRef.current
+        );
+      }
+    };
 
   const exitExportMode = () => {
     resetPrintLayout();
@@ -947,12 +1103,10 @@ export default function Report({
    * DOWNLOAD
    * ============================ */
 
-  const downloadBlob = async (
+  const downloadBlob = (
     blob: Blob,
     fileName: string
   ) => {
-    await yieldToBrowser();
-
     const url =
       URL.createObjectURL(blob);
 
@@ -960,23 +1114,15 @@ export default function Report({
       document.createElement('a');
 
     link.href = url;
-
     link.download = fileName;
-
     link.style.display = 'none';
 
     document.body.appendChild(link);
-
-    await yieldToBrowser();
 
     link.click();
 
     link.remove();
 
-    /*
-     * نعطي المتصفح وقتًا لمعالجة
-     * عملية التحميل قبل حذف الـ URL.
-     */
     setTimeout(() => {
       URL.revokeObjectURL(url);
     }, 60000);
@@ -1007,224 +1153,158 @@ export default function Report({
       }
     );
 
-  /*
-   * تحويل Blob إلى Data URL
-   * بشكل Async بدل canvas.toDataURL()
-   * المباشر الذي قد يجمّد الصفحة.
-   */
-  const blobToDataURL = (
-    blob: Blob
-  ) =>
-    new Promise<string>(
-      (resolve, reject) => {
-        const reader =
-          new FileReader();
-
-        reader.onload = () => {
-          resolve(
-            reader.result as string
-          );
-        };
-
-        reader.onerror = () => {
-          reject(
-            reader.error ||
-              new Error(
-                'Failed to read image blob.'
-              )
-          );
-        };
-
-        reader.readAsDataURL(blob);
-      }
-    );
-
-  /*
-   * نفس جودة الكمبيوتر والجوال.
-   */
   const getCaptureScale = () => 3;
 
   /* ============================
    * PDF
    * ============================ */
 
-  const handleDownloadPDF = async () => {
-    if (!validateForm()) return;
+  const handleDownloadPDF =
+    async () => {
+      if (!validateForm()) return;
 
-    if (!reportRef.current) return;
+      if (!reportRef.current) return;
 
-    try {
-      setDownloadingType('pdf');
+      try {
+        setDownloadingType('pdf');
 
-      onSubmit?.(formData);
+        onSubmit?.(formData);
 
-      await enterExportMode();
+        await enterExportMode();
 
-      await waitForDocumentFonts();
+        if (!reportRef.current) {
+          throw new Error(
+            'Report element not found.'
+          );
+        }
 
-      if (!reportRef.current) {
-        throw new Error(
-          'Report element not found.'
+        const canvas =
+          await captureReportCanvas(
+            reportRef.current,
+            getCaptureScale()
+          );
+
+        const pdf =
+          new jsPDF({
+            orientation: 'portrait',
+            unit: 'mm',
+            format: 'a4',
+            compress: true,
+          });
+
+        const pageWidth = A4_WIDTH_MM;
+        const pageHeight =
+          A4_HEIGHT_MM;
+
+        const pdfScale =
+          Math.min(
+            pageWidth / canvas.width,
+            pageHeight / canvas.height
+          );
+
+        const imgWidth =
+          canvas.width * pdfScale;
+
+        const imgHeight =
+          canvas.height * pdfScale;
+
+        const x =
+          (pageWidth - imgWidth) / 2;
+
+        const y = 0;
+
+        const imageData =
+          canvas.toDataURL(
+            'image/jpeg',
+            0.96
+          );
+
+        pdf.addImage(
+          imageData,
+          'JPEG',
+          x,
+          y,
+          imgWidth,
+          imgHeight,
+          undefined,
+          'FAST'
         );
+
+        const pdfBlob =
+          pdf.output('blob');
+
+        downloadBlob(
+          pdfBlob,
+          `${getSafeFileName()}.pdf`
+        );
+      } catch (error) {
+        console.error(
+          'PDF generation failed:',
+          error
+        );
+
+        alert(
+          'تعذر تحميل التقرير كملف PDF. حاول مرة أخرى.'
+        );
+      } finally {
+        exitExportMode();
+        setDownloadingType(null);
       }
-
-      await yieldToBrowser();
-
-      const canvas =
-        await captureReportCanvas(
-          reportRef.current,
-          getCaptureScale()
-        );
-
-      await yieldToBrowser();
-
-      const pdf =
-        new jsPDF({
-          orientation: 'portrait',
-          unit: 'mm',
-          format: 'a4',
-          compress: true,
-        });
-
-      const pageWidth = 210;
-      const pageHeight = 297;
-
-      const pdfScale =
-        Math.min(
-          pageWidth / canvas.width,
-          pageHeight / canvas.height
-        );
-
-      const imgWidth =
-        canvas.width * pdfScale;
-
-      const imgHeight =
-        canvas.height * pdfScale;
-
-      const x =
-        (pageWidth - imgWidth) / 2;
-
-      const y = 0;
-
-      /*
-       * بدل canvas.toDataURL()
-       * نستخدم Blob + FileReader
-       * حتى لا يتم تنفيذ التحويل
-       * بشكل synchronous ثقيل.
-       */
-      const imageBlob =
-        await canvasToBlob(
-          canvas,
-          'image/jpeg',
-          0.96
-        );
-
-      await yieldToBrowser();
-
-      const imageData =
-        await blobToDataURL(
-          imageBlob
-        );
-
-      await yieldToBrowser();
-
-      pdf.addImage(
-        imageData,
-        'JPEG',
-        x,
-        y,
-        imgWidth,
-        imgHeight,
-        undefined,
-        'FAST'
-      );
-
-      await yieldToBrowser();
-
-      const pdfBlob =
-        pdf.output('blob');
-
-      await yieldToBrowser();
-
-      await downloadBlob(
-        pdfBlob,
-        `${getSafeFileName()}.pdf`
-      );
-    } catch (error) {
-      console.error(
-        'PDF generation failed:',
-        error
-      );
-
-      alert(
-        'تعذر تحميل التقرير كملف PDF. حاول مرة أخرى.'
-      );
-    } finally {
-      exitExportMode();
-      setDownloadingType(null);
-    }
-  };
+    };
 
   /* ============================
    * PNG
    * ============================ */
 
-  const handleDownloadPNG = async () => {
-    if (!validateForm()) return;
+  const handleDownloadPNG =
+    async () => {
+      if (!validateForm()) return;
 
-    if (!reportRef.current) return;
+      if (!reportRef.current) return;
 
-    try {
-      setDownloadingType('png');
+      try {
+        setDownloadingType('png');
 
-      onSubmit?.(formData);
+        onSubmit?.(formData);
 
-      await enterExportMode();
+        await enterExportMode();
 
-      await waitForDocumentFonts();
+        if (!reportRef.current) {
+          throw new Error(
+            'Report element not found.'
+          );
+        }
 
-      if (!reportRef.current) {
-        throw new Error(
-          'Report element not found.'
+        const canvas =
+          await captureReportCanvas(
+            reportRef.current,
+            getCaptureScale()
+          );
+
+        const imageBlob =
+          await canvasToBlob(
+            canvas,
+            'image/png'
+          );
+
+        downloadBlob(
+          imageBlob,
+          `${getSafeFileName()}.png`
         );
+      } catch (error) {
+        console.error(
+          'PNG generation failed:',
+          error
+        );
+
+        alert(
+          'تعذر تحميل التقرير كصورة PNG. حاول مرة أخرى.'
+        );
+      } finally {
+        exitExportMode();
+        setDownloadingType(null);
       }
-
-      await yieldToBrowser();
-
-      const canvas =
-        await captureReportCanvas(
-          reportRef.current,
-          getCaptureScale()
-        );
-
-      await yieldToBrowser();
-
-      const imageBlob =
-        await canvasToBlob(
-          canvas,
-          'image/png'
-        );
-
-      await yieldToBrowser();
-
-      await downloadBlob(
-        imageBlob,
-        `${getSafeFileName()}.png`
-      );
-    } catch (error) {
-      console.error(
-        'PNG generation failed:',
-        error
-      );
-
-      alert(
-        'تعذر تحميل التقرير كصورة PNG. حاول مرة أخرى.'
-      );
-    } finally {
-      exitExportMode();
-      setDownloadingType(null);
-    }
-  };
+    };
 
   /* ============================
    * EVIDENCE DATA
@@ -1252,14 +1332,24 @@ export default function Report({
     total: number
   ) => {
     if (total === 1) {
-      return 'col-span-2 max-w-[500px] mx-auto w-full';
+      return `
+        col-span-1
+        md:col-span-2
+        max-w-[500px]
+        mx-auto
+        w-full
+      `;
     }
 
     if (
       total === 3 &&
       index === 2
     ) {
-      return 'col-span-2 w-full';
+      return `
+        col-span-1
+        md:col-span-2
+        w-full
+      `;
     }
 
     return 'w-full';
@@ -1307,20 +1397,23 @@ export default function Report({
       className="
         min-h-screen
         w-full
-        overflow-x-hidden
-        bg-slate-100
-        px-2 py-4
-        sm:px-4 sm:py-8
+        overflow-x-auto
+        bg-[#111714]
+        px-2
+        py-4
+        text-[#E5E9E5]
+        font-sans
+        antialiased
+        selection:bg-[#B39A63]/20
+        selection:text-[#E5E9E5]
+        sm:px-4
+        sm:py-8
         print:min-h-0
         print:bg-white
         print:p-0
         print:m-0
       "
     >
-      {/* ============================
-          PRINT CSS
-          ============================ */}
-
       <style>{`
         @page {
           size: A4 portrait;
@@ -1330,8 +1423,8 @@ export default function Report({
         @media print {
           html,
           body {
-            width: 210mm !important;
-            min-width: 210mm !important;
+            width: 100% !important;
+            min-width: 0 !important;
             margin: 0 !important;
             padding: 0 !important;
             background: #ffffff !important;
@@ -1383,10 +1476,6 @@ export default function Report({
         }
       `}</style>
 
-      {/* ============================
-          PAGE FRAME
-          ============================ */}
-
       <div
         ref={pageFrameRef}
         className="report-page-frame"
@@ -1397,11 +1486,6 @@ export default function Report({
             handlePrint();
           }}
         >
-          {/* ============================
-              REPORT
-              Responsive
-              ============================ */}
-
           <div
             ref={reportRef}
             className={`
@@ -1414,11 +1498,17 @@ export default function Report({
               bg-white
               font-[Arial,sans-serif]
               text-[#173f56]
-              shadow-2xl
+              shadow-[0_24px_70px_rgba(0,0,0,0.35)]
 
               ${
                 isExportMode
-                  ? 'w-[210mm] max-w-none rounded-none shadow-none m-0'
+                  ? `
+                    w-[210mm]
+                    max-w-none
+                    rounded-none
+                    m-0
+                    shadow-none
+                  `
                   : ''
               }
             `}
@@ -1428,12 +1518,10 @@ export default function Report({
             <header
               className="
                 relative
-                min-h-[150px]
-                sm:min-h-[193px]
+                min-h-[193px]
                 overflow-visible
                 rounded-b-[18px]
-                pb-8
-                sm:pb-10
+                pb-10
                 print:rounded-b-[18px]
               "
               style={{
@@ -1450,48 +1538,40 @@ export default function Report({
                   flex-row
                   items-center
                   justify-center
-                  gap-3
-                  px-3
-                  pb-6
-                  pt-5
+                  gap-8
+                  px-4
+                  pb-7
+                  pt-6
                   text-white
-                  sm:gap-8
-                  sm:px-4
-                  sm:pb-7
-                  sm:pt-6
                 "
               >
                 <div
                   className="
                     flex
                     items-center
-                    gap-2
-                    border-r-[3px]
+                    gap-4
+                    border-r-[4px]
                     border-white
-                    pr-3
-                    sm:gap-4
-                    sm:border-r-[4px]
-                    sm:pr-5
+                    pr-5
                   "
                 >
                   <div
                     className="
                       text-right
-                      text-[15px]
+                      text-[21px]
                       font-bold
                       leading-[1.55]
-                      sm:text-[21px]
                     "
                   >
                     وزارة التعليم
+
                     <br />
 
                     <span
                       className="
-                        text-[9px]
+                        text-[14px]
                         font-normal
                         tracking-wide
-                        sm:text-[14px]
                       "
                     >
                       Ministry of Education
@@ -1503,8 +1583,7 @@ export default function Report({
                       flex
                       items-center
                       justify-center
-                      pr-1
-                      sm:pr-2
+                      pr-2
                     "
                   >
                     <MinistryLogo
@@ -1517,13 +1596,13 @@ export default function Report({
                   className="
                     w-auto
                     text-right
-                    text-[15px]
+                    text-[21px]
                     font-bold
                     leading-[1.7]
-                    sm:text-[21px]
                   "
                 >
                   الإدارة العامة للتعليم
+
                   <br />
 
                   <HeaderText
@@ -1531,17 +1610,12 @@ export default function Report({
                       isExportMode
                     }
                     name="region"
-                    value={
-                      formData.region
-                    }
-                    onChange={
-                      handleChange
-                    }
+                    value={formData.region}
+                    onChange={handleChange}
                     placeholder="أدخل المنطقة"
                     className="
                       w-full
-                      min-w-0
-                      sm:min-w-[180px]
+                      min-w-[180px]
                       bg-transparent
                       text-right
                       font-bold
@@ -1553,31 +1627,24 @@ export default function Report({
                 </div>
               </div>
 
-              {/* ================= SCHOOL + TITLE ================= */}
-
               <div
                 className="
                   absolute
-                  -bottom-28
+                  -bottom-40
                   left-1/2
                   z-10
-                  w-[calc(100%-32px)]
+                  w-[calc(100%-112px)]
                   max-w-[742px]
                   -translate-x-1/2
-                  sm:-bottom-40
-                  sm:w-[calc(100%-112px)]
                 "
               >
                 <div
                   className="
-                    mb-2
+                    mb-3
                     rounded-[12px]
-                    px-3
-                    py-2
+                    px-6
+                    py-4
                     shadow-sm
-                    sm:mb-3
-                    sm:px-6
-                    sm:py-4
                   "
                   style={{
                     backgroundColor:
@@ -1592,33 +1659,27 @@ export default function Report({
                     value={
                       formData.schoolName
                     }
-                    onChange={
-                      handleChange
-                    }
+                    onChange={handleChange}
                     placeholder="أدخل اسم المدرسة"
                     className="
                       w-full
                       min-w-0
                       bg-transparent
                       text-center
-                      text-[16px]
+                      text-[21px]
                       font-bold
                       text-white
                       outline-none
                       placeholder:text-white/60
-                      sm:text-[21px]
                     "
                   />
                 </div>
 
                 <div
                   className="
-                    border-b-[4px]
-                    px-3
-                    py-2
-                    sm:border-b-[7px]
-                    sm:px-6
-                    sm:py-4
+                    border-b-[7px]
+                    px-6
+                    py-4
                   "
                   style={{
                     backgroundColor:
@@ -1635,21 +1696,18 @@ export default function Report({
                     value={
                       formData.reportTitle
                     }
-                    onChange={
-                      handleChange
-                    }
+                    onChange={handleChange}
                     placeholder="أدخل عنوان التقرير"
                     className="
                       w-full
                       min-w-0
                       bg-transparent
                       text-center
-                      text-[18px]
+                      text-[23px]
                       font-bold
                       text-white
                       outline-none
                       placeholder:text-white/60
-                      sm:text-[23px]
                     "
                   />
                 </div>
@@ -1662,52 +1720,43 @@ export default function Report({
               className={`
                 mx-auto
                 max-w-[840px]
-                px-3
-                pb-0
-                pt-[135px]
+                px-4
                 sm:px-8
-                sm:pt-[194px]
+                pb-0
+                pt-[194px]
 
                 print:max-w-none
                 print:px-[12mm]
-                print:pt-[32mm]
                 print:pb-0
+                print:pt-[32mm]
 
                 ${
                   isExportMode
-                    ? 'max-w-none px-[12mm] pt-[32mm] pb-0'
+                    ? `
+                      max-w-none
+                      px-[12mm]
+                      pb-0
+                      pt-[32mm]
+                    `
                     : ''
                 }
               `}
             >
-              {/*
-                مهم:
-                التوزيع هنا بقي كما هو تمامًا:
-                
-                العمود الأول:
-                المنفذ
-                المستهدفون
-                عدد المستفيدين
-                تاريخ التنفيذ
-
-                العمود الثاني:
-                مكان التنفيذ
-                الأهداف
-
-                الفرق الوحيد:
-                في الجوال الـ grid نفسه يصغر
-                بدل ما يثبت على 950px.
-              */}
-
               <div
-                className="
+                className={`
                   grid
-                  grid-cols-[1.3fr_1fr]
-                  gap-x-2
-                  gap-y-5
-                  sm:gap-x-4
-                  sm:gap-y-7
-                "
+                  grid-cols-1
+                  md:grid-cols-[1.3fr_1fr]
+                  print:grid-cols-[1.3fr_1fr]
+                  gap-x-4
+                  gap-y-7
+
+                  ${
+                    isExportMode
+                      ? 'grid-cols-[1.3fr_1fr]'
+                      : ''
+                  }
+                `}
               >
                 <Field
                   theme={currentTheme}
@@ -1718,17 +1767,26 @@ export default function Report({
                   value={
                     formData.implementer
                   }
-                  onChange={
-                    handleChange
-                  }
+                  onChange={handleChange}
                   error={
                     errors.implementer
                   }
                   label="المنفذ:"
-                  className="
-                    col-start-1
-                    row-start-1
-                  "
+                  className={`${
+                    isExportMode
+                      ? `
+                        col-start-1
+                        row-start-1
+                      `
+                      : `
+                        col-auto
+                        row-auto
+                        md:col-start-1
+                        md:row-start-1
+                        print:col-start-1
+                        print:row-start-1
+                      `
+                  }`}
                 />
 
                 <Field
@@ -1740,17 +1798,26 @@ export default function Report({
                   value={
                     formData.location
                   }
-                  onChange={
-                    handleChange
-                  }
+                  onChange={handleChange}
                   error={
                     errors.location
                   }
                   label="مكان التنفيذ:"
-                  className="
-                    col-start-2
-                    row-start-1
-                  "
+                  className={`${
+                    isExportMode
+                      ? `
+                        col-start-2
+                        row-start-1
+                      `
+                      : `
+                        col-auto
+                        row-auto
+                        md:col-start-2
+                        md:row-start-1
+                        print:col-start-2
+                        print:row-start-1
+                      `
+                  }`}
                 />
 
                 <Field
@@ -1762,17 +1829,26 @@ export default function Report({
                   value={
                     formData.target
                   }
-                  onChange={
-                    handleChange
-                  }
+                  onChange={handleChange}
                   error={
                     errors.target
                   }
                   label="المستهدفون:"
-                  className="
-                    col-start-1
-                    row-start-2
-                  "
+                  className={`${
+                    isExportMode
+                      ? `
+                        col-start-1
+                        row-start-2
+                      `
+                      : `
+                        col-auto
+                        row-auto
+                        md:col-start-1
+                        md:row-start-2
+                        print:col-start-1
+                        print:row-start-2
+                      `
+                  }`}
                 />
 
                 <Field
@@ -1784,17 +1860,26 @@ export default function Report({
                   value={
                     formData.beneficiaries
                   }
-                  onChange={
-                    handleChange
-                  }
+                  onChange={handleChange}
                   error={
                     errors.beneficiaries
                   }
                   label="عدد المستفيدين:"
-                  className="
-                    col-start-1
-                    row-start-3
-                  "
+                  className={`${
+                    isExportMode
+                      ? `
+                        col-start-1
+                        row-start-3
+                      `
+                      : `
+                        col-auto
+                        row-auto
+                        md:col-start-1
+                        md:row-start-3
+                        print:col-start-1
+                        print:row-start-3
+                      `
+                  }`}
                 />
 
                 <Field
@@ -1804,20 +1889,25 @@ export default function Report({
                   }
                   name="date"
                   type="date"
-                  value={
-                    formData.date
-                  }
-                  onChange={
-                    handleChange
-                  }
-                  error={
-                    errors.date
-                  }
+                  value={formData.date}
+                  onChange={handleChange}
+                  error={errors.date}
                   label="تاريخ التنفيذ:"
-                  className="
-                    col-start-1
-                    row-start-4
-                  "
+                  className={`${
+                    isExportMode
+                      ? `
+                        col-start-1
+                        row-start-4
+                      `
+                      : `
+                        col-auto
+                        row-auto
+                        md:col-start-1
+                        md:row-start-4
+                        print:col-start-1
+                        print:row-start-4
+                      `
+                  }`}
                 />
 
                 <Field
@@ -1829,43 +1919,50 @@ export default function Report({
                   value={
                     formData.objectives
                   }
-                  onChange={
-                    handleChange
-                  }
+                  onChange={handleChange}
                   error={
                     errors.objectives
                   }
                   label="الأهداف:"
                   type="textarea"
                   align="right"
-                  className="
-                    min-h-[205px]
-                    col-start-2
-                    row-start-2
-                    row-span-3
-                    sm:min-h-[237px]
-                  "
+                  className={`
+                    min-h-[237px]
+
+                    ${
+                      isExportMode
+                        ? `
+                          col-start-2
+                          row-start-2
+                          row-span-3
+                        `
+                        : `
+                          col-auto
+                          row-auto
+                          md:col-start-2
+                          md:row-start-2
+                          md:row-span-3
+                          print:col-start-2
+                          print:row-start-2
+                          print:row-span-3
+                        `
+                    }
+                  `}
                 />
               </div>
 
-              {/* ============================
-                  EVIDENCE — EDIT MODE
-                  ============================ */}
+              {/* ================= EVIDENCE — EDIT ================= */}
 
               <div
                 className={`
                   report-evidence
                   relative
-                  mt-6
+                  mt-7
                   rounded-[11px]
                   border-2
-                  px-3
-                  pb-3
-                  pt-4
-                  sm:mt-7
-                  sm:px-5
-                  sm:pb-5
-                  sm:pt-5
+                  px-5
+                  pb-5
+                  pt-5
 
                   ${
                     activeCount === 0
@@ -1887,16 +1984,13 @@ export default function Report({
                 <span
                   className="
                     absolute
-                    -top-4
+                    -top-5
                     right-1/2
                     translate-x-1/2
                     bg-white
-                    px-2
-                    text-lg
+                    px-3
+                    text-[24px]
                     font-bold
-                    sm:-top-5
-                    sm:px-3
-                    sm:text-[24px]
                   "
                   style={{
                     color:
@@ -1910,8 +2004,7 @@ export default function Report({
                   className="
                     grid
                     grid-cols-2
-                    gap-2
-                    sm:gap-4
+                    gap-4
                     print:hidden
                   "
                 >
@@ -1926,9 +2019,7 @@ export default function Report({
 
                       return (
                         <div
-                          key={
-                            boxIndex
-                          }
+                          key={boxIndex}
                           className={`
                             relative
                             min-w-0
@@ -1943,7 +2034,7 @@ export default function Report({
                               group
                               relative
                               flex
-                              h-[150px]
+                              h-[230px]
                               w-full
                               cursor-pointer
                               items-center
@@ -1955,7 +2046,6 @@ export default function Report({
                               transition-all
                               hover:border-dashed
                               hover:bg-gray-50
-                              sm:h-[230px]
                             "
                             style={{
                               borderColor:
@@ -1969,9 +2059,7 @@ export default function Report({
                               type="file"
                               accept="image/*"
                               className="hidden"
-                              onChange={(
-                                e
-                              ) =>
+                              onChange={(e) =>
                                 handleImageUpload(
                                   e,
                                   boxIndex
@@ -1981,12 +2069,9 @@ export default function Report({
 
                             {imageSrc ? (
                               <img
-                                src={
-                                  imageSrc
-                                }
+                                src={imageSrc}
                                 alt={`شاهد ${
-                                  boxIndex +
-                                  1
+                                  boxIndex + 1
                                 }`}
                                 className="
                                   h-full
@@ -2010,11 +2095,11 @@ export default function Report({
                                     currentTheme.labelColor,
                                 }}
                               >
-                                <span className="text-3xl leading-none sm:text-4xl">
+                                <span className="text-4xl leading-none">
                                   +
                                 </span>
 
-                                <span className="mt-2 text-xs font-bold sm:text-sm">
+                                <span className="mt-2 text-sm font-bold">
                                   إضافة صورة
                                 </span>
                               </div>
@@ -2031,27 +2116,22 @@ export default function Report({
                               }
                               className="
                                 absolute
-                                right-1.5
-                                top-1.5
+                                right-2
+                                top-2
                                 z-20
                                 flex
-                                h-7
-                                w-7
+                                h-8
+                                w-8
                                 items-center
                                 justify-center
                                 rounded-full
                                 bg-red-500
-                                text-base
+                                text-lg
                                 font-bold
                                 text-white
                                 shadow-md
                                 transition-all
                                 hover:scale-105
-                                sm:right-2
-                                sm:top-2
-                                sm:h-8
-                                sm:w-8
-                                sm:text-lg
                               "
                               aria-label="حذف الصورة"
                             >
@@ -2065,9 +2145,7 @@ export default function Report({
                 </div>
               </div>
 
-              {/* ============================
-                  EVIDENCE — EXPORT MODE
-                  ============================ */}
+              {/* ================= EVIDENCE — EXPORT ================= */}
 
               {activeCount > 0 && (
                 <div
@@ -2079,6 +2157,7 @@ export default function Report({
                     px-5
                     pb-5
                     pt-5
+
                     ${
                       isExportMode
                         ? 'block'
@@ -2090,14 +2169,7 @@ export default function Report({
                       currentTheme.primaryBorder,
                   }}
                 >
-                  <div
-                    className="
-                      relative
-                      grid
-                      grid-cols-2
-                      gap-4
-                    "
-                  >
+                  <div className="relative grid grid-cols-2 gap-4">
                     <span
                       className="
                         absolute
@@ -2119,10 +2191,7 @@ export default function Report({
                     </span>
 
                     {activeImages.map(
-                      (
-                        src,
-                        index
-                      ) => (
+                      (src, index) => (
                         <div
                           key={index}
                           className={`
@@ -2163,23 +2232,19 @@ export default function Report({
                 </div>
               )}
             </section>
-
-            {/* ================= FOOTER ================= */}
-
-            <footer
-              className="h-[43px]"
-              style={{
-                backgroundColor:
-                  currentTheme.darkAccent,
-              }}
-            />
           </div>
 
-          {/* ============================
-              MOBILE PRINT BUTTON
-              ============================ */}
+          {/* ================= MOBILE PRINT ================= */}
 
-          <div className="mt-6 flex justify-center sm:hidden print:hidden">
+          <div
+            className="
+              mt-6
+              flex
+              justify-center
+              sm:hidden
+              print:hidden
+            "
+          >
             <button
               type="button"
               onClick={handlePrint}
@@ -2194,21 +2259,22 @@ export default function Report({
                 items-center
                 justify-center
                 gap-2
-                rounded-full
+                rounded-xl
+                border
+                border-[#46534B]
+                bg-[#202923]
                 px-6
                 py-3
                 text-sm
                 font-bold
-                text-white
-                shadow-lg
+                text-[#E5E9E5]
+                shadow-[0_10px_30px_rgba(0,0,0,0.22)]
                 transition-all
+                hover:bg-[#29352E]
+                hover:border-[#B39A63]/60
                 active:scale-[0.98]
                 disabled:opacity-60
               "
-              style={{
-                backgroundColor:
-                  currentTheme.btnBg,
-              }}
             >
               <PrinterIcon />
 
@@ -2237,11 +2303,10 @@ export default function Report({
           gap-4
           rounded-2xl
           border
-          border-gray-200
-          bg-white/95
+          border-[#29332D]
+          bg-[#171E1A]
           p-4
-          shadow-xl
-          backdrop-blur-md
+          shadow-[0_18px_50px_rgba(0,0,0,0.25)]
           sm:w-fit
           sm:flex-row
           sm:rounded-full
@@ -2262,7 +2327,7 @@ export default function Report({
             sm:w-auto
             sm:flex-row
             sm:border-l
-            sm:border-gray-300
+            sm:border-[#29332D]
             sm:pl-4
           "
         >
@@ -2271,7 +2336,7 @@ export default function Report({
               whitespace-nowrap
               text-sm
               font-bold
-              text-gray-700
+              text-[#89938C]
             "
           >
             اختر الثيم:
@@ -2301,16 +2366,32 @@ export default function Report({
                     items-center
                     gap-1.5
                     rounded-full
+                    border
                     px-3
                     py-1.5
                     text-xs
                     font-bold
                     transition-all
+
                     ${
                       currentTheme.id ===
                       theme.id
-                        ? 'scale-105 shadow-sm ring-2 ring-blue-500 ring-offset-1'
-                        : 'hover:bg-gray-100'
+                        ? `
+                          scale-105
+                          border-[#46534B]
+                          bg-[#202923]
+                          text-[#E5E9E5]
+                          shadow-sm
+                          ring-1
+                          ring-[#B39A63]/40
+                        `
+                        : `
+                          border-transparent
+                          text-[#7F8A82]
+                          hover:border-[#303A34]
+                          hover:bg-[#202923]
+                          hover:text-[#D3D9D4]
+                        `
                     }
                   `}
                 >
@@ -2322,7 +2403,7 @@ export default function Report({
                       overflow-hidden
                       rounded-full
                       border
-                      border-gray-300
+                      border-[#46534B]
                     "
                   >
                     {theme.swatches.map(
@@ -2358,59 +2439,6 @@ export default function Report({
           </div>
         </div>
 
-        {/* ================= PRINT ================= */}
-
-        <button
-          type="button"
-          onClick={handlePrint}
-          disabled={
-            isPrinting ||
-            downloadingType !== null
-          }
-          className="
-            flex
-            w-full
-            items-center
-            justify-center
-            gap-2
-            whitespace-nowrap
-            rounded-full
-            px-6
-            py-2
-            text-md
-            font-bold
-            text-white
-            shadow-lg
-            transition-all
-            hover:scale-105
-            disabled:cursor-not-allowed
-            disabled:opacity-60
-            sm:w-auto
-          "
-          style={{
-            backgroundColor:
-              currentTheme.btnBg,
-          }}
-        >
-          {isPrinting ? (
-            <>
-              <SpinnerIcon />
-
-              <span>
-                جاري التجهيز للطباعة...
-              </span>
-            </>
-          ) : (
-            <>
-              <PrinterIcon />
-
-              <span>
-                طباعة
-              </span>
-            </>
-          )}
-        </button>
-
         {/* ================= PDF ================= */}
 
         <button
@@ -2419,8 +2447,7 @@ export default function Report({
             handleDownloadPDF
           }
           disabled={
-            downloadingType !==
-              null ||
+            downloadingType !== null ||
             isPrinting
           }
           className="
@@ -2430,16 +2457,20 @@ export default function Report({
             justify-center
             gap-2
             whitespace-nowrap
-            rounded-full
-            bg-slate-800
+            rounded-xl
+            border
+            border-[#3A463F]
+            bg-[#202923]
             px-6
             py-2
             text-md
             font-bold
-            text-white
-            shadow-lg
+            text-[#DCE3DD]
+            shadow-sm
             transition-all
-            hover:scale-105
+            hover:border-[#B39A63]/50
+            hover:bg-[#29352E]
+            hover:text-[#E7E9E5]
             disabled:cursor-not-allowed
             disabled:opacity-60
             sm:w-auto
@@ -2473,8 +2504,7 @@ export default function Report({
             handleDownloadPNG
           }
           disabled={
-            downloadingType !==
-              null ||
+            downloadingType !== null ||
             isPrinting
           }
           className="
@@ -2484,16 +2514,20 @@ export default function Report({
             justify-center
             gap-2
             whitespace-nowrap
-            rounded-full
-            bg-slate-600
+            rounded-xl
+            border
+            border-[#29332D]
+            bg-[#171E1A]
             px-6
             py-2
             text-md
             font-bold
-            text-white
-            shadow-lg
+            text-[#89938C]
+            shadow-sm
             transition-all
-            hover:scale-105
+            hover:border-[#46534B]
+            hover:bg-[#202923]
+            hover:text-[#DCE3DD]
             disabled:cursor-not-allowed
             disabled:opacity-60
             sm:w-auto

@@ -21,7 +21,6 @@ function AppRoutes() {
       <Route path="/Report" element={<ReportsPage/>}/>
 
     </Routes>
-      <Footer/>
         </BrowserRouter>
             </UserProvider>
 
