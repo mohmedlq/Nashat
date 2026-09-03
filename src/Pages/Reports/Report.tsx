@@ -101,15 +101,29 @@ function Field({
 }: FieldProps) {
   return (
     <div
-      className={`relative min-w-0 rounded-[11px] border-2 bg-white px-5 py-5 transition-all ${className}`}
+      className={`
+        relative min-w-0 rounded-[11px] border-2 bg-white
+        px-2.5 py-3
+        sm:px-5 sm:py-5
+        transition-all
+        ${className}
+      `}
       style={{
         borderColor: error ? '#ef4444' : theme.primaryBorder,
       }}
     >
       <span
-        className="absolute -top-5 right-5 bg-white px-2 text-[22px] font-bold transition-colors"
+        className={`
+          absolute
+          -top-4 right-2.5
+          px-1.5
+          text-base
+          sm:-top-5 sm:right-5 sm:px-2 sm:text-[22px]
+          font-bold transition-colors
+        `}
         style={{
           color: error ? '#ef4444' : theme.labelColor,
+          backgroundColor: '#ffffff',
         }}
       >
         {label}
@@ -118,9 +132,25 @@ function Field({
       <div className="h-full w-full min-w-0">
         {isExportMode ? (
           <div
-            className={`w-full min-w-0 whitespace-pre-wrap break-words text-[19px] leading-[1.7] text-[#424242] ${
-              type === 'textarea' ? 'min-h-[190px]' : ''
-            } ${align === 'right' ? 'text-right' : 'text-center'}`}
+            className={`
+              w-full min-w-0
+              whitespace-pre-wrap
+              break-words
+              text-base
+              leading-[1.7]
+              sm:text-[19px]
+              text-[#424242]
+              ${
+                type === 'textarea'
+                  ? 'min-h-[190px]'
+                  : ''
+              }
+              ${
+                align === 'right'
+                  ? 'text-right'
+                  : 'text-center'
+              }
+            `}
           >
             {value && value.trim() ? value : '\u00A0'}
           </div>
@@ -129,15 +159,34 @@ function Field({
             name={name}
             value={value}
             onChange={onChange}
-            className={`h-full min-h-[190px] w-full resize-none overflow-auto bg-transparent text-[19px] leading-[1.7] text-[#424242] outline-none placeholder:text-gray-300 ${
-              align === 'right' ? 'text-right' : 'text-center'
-            }`}
+            className={`
+              h-full min-h-[170px]
+              w-full resize-none
+              overflow-auto
+              bg-transparent
+              text-base
+              leading-[1.7]
+              text-[#424242]
+              outline-none
+              placeholder:text-gray-300
+              sm:min-h-[190px]
+              sm:text-[19px]
+              ${
+                align === 'right'
+                  ? 'text-right'
+                  : 'text-center'
+              }
+            `}
             placeholder={`أدخل ${label}`}
           />
         ) : type === 'date' ? (
           <div className="relative flex w-full min-w-0 items-center">
             <Picker
-              value={value ? value.replace(/[همـ\s]/g, '') : ''}
+              value={
+                value
+                  ? value.replace(/[همـ\s]/g, '')
+                  : ''
+              }
               onChange={(date: any) => {
                 const formatted = date
                   ? `${date.format('YYYY/MM/DD')} هـ`
@@ -154,9 +203,21 @@ function Field({
               locale={arabic_ar}
               calendarPosition="bottom-right"
               containerClassName="w-full"
-              inputClass={`w-full min-w-0 bg-transparent text-[22px] leading-8 text-[#424242] outline-none placeholder:text-gray-300 ${
-                align === 'right' ? 'text-right' : 'text-center'
-              }`}
+              inputClass={`
+                w-full min-w-0
+                bg-transparent
+                text-base
+                leading-8
+                text-[#424242]
+                outline-none
+                placeholder:text-gray-300
+                sm:text-[22px]
+                ${
+                  align === 'right'
+                    ? 'text-right'
+                    : 'text-center'
+                }
+              `}
               placeholder={`اختر ${label}`}
             />
           </div>
@@ -166,9 +227,21 @@ function Field({
             name={name}
             value={value}
             onChange={onChange}
-            className={`w-full min-w-0 bg-transparent text-[22px] leading-8 text-[#424242] outline-none placeholder:text-gray-300 ${
-              align === 'right' ? 'text-right' : 'text-center'
-            }`}
+            className={`
+              w-full min-w-0
+              bg-transparent
+              text-base
+              leading-8
+              text-[#424242]
+              outline-none
+              placeholder:text-gray-300
+              sm:text-[22px]
+              ${
+                align === 'right'
+                  ? 'text-right'
+                  : 'text-center'
+              }
+            `}
             placeholder={`أدخل ${label}`}
           />
         )}
@@ -230,7 +303,12 @@ function MinistryLogo({ src }: { src?: string }) {
     <img
       src={src || logoImage}
       alt="شعار وزارة التعليم السعودية"
-      className="h-[75px] w-auto object-contain brightness-0 invert"
+      className="
+        h-[50px] w-auto
+        object-contain
+        brightness-0 invert
+        sm:h-[75px]
+      "
     />
   );
 }
@@ -526,17 +604,21 @@ export default function Report({
   };
 
   /* ============================
-   * WAIT FOR RENDER
+   * ASYNC HELPERS
    * ============================ */
 
   const waitForNextPaint = () =>
     new Promise<void>((resolve) =>
       requestAnimationFrame(() =>
-        requestAnimationFrame(() =>
-          resolve()
-        )
+        requestAnimationFrame(() => resolve())
       )
     );
+
+  const yieldToBrowser = async () => {
+    await new Promise<void>((resolve) =>
+      setTimeout(resolve, 0)
+    );
+  };
 
   const waitForDocumentFonts = async () => {
     if ('fonts' in document) {
@@ -547,7 +629,7 @@ export default function Report({
           }
         ).fonts?.ready;
       } catch {
-        // لا نوقف التصدير إذا لم يدعم المتصفح FontFaceSet بشكل كامل.
+        // لا نوقف التصدير إذا لم يدعم المتصفح FontFaceSet.
       }
     }
   };
@@ -613,8 +695,7 @@ export default function Report({
     element.style.transform = 'none';
     element.style.width = '210mm';
     element.style.maxWidth = 'none';
-    element.style.transformOrigin =
-      'top right';
+    element.style.transformOrigin = 'top right';
 
     void element.offsetHeight;
 
@@ -703,6 +784,8 @@ export default function Report({
     try {
       await waitForNextPaint();
       await waitForNextPaint();
+      await yieldToBrowser();
+
       await waitForDocumentFonts();
 
       if (reportRef.current) {
@@ -714,6 +797,7 @@ export default function Report({
       await fitReportToPrintPage();
 
       await waitForNextPaint();
+      await yieldToBrowser();
 
       window.print();
     } catch (error) {
@@ -742,29 +826,8 @@ export default function Report({
     scale: number
   ) => {
     await waitForImages(element);
-
-    /*
-     * نلتقط التقرير كاملًا:
-     *
-     * البداية:
-     * x = 0
-     * y = 0
-     *
-     * النهاية:
-     * scrollWidth
-     * scrollHeight
-     *
-     * وبالتالي:
-     * Header
-     * ↓
-     * Content
-     * ↓
-     * Evidence
-     * ↓
-     * Footer
-     *
-     * كلها تدخل في PNG / PDF.
-     */
+    await waitForNextPaint();
+    await yieldToBrowser();
 
     const startX = 0;
     const startY = 0;
@@ -778,49 +841,53 @@ export default function Report({
     const cropHeight =
       endY - startY;
 
-    return html2canvas(element, {
-      scale,
+    const canvas = await html2canvas(
+      element,
+      {
+        scale,
 
-      useCORS: true,
-      allowTaint: false,
+        useCORS: true,
+        allowTaint: false,
 
-      backgroundColor: '#ffffff',
+        backgroundColor: '#ffffff',
 
-      logging: false,
+        logging: false,
 
-      imageTimeout: 15000,
+        imageTimeout: 15000,
 
-      x: startX,
-      y: startY,
+        x: startX,
+        y: startY,
 
-      width: cropWidth,
-      height: cropHeight,
+        width: cropWidth,
+        height: cropHeight,
 
-      /*
-       * مهم جدًا:
-       * التقرير في وضع التعديل ثابت 950px.
-       *
-       * لذلك html2canvas لا يتعامل معه
-       * كتقرير بعرض شاشة الجوال.
-       */
-      windowWidth: 950,
+        /*
+         * نستخدم عرض التقرير الحقيقي
+         * في وضع التصدير.
+         */
+        windowWidth: element.scrollWidth,
 
-      windowHeight: Math.max(
-        window.innerHeight,
-        element.scrollHeight
-      ),
+        windowHeight: Math.max(
+          window.innerHeight,
+          element.scrollHeight
+        ),
 
-      ignoreElements: (el) => {
-        return (
-          el.hasAttribute(
-            'data-pdf-ignore'
-          ) ||
-          el.classList.contains(
-            'export-ignore'
-          )
-        );
-      },
-    });
+        ignoreElements: (el) => {
+          return (
+            el.hasAttribute(
+              'data-pdf-ignore'
+            ) ||
+            el.classList.contains(
+              'export-ignore'
+            )
+          );
+        },
+      }
+    );
+
+    await yieldToBrowser();
+
+    return canvas;
   };
 
   /* ============================
@@ -868,6 +935,7 @@ export default function Report({
 
     await waitForNextPaint();
     await waitForNextPaint();
+    await yieldToBrowser();
   };
 
   const exitExportMode = () => {
@@ -879,10 +947,12 @@ export default function Report({
    * DOWNLOAD
    * ============================ */
 
-  const downloadBlob = (
+  const downloadBlob = async (
     blob: Blob,
     fileName: string
   ) => {
+    await yieldToBrowser();
+
     const url =
       URL.createObjectURL(blob);
 
@@ -897,10 +967,16 @@ export default function Report({
 
     document.body.appendChild(link);
 
+    await yieldToBrowser();
+
     link.click();
 
     link.remove();
 
+    /*
+     * نعطي المتصفح وقتًا لمعالجة
+     * عملية التحميل قبل حذف الـ URL.
+     */
     setTimeout(() => {
       URL.revokeObjectURL(url);
     }, 60000);
@@ -928,6 +1004,38 @@ export default function Report({
           type,
           quality
         );
+      }
+    );
+
+  /*
+   * تحويل Blob إلى Data URL
+   * بشكل Async بدل canvas.toDataURL()
+   * المباشر الذي قد يجمّد الصفحة.
+   */
+  const blobToDataURL = (
+    blob: Blob
+  ) =>
+    new Promise<string>(
+      (resolve, reject) => {
+        const reader =
+          new FileReader();
+
+        reader.onload = () => {
+          resolve(
+            reader.result as string
+          );
+        };
+
+        reader.onerror = () => {
+          reject(
+            reader.error ||
+              new Error(
+                'Failed to read image blob.'
+              )
+          );
+        };
+
+        reader.readAsDataURL(blob);
       }
     );
 
@@ -960,26 +1068,27 @@ export default function Report({
         );
       }
 
+      await yieldToBrowser();
+
       const canvas =
         await captureReportCanvas(
           reportRef.current,
           getCaptureScale()
         );
 
-      const pdf = new jsPDF({
-        orientation: 'portrait',
-        unit: 'mm',
-        format: 'a4',
-        compress: true,
-      });
+      await yieldToBrowser();
+
+      const pdf =
+        new jsPDF({
+          orientation: 'portrait',
+          unit: 'mm',
+          format: 'a4',
+          compress: true,
+        });
 
       const pageWidth = 210;
       const pageHeight = 297;
 
-      /*
-       * نصغر التقرير داخل صفحة A4
-       * بدون تغيير محتوى التقرير نفسه.
-       */
       const pdfScale =
         Math.min(
           pageWidth / canvas.width,
@@ -997,11 +1106,27 @@ export default function Report({
 
       const y = 0;
 
-      const imageData =
-        canvas.toDataURL(
+      /*
+       * بدل canvas.toDataURL()
+       * نستخدم Blob + FileReader
+       * حتى لا يتم تنفيذ التحويل
+       * بشكل synchronous ثقيل.
+       */
+      const imageBlob =
+        await canvasToBlob(
+          canvas,
           'image/jpeg',
           0.96
         );
+
+      await yieldToBrowser();
+
+      const imageData =
+        await blobToDataURL(
+          imageBlob
+        );
+
+      await yieldToBrowser();
 
       pdf.addImage(
         imageData,
@@ -1014,10 +1139,14 @@ export default function Report({
         'FAST'
       );
 
+      await yieldToBrowser();
+
       const pdfBlob =
         pdf.output('blob');
 
-      downloadBlob(
+      await yieldToBrowser();
+
+      await downloadBlob(
         pdfBlob,
         `${getSafeFileName()}.pdf`
       );
@@ -1060,11 +1189,15 @@ export default function Report({
         );
       }
 
+      await yieldToBrowser();
+
       const canvas =
         await captureReportCanvas(
           reportRef.current,
           getCaptureScale()
         );
+
+      await yieldToBrowser();
 
       const imageBlob =
         await canvasToBlob(
@@ -1072,7 +1205,9 @@ export default function Report({
           'image/png'
         );
 
-      downloadBlob(
+      await yieldToBrowser();
+
+      await downloadBlob(
         imageBlob,
         `${getSafeFileName()}.png`
       );
@@ -1170,9 +1305,16 @@ export default function Report({
     <div
       dir="rtl"
       className="
-        min-h-screen w-full overflow-x-auto bg-slate-100
-        px-2 py-4 sm:px-4 sm:py-8
-        print:min-h-0 print:bg-white print:p-0 print:m-0
+        min-h-screen
+        w-full
+        overflow-x-hidden
+        bg-slate-100
+        px-2 py-4
+        sm:px-4 sm:py-8
+        print:min-h-0
+        print:bg-white
+        print:p-0
+        print:m-0
       "
     >
       {/* ============================
@@ -1257,17 +1399,23 @@ export default function Report({
         >
           {/* ============================
               REPORT
-              ثابت 950px في الجوال والكمبيوتر
+              Responsive
               ============================ */}
 
           <div
             ref={reportRef}
             className={`
               report-print-area
-              mx-auto w-[950px] max-w-none
-              overflow-hidden rounded-2xl bg-white
-              font-[Arial,sans-serif] text-[#173f56]
+              mx-auto
+              w-full
+              max-w-[950px]
+              overflow-hidden
+              rounded-2xl
+              bg-white
+              font-[Arial,sans-serif]
+              text-[#173f56]
               shadow-2xl
+
               ${
                 isExportMode
                   ? 'w-[210mm] max-w-none rounded-none shadow-none m-0'
@@ -1279,9 +1427,13 @@ export default function Report({
 
             <header
               className="
-                relative min-h-[193px]
-                overflow-visible rounded-b-[18px]
-                pb-10
+                relative
+                min-h-[150px]
+                sm:min-h-[193px]
+                overflow-visible
+                rounded-b-[18px]
+                pb-8
+                sm:pb-10
                 print:rounded-b-[18px]
               "
               style={{
@@ -1291,25 +1443,44 @@ export default function Report({
             >
               <div
                 className="
-                  mx-auto flex h-full max-w-[760px]
-                  flex-row items-center
-                  justify-center gap-8
-                  px-4 pb-7 pt-6
+                  mx-auto
+                  flex
+                  h-full
+                  max-w-[760px]
+                  flex-row
+                  items-center
+                  justify-center
+                  gap-3
+                  px-3
+                  pb-6
+                  pt-5
                   text-white
+                  sm:gap-8
+                  sm:px-4
+                  sm:pb-7
+                  sm:pt-6
                 "
               >
                 <div
                   className="
-                    flex items-center gap-4
-                    border-r-[4px]
+                    flex
+                    items-center
+                    gap-2
+                    border-r-[3px]
                     border-white
-                    pr-5
+                    pr-3
+                    sm:gap-4
+                    sm:border-r-[4px]
+                    sm:pr-5
                   "
                 >
                   <div
                     className="
-                      text-right text-[21px]
-                      font-bold leading-[1.55]
+                      text-right
+                      text-[15px]
+                      font-bold
+                      leading-[1.55]
+                      sm:text-[21px]
                     "
                   >
                     وزارة التعليم
@@ -1317,9 +1488,10 @@ export default function Report({
 
                     <span
                       className="
-                        text-[14px]
+                        text-[9px]
                         font-normal
                         tracking-wide
+                        sm:text-[14px]
                       "
                     >
                       Ministry of Education
@@ -1328,8 +1500,11 @@ export default function Report({
 
                   <div
                     className="
-                      flex items-center
-                      justify-center pr-2
+                      flex
+                      items-center
+                      justify-center
+                      pr-1
+                      sm:pr-2
                     "
                   >
                     <MinistryLogo
@@ -1340,10 +1515,12 @@ export default function Report({
 
                 <div
                   className="
-                    w-auto text-right
-                    text-[21px]
+                    w-auto
+                    text-right
+                    text-[15px]
                     font-bold
                     leading-[1.7]
+                    sm:text-[21px]
                   "
                 >
                   الإدارة العامة للتعليم
@@ -1362,7 +1539,9 @@ export default function Report({
                     }
                     placeholder="أدخل المنطقة"
                     className="
-                      w-full min-w-[180px]
+                      w-full
+                      min-w-0
+                      sm:min-w-[180px]
                       bg-transparent
                       text-right
                       font-bold
@@ -1378,17 +1557,27 @@ export default function Report({
 
               <div
                 className="
-                  absolute -bottom-40
-                  left-1/2 z-10
-                  w-[calc(100%-112px)]
+                  absolute
+                  -bottom-28
+                  left-1/2
+                  z-10
+                  w-[calc(100%-32px)]
                   max-w-[742px]
                   -translate-x-1/2
+                  sm:-bottom-40
+                  sm:w-[calc(100%-112px)]
                 "
               >
                 <div
                   className="
-                    mb-3 rounded-[12px]
-                    px-6 py-4 shadow-sm
+                    mb-2
+                    rounded-[12px]
+                    px-3
+                    py-2
+                    shadow-sm
+                    sm:mb-3
+                    sm:px-6
+                    sm:py-4
                   "
                   style={{
                     backgroundColor:
@@ -1408,22 +1597,28 @@ export default function Report({
                     }
                     placeholder="أدخل اسم المدرسة"
                     className="
-                      w-full min-w-0
+                      w-full
+                      min-w-0
                       bg-transparent
                       text-center
-                      text-[21px]
+                      text-[16px]
                       font-bold
                       text-white
                       outline-none
                       placeholder:text-white/60
+                      sm:text-[21px]
                     "
                   />
                 </div>
 
                 <div
                   className="
-                    border-b-[7px]
-                    px-6 py-4
+                    border-b-[4px]
+                    px-3
+                    py-2
+                    sm:border-b-[7px]
+                    sm:px-6
+                    sm:py-4
                   "
                   style={{
                     backgroundColor:
@@ -1445,14 +1640,16 @@ export default function Report({
                     }
                     placeholder="أدخل عنوان التقرير"
                     className="
-                      w-full min-w-0
+                      w-full
+                      min-w-0
                       bg-transparent
                       text-center
-                      text-[23px]
+                      text-[18px]
                       font-bold
                       text-white
                       outline-none
                       placeholder:text-white/60
+                      sm:text-[23px]
                     "
                   />
                 </div>
@@ -1463,12 +1660,19 @@ export default function Report({
 
             <section
               className={`
-                mx-auto max-w-[840px]
-                px-8 pb-0 pt-[194px]
+                mx-auto
+                max-w-[840px]
+                px-3
+                pb-0
+                pt-[135px]
+                sm:px-8
+                sm:pt-[194px]
+
                 print:max-w-none
                 print:px-[12mm]
                 print:pt-[32mm]
                 print:pb-0
+
                 ${
                   isExportMode
                     ? 'max-w-none px-[12mm] pt-[32mm] pb-0'
@@ -1476,12 +1680,33 @@ export default function Report({
                 }
               `}
             >
+              {/*
+                مهم:
+                التوزيع هنا بقي كما هو تمامًا:
+                
+                العمود الأول:
+                المنفذ
+                المستهدفون
+                عدد المستفيدين
+                تاريخ التنفيذ
+
+                العمود الثاني:
+                مكان التنفيذ
+                الأهداف
+
+                الفرق الوحيد:
+                في الجوال الـ grid نفسه يصغر
+                بدل ما يثبت على 950px.
+              */}
+
               <div
                 className="
                   grid
                   grid-cols-[1.3fr_1fr]
-                  gap-x-4
-                  gap-y-7
+                  gap-x-2
+                  gap-y-5
+                  sm:gap-x-4
+                  sm:gap-y-7
                 "
               >
                 <Field
@@ -1614,10 +1839,11 @@ export default function Report({
                   type="textarea"
                   align="right"
                   className="
-                    min-h-[237px]
+                    min-h-[205px]
                     col-start-2
                     row-start-2
                     row-span-3
+                    sm:min-h-[237px]
                   "
                 />
               </div>
@@ -1629,15 +1855,24 @@ export default function Report({
               <div
                 className={`
                   report-evidence
-                  relative mt-7
+                  relative
+                  mt-6
                   rounded-[11px]
                   border-2
-                  px-5 pb-5 pt-5
+                  px-3
+                  pb-3
+                  pt-4
+                  sm:mt-7
+                  sm:px-5
+                  sm:pb-5
+                  sm:pt-5
+
                   ${
                     activeCount === 0
                       ? 'print:hidden'
                       : ''
                   }
+
                   ${
                     isExportMode
                       ? 'hidden'
@@ -1651,12 +1886,17 @@ export default function Report({
               >
                 <span
                   className="
-                    absolute -top-5
+                    absolute
+                    -top-4
                     right-1/2
                     translate-x-1/2
-                    bg-white px-3
-                    text-[24px]
+                    bg-white
+                    px-2
+                    text-lg
                     font-bold
+                    sm:-top-5
+                    sm:px-3
+                    sm:text-[24px]
                   "
                   style={{
                     color:
@@ -1668,8 +1908,10 @@ export default function Report({
 
                 <div
                   className="
-                    grid grid-cols-2
-                    gap-4
+                    grid
+                    grid-cols-2
+                    gap-2
+                    sm:gap-4
                     print:hidden
                   "
                 >
@@ -1698,8 +1940,10 @@ export default function Report({
                         >
                           <label
                             className="
-                              group relative
-                              flex h-[230px]
+                              group
+                              relative
+                              flex
+                              h-[150px]
                               w-full
                               cursor-pointer
                               items-center
@@ -1711,6 +1955,7 @@ export default function Report({
                               transition-all
                               hover:border-dashed
                               hover:bg-gray-50
+                              sm:h-[230px]
                             "
                             style={{
                               borderColor:
@@ -1765,11 +2010,11 @@ export default function Report({
                                     currentTheme.labelColor,
                                 }}
                               >
-                                <span className="text-4xl leading-none">
+                                <span className="text-3xl leading-none sm:text-4xl">
                                   +
                                 </span>
 
-                                <span className="mt-2 text-sm font-bold">
+                                <span className="mt-2 text-xs font-bold sm:text-sm">
                                   إضافة صورة
                                 </span>
                               </div>
@@ -1786,19 +2031,27 @@ export default function Report({
                               }
                               className="
                                 absolute
-                                right-2 top-2
+                                right-1.5
+                                top-1.5
                                 z-20
-                                flex h-8 w-8
+                                flex
+                                h-7
+                                w-7
                                 items-center
                                 justify-center
                                 rounded-full
                                 bg-red-500
-                                text-lg
+                                text-base
                                 font-bold
                                 text-white
                                 shadow-md
                                 transition-all
                                 hover:scale-105
+                                sm:right-2
+                                sm:top-2
+                                sm:h-8
+                                sm:w-8
+                                sm:text-lg
                               "
                               aria-label="حذف الصورة"
                             >
@@ -1823,7 +2076,9 @@ export default function Report({
                     mt-7
                     rounded-[11px]
                     border-2
-                    px-5 pb-5 pt-5
+                    px-5
+                    pb-5
+                    pt-5
                     ${
                       isExportMode
                         ? 'block'
@@ -1838,7 +2093,8 @@ export default function Report({
                   <div
                     className="
                       relative
-                      grid grid-cols-2
+                      grid
+                      grid-cols-2
                       gap-4
                     "
                   >
@@ -1921,7 +2177,6 @@ export default function Report({
 
           {/* ============================
               MOBILE PRINT BUTTON
-              خارج reportRef
               ============================ */}
 
           <div className="mt-6 flex justify-center sm:hidden print:hidden">
@@ -1933,13 +2188,15 @@ export default function Report({
                 downloadingType !== null
               }
               className="
-                flex w-full
+                flex
+                w-full
                 max-w-[360px]
                 items-center
                 justify-center
                 gap-2
                 rounded-full
-                px-6 py-3
+                px-6
+                py-3
                 text-sm
                 font-bold
                 text-white
@@ -1970,12 +2227,17 @@ export default function Report({
       <div
         className="
           print:hidden
-          mx-auto mt-8
-          flex w-full max-w-[95%]
-          flex-col items-center
+          mx-auto
+          mt-8
+          flex
+          w-full
+          max-w-[95%]
+          flex-col
+          items-center
           gap-4
           rounded-2xl
-          border border-gray-200
+          border
+          border-gray-200
           bg-white/95
           p-4
           shadow-xl
@@ -1992,7 +2254,8 @@ export default function Report({
 
         <div
           className="
-            flex w-full
+            flex
+            w-full
             flex-col
             items-center
             gap-2
@@ -2016,7 +2279,8 @@ export default function Report({
 
           <div
             className="
-              flex flex-wrap
+              flex
+              flex-wrap
               items-center
               justify-center
               gap-2
@@ -2033,10 +2297,12 @@ export default function Report({
                     )
                   }
                   className={`
-                    flex items-center
+                    flex
+                    items-center
                     gap-1.5
                     rounded-full
-                    px-3 py-1.5
+                    px-3
+                    py-1.5
                     text-xs
                     font-bold
                     transition-all
@@ -2050,7 +2316,9 @@ export default function Report({
                 >
                   <div
                     className="
-                      flex h-3.5 w-7
+                      flex
+                      h-3.5
+                      w-7
                       overflow-hidden
                       rounded-full
                       border
@@ -2100,13 +2368,15 @@ export default function Report({
             downloadingType !== null
           }
           className="
-            flex w-full
+            flex
+            w-full
             items-center
             justify-center
             gap-2
             whitespace-nowrap
             rounded-full
-            px-6 py-2
+            px-6
+            py-2
             text-md
             font-bold
             text-white
@@ -2154,14 +2424,16 @@ export default function Report({
             isPrinting
           }
           className="
-            flex w-full
+            flex
+            w-full
             items-center
             justify-center
             gap-2
             whitespace-nowrap
             rounded-full
             bg-slate-800
-            px-6 py-2
+            px-6
+            py-2
             text-md
             font-bold
             text-white
@@ -2206,14 +2478,16 @@ export default function Report({
             isPrinting
           }
           className="
-            flex w-full
+            flex
+            w-full
             items-center
             justify-center
             gap-2
             whitespace-nowrap
             rounded-full
             bg-slate-600
-            px-6 py-2
+            px-6
+            py-2
             text-md
             font-bold
             text-white
