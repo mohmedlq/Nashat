@@ -10,7 +10,6 @@ import {
   Sparkles,
   X,
 } from "lucide-react";
-
 const AI_ROUTE = "/generator";
 
 const Navbar: React.FC = () => {
@@ -117,7 +116,7 @@ const Navbar: React.FC = () => {
               )}
             </Link>
 
-            {/* Reports */}
+            {/* certificates */}
             <Link
               to="/reports"
               className={`relative flex items-center gap-2 rounded-lg px-4 py-2.5 text-[13px] font-semibold transition-all duration-200 ${
@@ -142,6 +141,34 @@ const Navbar: React.FC = () => {
                 <span className="absolute bottom-1 right-1/2 h-1 w-1 translate-x-1/2 rounded-full bg-[#B39A63]" />
               )}
             </Link>
+
+                <Link
+              to="/certificates"
+              className={`relative flex items-center gap-2 rounded-lg px-4 py-2.5 text-[13px] font-semibold transition-all duration-200 ${
+                isActive("/Report")
+                  ? "bg-[#202923] text-[#DCE3DD]"
+                  : "text-[#89938C] hover:bg-[#1A211D] hover:text-[#D5DBD6]"
+              }`}
+            >
+              <FileText
+                size={15}
+                strokeWidth={1.7}
+                className={
+                  isActive("/reports")
+                    ? "text-[#91A394]"
+                    : "text-[#68756D]"
+                }
+              />
+
+              الشهادات
+
+              {isActive("/certificates") && (
+                <span className="absolute bottom-1 right-1/2 h-1 w-1 translate-x-1/2 rounded-full bg-[#B39A63]" />
+              )}
+            </Link>
+            
+            
+            
           </nav>
 
           {/* ================= RIGHT ACTIONS ================= */}
@@ -353,6 +380,24 @@ const Navbar: React.FC = () => {
               </div>
 
               {isActive(AI_ROUTE) && (
+                <span className="h-1.5 w-1.5 rounded-full bg-[#B39A63]" />
+              )}
+            </Link>
+              <Link
+              to="/certificates"
+              onClick={closeSidebar}
+              className={`flex items-center justify-between rounded-xl px-4 py-3.5 text-sm font-semibold transition-all ${
+                isActive("/certificates")
+                  ? "bg-[#202923] text-[#E0E5E0]"
+                  : "text-[#858F88] hover:bg-[#171E1A] hover:text-[#D3D9D4]"
+              }`}
+            >
+              <div className="flex items-center gap-3">
+                <FileText size={16} strokeWidth={1.7} />
+                الشهادات
+              </div>
+
+              {isActive("/certificates") && (
                 <span className="h-1.5 w-1.5 rounded-full bg-[#B39A63]" />
               )}
             </Link>

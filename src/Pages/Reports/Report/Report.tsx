@@ -324,7 +324,7 @@ export default function Report({
         el.hasAttribute('data-pdf-ignore') || el.classList.contains('export-ignore'),
     });
   };
-
+const [reportMode, setReportMode] = useState<'image' | 'no-image'>('image');
   const getSafeFileName = () => {
     const title = formData.reportTitle
       .trim()
@@ -491,7 +491,35 @@ export default function Report({
           </button>
         </div>
       )}
+{/* ================= REPORT MODE TOGGLE ================= */}
+<div
+  className="mx-auto gap-15  mb-6 justify-center flex w-500px items-center rounded-full border border-[#344039] bg-[#171E1A]/60 p-1 backdrop-blur-sm"
+  data-pdf-ignore
+>
+  <button
+    type="button"
+    onClick={() => setReportMode('image')}
+    className={`rounded-full  px-12 py-2 text-sm font-semibold transition-all duration-200 ${
+      reportMode === 'image'
+        ? 'bg-[#B39A63]/15 text-[#D8C18E] shadow-sm ring-1 ring-[#B39A63]/25'
+        : 'text-[#89938C] hover:text-[#C5CCC7]'
+    }`}
+  >
+    تقرير بصورة
+  </button>
 
+  <button
+    type="button"
+    onClick={() => setReportMode('no-image')}
+    className={`rounded-full px-12 py-2 text-sm font-semibold transition-all duration-200 ${
+      reportMode === 'no-image'
+        ? 'bg-[#B39A63]/15 text-[#D8C18E] shadow-sm ring-1 ring-[#B39A63]/25'
+        : 'text-[#89938C] hover:text-[#C5CCC7]'
+    }`}
+  >
+    تقرير بدون صورة
+  </button>
+</div>
       {/* Form التعديل التفاعلي */}
       <ReportEditForm
         formData={formData}

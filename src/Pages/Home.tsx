@@ -160,8 +160,8 @@ const Home: React.FC = () => {
           <RandomBroadcasts />
         </section>
 
-        {/* ================= PERSONAL CTA ================= */}
-        <section className="relative overflow-hidden border-t border-[#29332D] py-24">
+{/* ================= PERSONAL CTA ================= */}
+        <        section className="relative overflow-hidden border-t border-[#29332D] py-24">
           {/* Background decoration */}
           <div className="pointer-events-none absolute inset-0">
             <div className="absolute left-1/2 top-1/2 h-[500px] w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#B39A63]/[0.025] blur-3xl" />
