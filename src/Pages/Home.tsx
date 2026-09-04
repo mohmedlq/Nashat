@@ -17,10 +17,9 @@ import Background from "../Components/Background";
 import { FaGithub } from "react-icons/fa6";
 import { FaGithubSquare } from "react-icons/fa";
 
-// ✅ استيراد جميع الصور هنا
 import Dvld from "../assets/Dvld.png";
-import NashatImg from "../assets/nashat.png"; // تأكد من اسم الصورة وامتدادها
-import TrainingImg from "../assets/training.png"; // تأكد من اسم الصورة وامتدادها
+import NashatImg from "../assets/nashat.png";  
+import TrainingImg from "../assets/training.png";
 
 const Home: React.FC = () => {
   return (

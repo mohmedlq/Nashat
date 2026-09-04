@@ -20,7 +20,7 @@ import {
 } from "lucide-react";
 
 import BroadcastDetail from "../Broadcasts/BroadcastDetail";
-import Report from "../Reports/Report";
+import Report from "../Reports/Report/Report";
 
 import type { Broadcast } from "../../types/BroadcastTypes";
 import type { ReportFormData } from "../../types/ReportsTypes";
