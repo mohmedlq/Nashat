@@ -1,22 +1,10 @@
 import React from 'react';
-import type { ReportFormData } from '../../../types/ReportsTypes';
-import type { Theme } from '../../../misc/Theme';
-import { MinistryLogo } from '../../../Icons/Icons';
-import { EditableField } from './EditableField';
-import { EditableHeaderText } from './EditableHeader';
-import { EvidenceUploadGrid } from './Evidenceuploadgrid';
-
-export type ReportEditFormProps = {
-  formData: ReportFormData;
-  errors: Record<string, string>;
-  theme: Theme;
-  logoSrc?: string;
-  onChange: (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => void;
-  onImageUpload: (e: React.ChangeEvent<HTMLInputElement>, index: number) => void;
-  onRemoveImage: (index: number) => void;
-};
+import type { ReportFormData , ReportEditFormProps } from '../../../../../types/ReportsTypes';
+import type { Theme } from '../../../../../misc/Theme';
+import { MinistryLogo } from '../../../../../Icons/Icons';
+import { EditableField } from '../EditableField';
+import { EditableHeaderText } from '../EditableHeader';
+import { EvidenceUploadGrid } from '../Evidenceuploadgrid';
 
 export function ReportEditForm({
   formData,

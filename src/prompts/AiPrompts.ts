@@ -27,17 +27,17 @@ export function createReportPrompt(
   region: string
 ): string {
   return `
-You are generating a formal Arabic school activity report (تقرير نشاط مدرسي).
-
+You are generating a formal  school activity report in arabic (تقرير نشاط مدرسي)
+in english (School Reports).
 USER REQUEST (free text, may contain the activity description plus extra details like the school name, implementer name, region, beneficiaries, and their count, in any order and without labels):
 "${userText}"
 
 FIELDS TO FILL — PRIORITY ORDER:
 For each of the three fields below (schoolName, implementer, region), decide the value using this exact priority:
-  1) If the value appears anywhere inside USER REQUEST (even informally, e.g. "اسم المنفذ ...", "مدرسة ...", "منطقة ..."), extract and use that value.
+  1) If the value appears anywhere inside USER REQUEST (even informally, e.g. "اسم المنفذ ...", "مدرسة ...", "منطقة ... "), extract and use that value.
   2) Otherwise, if a non-empty value was passed in below, use it exactly as given — do not alter, translate, or reformat it.
   3) Otherwise, use "".
-
+  4) even if it was a plain name like 'محمد' or any name 
 Provided values (used only per the priority rule above, and only if step 1 finds nothing):
 - schoolName: "${schoolName}"
 - implementer: "${teacherName}"
@@ -62,7 +62,9 @@ OTHER CONTENT RULES:
 6. Do not invent personal information, names, numbers, or locations that were not provided or extracted.
 8. Do not ask any questions. Generate the full report immediately.
 9. Do not add commentary, explanations, or notes outside the JSON. Do not wrap the output in markdown code fences.
-
+10. be direct never make a revison after filling the data
+11. Before School name always add ' مدرسة:'
+12. Before the Implementer also add ' الاستاذ :'
 OUTPUT:
 Return only the JSON object required by the schema. No text before or after it.
 `;

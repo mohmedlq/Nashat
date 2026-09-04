@@ -88,4 +88,40 @@ export const PRESET_THEMES: Theme[] = [
     btnBg: '#3f6212',
     swatches: ['#3f6212', '#4d7c0f', '#65a30d', '#1a2e05'],
   },
+{
+    id: 'report-teal-premium',
+    name: 'أخضر التقرير (الفاخر)',
+    // مستوحى من كلاس .teal-surface
+    headerGradient: 'linear-gradient(160deg, #1f6a68 0%, #124a4a 48%, #0a2f30 100%)',
+    darkAccent: '#0a2f30',    // --color-teal-950
+    primaryBorder: '#c39a41', // --color-gold-500
+    labelColor: '#0c3b3c',    // --color-teal-900
+    titleBorder: '#d8b661',   // --color-gold-400
+    btnBg: '#217874',         // --color-teal-600
+    swatches: ['#0a2f30', '#217874', '#c39a41', '#e7cf8e'],
+  },
+  {
+    id: 'report-paper-gold',
+    name: 'الكلاسيكي الذهبي',
+    // مستوحى من كلاس .gold-surface
+    headerGradient: 'linear-gradient(180deg, #f6e6b4 0%, #e7cf8e 14%, #c99f43 46%, #a9812f 74%, #8a6620 100%)',
+    darkAccent: '#0c3b3c',    // --color-teal-900
+    primaryBorder: '#124a4a', // --color-teal-800
+    labelColor: '#1a5c5b',    // --color-teal-700
+    titleBorder: '#c39a41',   // --color-gold-500
+    btnBg: '#c39a41',         // --color-gold-500
+    // الألوان: لون الورق، ذهبي أساسي، أخضر التقرير، والأخضر الداكن
+    swatches: ['#efe9db', '#c39a41', '#217874', '#0a2f30'],
+  },
+  {
+    id: 'report-signature-soft',
+    name: 'التقرير الرسمي (أخضر وذهبي ناعم)',
+    headerGradient: 'linear-gradient(160deg, #1f6a68 0%, #124a4a 48%, #0a2f30 100%)',
+    darkAccent: '#071f20',    
+    primaryBorder: '#c39a41', 
+    labelColor: '#0c3b3c',    
+    titleBorder: '#e7cf8e',   
+    btnBg: '#124a4a',         
+    swatches: ['#efe9db', '#e7cf8e', '#124a4a', '#0a2f30'],
+  }
 ];

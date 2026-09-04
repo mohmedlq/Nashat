@@ -102,7 +102,7 @@ const Footer: React.FC = () => {
         {/* Bottom */}
         <div className="mt-14 flex flex-col justify-between gap-4 border-t border-[#232C27] pt-6 text-[11px] text-[#59645D] sm:flex-row sm:items-center">
           <p>
-            © {new Date().getFullYear()} المساعد المدرسي. جميع الحقوق محفوظة.
+            © {new Date().getFullYear()}  جميع الحقوق محفوظة.
           </p>
 
           <a
