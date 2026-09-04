@@ -11,7 +11,7 @@ import {
 
 import AIGenerator from "../Components/MiniAIGenerator";
 import HowItWorks from "../Components/HowItWork";
-import RandomBroadcasts from "../Components/RandomBroadcasts";
+import RandomBroadcasts from "../Components/RandomReports";
 import Footer from "../Components/Footer";
 import Background from "../Components/Background";
 import { FaGithub } from "react-icons/fa6";
@@ -268,7 +268,7 @@ const Home: React.FC = () => {
                     </div>
 
                     <a
-                      href="https://github.com/"
+                      href="https://github.com/mohmedlq"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="group inline-flex w-fit items-center gap-2 text-sm font-semibold text-[#9AAA9E] transition hover:text-[#B39A63]"

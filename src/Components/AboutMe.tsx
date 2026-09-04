@@ -9,7 +9,6 @@ import {
   Code2,
   Database,
   ExternalLink,
-  Github,
   Globe2,
   Layers3,
   Mail,
@@ -25,6 +24,7 @@ import {
 import Dvld from "../assets/Dvld.png";
 import NashatImg from "../assets/nashat.png";
 import TrainingImg from "../assets/training.png";
+import { FaGithub } from "react-icons/fa6";
 
 export default function AboutMe() {
   const skills = [
@@ -323,7 +323,7 @@ export default function AboutMe() {
                   rel="noreferrer"
                   className="inline-flex items-center gap-2 rounded-xl border border-[#354039] bg-[#171E1A]/70 px-5 py-3 font-['Cairo',sans-serif] text-sm font-semibold text-[#B4BDB7] transition-all hover:border-[#4A574F] hover:bg-[#1A221E] hover:text-[#E0E4E0]"
                 >
-                  <Github size={17} />
+                  <FaGithub size={17} />
                   GitHub
                 </a>
               </div>
@@ -707,7 +707,7 @@ export default function AboutMe() {
               rel="noreferrer"
               className="group inline-flex w-fit items-center gap-2 text-sm text-[#929D95] transition-colors hover:text-[#C8AF73]"
             >
-              <Github size={16} />
+              <FaGithub size={16} />
               <span>شاهد جميع المشاريع</span>
               <ArrowUpLeft
                 size={15}
@@ -830,7 +830,7 @@ export default function AboutMe() {
                         rel="noreferrer"
                         className="group/link inline-flex items-center gap-2 rounded-lg px-3 py-2 text-xs font-semibold text-[#9BA59F] transition-all hover:bg-[#202923] hover:text-[#D1BB83]"
                       >
-                        <Github size={15} />
+                        <FaGithub size={15} />
                         GitHub
                         <ExternalLink
                           size={12}
@@ -990,7 +990,7 @@ export default function AboutMe() {
                   rel="noreferrer"
                   className="inline-flex items-center gap-2 rounded-xl border border-[#3A463F] bg-[#202923] px-5 py-3 font-['Cairo',sans-serif] text-sm font-semibold text-[#AEB7B1] transition-all hover:bg-[#29352E] hover:text-[#E0E5E0]"
                 >
-                  <Github size={16} />
+                  <FaGithub size={16} />
                   GitHub
                 </a>
               </div>
