@@ -114,6 +114,7 @@ export const ClasicStylePrint = React.forwardRef<
           flex-col
           overflow-hidden
           pt-[180px]
+pb-[40px]
         "
       >
         {/* ================= SCHOOL + TITLE ================= */}
