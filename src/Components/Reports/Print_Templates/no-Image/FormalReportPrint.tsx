@@ -19,22 +19,24 @@ export const FormalReportPrint = React.forwardRef<
 >(({ data, theme, logoSrc }, ref) => {
   return (
     <div
-      ref={ref}
-      dir="rtl"
-      className="
-        relative
-        m-0
-        flex
-        h-[297mm]
-        min-h-[297mm]
-        w-[210mm]
-        flex-col
-        overflow-hidden
-        bg-white
-        font-[Arial,sans-serif]
-        text-[#173f56]
-        shadow-none
-      "
+  ref={ref}
+  dir="rtl"
+  className="
+    relative
+    m-0
+    box-border
+    flex
+    h-[297mm]
+    min-h-[297mm]
+    w-[210mm]
+    flex-col
+    overflow-hidden
+    bg-white
+    font-[Arial,sans-serif]
+    text-[#173f56]
+    shadow-none
+  "
+>
       style={{
         pageBreakAfter: 'always',
       }}
@@ -479,7 +481,7 @@ export const FormalReportPrint = React.forwardRef<
         </section>
 
         {/* ================= OBJECTIVES ================= */}
-        <section className="mb-5 flex flex-1 flex-col px-[13mm] pt-[6mm]">
+        <section className="flex min-h-0 flex-1 flex-col px-[13mm] pt-[6mm]">
           <PrintSectionHeading
             title="أهداف التقرير"
             theme={theme}
@@ -494,6 +496,7 @@ export const FormalReportPrint = React.forwardRef<
               overflow-hidden
               rounded-[5px]
               border-[2px]
+min-h-0
             "
             style={{
               borderColor: theme.primaryBorder,
@@ -570,7 +573,7 @@ export const FormalReportPrint = React.forwardRef<
         </section>
       </main>
 
-      {/* ================= FOOTER ================= x
+      {/* ================= FOOTER =================*/} 
       <footer
         className="
           absolute top-bottom left-0 w-full
@@ -589,13 +592,13 @@ export const FormalReportPrint = React.forwardRef<
         }}
       >
         <div
-          className="h-[2px] "
+          className="h-[5px] "
           style={{
             backgroundColor: theme.titleBorder,
           }}
         />
       </footer>
-      */}
+     
     </div>
   );
 });
