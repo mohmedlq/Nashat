@@ -1,5 +1,5 @@
 import React from 'react';
-import type { Theme } from '../../../../misc/Theme';
+import type { Theme } from '../../../misc/Theme';
 
 export type EvidenceUploadGridProps = {
   evidences: (string | null)[];

@@ -49,7 +49,7 @@ STRICT RULES FOR THESE THREE FIELDS:
 - If the final value is empty, keep the field as "" — do not fabricate a placeholder.
 
 TYPO CORRECTION (spelling only, not identity):
-- If the extracted/provided text contains an obvious spelling mistake in a well-known word (e.g. a city, region, or common Arabic name), correct the spelling to the standard form — e.g. "مكة المكرة" → "مكة المكرمة", "محد" → "محمد".
+- If the extracted/provided text contains an obvious spelling mistake in a well-known word (e.g. a city, region, or common Arabic name),
 - Only fix clear, obvious misspellings of recognizable words. Do not "correct" an uncommon or unfamiliar name into a different name — if it's not obviously a typo, leave it exactly as written.
 - This correction must never change the person's, school's, or region's actual identity — only fix how it is spelled.
 

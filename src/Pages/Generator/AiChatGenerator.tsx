@@ -20,7 +20,7 @@ import {
 } from "lucide-react";
 
 import BroadcastDetail from "../Broadcasts/BroadcastDetail";
-import Report from "../Reports/Report/Report";
+import Report from "../Reports/Report";
 
 import type { Broadcast } from "../../types/BroadcastTypes";
 import type { ReportFormData } from "../../types/ReportsTypes";
@@ -434,56 +434,24 @@ const AiGenerator: React.FC = () => {
 
   if (activeReport) {
     return (
-      <div
-        dir="rtl"
-        className="relative min-h-screen bg-[#111714]"
+  <div dir="rtl" className="min-h-screen bg-[#111714]">
+  <div className="mx-auto max-w-7xl px-4 pt-6 sm:px-8">
+    {/* زر العودة فوق التقرير مباشرة */}
+    <div className="-mb-0 flex items-center justify-start print:hidden">
+      <button
+        type="button"
+        onClick={() => setActiveReport(null)}
+        className="inline-flex items-center gap-2 rounded-lg border border-[#3A463F] bg-[#171E1A] px-3.5 py-2 text-xs font-semibold text-[#C4CCC6] transition hover:border-[#4A574F] hover:bg-[#202923] hover:text-[#E2E7E3]"
       >
-        <button
-          type="button"
-          onClick={() =>
-            setActiveReport(
-              null
-            )
-          }
-          className="
-            fixed
-            right-3
-            top-3
-            z-50
-            inline-flex
-            items-center
-            gap-2
-            rounded-lg
-            border
-            border-[#3A463F]
-            bg-[#171E1A]
-            px-3
-            py-2
-            text-xs
-            font-semibold
-            text-[#C4CCC6]
-            shadow-lg
-            transition
-            hover:border-[#4A574F]
-            hover:bg-[#202923]
-            hover:text-[#E2E7E3]
-            print:hidden
-          "
-        >
-          <ArrowLeft
-            size={13}
-            className="rotate-180"
-          />
+        <ArrowLeft size={13} className="rotate-180" />
+        العودة للمحادثة
+      </button>
+    </div>
 
-          العودة للمحادثة
-        </button>
-
-        <Report
-          initialData={
-            activeReport
-          }
-        />
-      </div>
+    {/* مكون التقرير */}
+    <Report initialData={activeReport} />
+  </div>
+</div>
     );
   }
 

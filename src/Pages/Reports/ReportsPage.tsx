@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from "react";
 import { ArrowLeft, FileText, Plus, ClipboardList } from "lucide-react";
 import { useUser } from "../../context/Context";
-import Report from "./Report/Report";
+import Report from "./Report";
 import { MOCK_REPORTS } from "../../data/ReportsData";
 import { useNavigate, useParams } from "react-router-dom";
 

@@ -2,8 +2,8 @@ import React from 'react';
 import DatePicker from 'react-multi-date-picker';
 import arabic from 'react-date-object/calendars/arabic';
 import arabic_ar from 'react-date-object/locales/arabic_ar';
-import type { ReportFormData } from '../../../../types/ReportsTypes';
-import type { Theme } from '../../../../misc/Theme';
+import type { ReportFormData } from '../../../types/ReportsTypes';
+import type { Theme } from '../../../misc/Theme';
 
 const Picker = (DatePicker as any).default || DatePicker;
 

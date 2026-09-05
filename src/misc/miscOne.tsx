@@ -4,7 +4,7 @@ export function getTodayHijri(): string {
     month: '2-digit',
     day: '2-digit'
   });
-  return `${formatter.format(new Date())} هـ`;
+  return formatter.format(new Date());
 }
 
 export  function stripWhiteBackground(
