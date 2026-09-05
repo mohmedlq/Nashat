@@ -571,7 +571,7 @@ export const FormalReportPrint = React.forwardRef<
         </section>
       </main>
 
-      {/* ================= FOOTER ================= */}
+      {/* ================= FOOTER ================= x
       <footer
         className="
           absolute top-bottom left-0 w-full
@@ -596,6 +596,7 @@ export const FormalReportPrint = React.forwardRef<
           }}
         />
       </footer>
+      */}
     </div>
   );
 });
