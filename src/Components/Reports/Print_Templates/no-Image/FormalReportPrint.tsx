@@ -197,7 +197,7 @@ export const FormalReportPrint = React.forwardRef<
           w-full
           flex-1
           flex-col
-          pb-[10px]
+          pb-[20px]
         "
       >
         {/* ================= SCHOOL + TITLE ================= */}
