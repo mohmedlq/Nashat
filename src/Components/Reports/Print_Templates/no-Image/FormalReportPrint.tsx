@@ -563,6 +563,7 @@ export const FormalReportPrint = React.forwardRef<
                   focus:!border-0
                   focus:!outline-none
                   focus:!ring-0
+                  h-full
                 "
               />
             </div>
