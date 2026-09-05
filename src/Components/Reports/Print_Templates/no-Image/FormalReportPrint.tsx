@@ -574,7 +574,7 @@ export const FormalReportPrint = React.forwardRef<
       {/* ================= FOOTER ================= */}
       <footer
         className="
-          relative
+          absolute top-bottom left-0 w-full
           z-20
           mt-auto
           flex
@@ -590,7 +590,7 @@ export const FormalReportPrint = React.forwardRef<
         }}
       >
         <div
-          className="absolute top-bottom left-0 w-full h-[2px] "
+          className="h-[2px] "
           style={{
             backgroundColor: theme.titleBorder,
           }}
