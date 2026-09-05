@@ -8,7 +8,7 @@
 
 ## 🌐 تجربة المنصة
 
-**[🔗 nashat-orcin.vercel.app](https://nashat-orcin.vercel.app/)**
+**[🔗 https://nashat-seven.vercel.app/generator)**
 
 ---
 
