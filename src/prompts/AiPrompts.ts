@@ -63,8 +63,6 @@ OTHER CONTENT RULES:
 8. Do not ask any questions. Generate the full report immediately.
 9. Do not add commentary, explanations, or notes outside the JSON. Do not wrap the output in markdown code fences.
 10. be direct never make a revison after filling the data
-11. Before School name always add ' مدرسة:'
-12. Before the Implementer also add ' الاستاذ :'
 OUTPUT:
 Return only the JSON object required by the schema. No text before or after it.
 `;
