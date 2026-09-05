@@ -160,11 +160,9 @@ export const CyanGalleryStylePrint = React.forwardRef<HTMLDivElement, CyanGaller
 
         {/* ================= FOOTER ================= */}
         <footer
-          className="flex h-[14mm] shrink-0 items-center justify-between px-8 text-white"
+          className="absolute top-bottom left-0 w-full shrink-0 items-center justify-between px-8 text-white"
           style={{ backgroundColor: theme.darkAccent }}
         >
-          <span className="text-[15px] font-bold">{data.schoolName || 'اسم المدرسة'}</span>
-          <span className="text-[11px] opacity-70">وزارة التعليم</span>
         </footer>
       </div>
     );

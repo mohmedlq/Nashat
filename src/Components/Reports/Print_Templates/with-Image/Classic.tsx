@@ -106,7 +106,7 @@ export const ClasicStylePrint = React.forwardRef<HTMLDivElement, ReportPrintDocu
 
         {/* ================= FOOTER ================= */}
         <footer
-          className="w-full h-[40px] shrink-0 z-10"
+          className="absolute top-bottom left-0 w-full h-[40px] shrink-0 z-10"
           style={{ backgroundColor: theme.darkAccent }}
         />
       </div>

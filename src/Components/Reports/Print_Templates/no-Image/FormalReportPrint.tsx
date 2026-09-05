@@ -589,7 +589,7 @@ export const FormalReportPrint = React.forwardRef<
         }}
       >
         <div
-          className="h-[2px] w-[14mm]"
+          className="absolute top-bottom left-0 w-full h-[2px] "
           style={{
             backgroundColor: theme.titleBorder,
           }}

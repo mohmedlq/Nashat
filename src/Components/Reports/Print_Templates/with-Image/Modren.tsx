@@ -476,6 +476,7 @@ export const ModernStylePrint = React.forwardRef<
               pt-3
               text-[14px]
               font-bold
+              absolute top-bottom left-0 w-full
             "
             style={{
               borderColor: `${theme.primaryBorder}30`,
