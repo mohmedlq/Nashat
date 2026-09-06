@@ -24,6 +24,7 @@ export const FormalReportPrint = React.forwardRef<
       className="
         relative
         m-0
+        box-border
         flex
         h-[297mm]
         min-h-[297mm]
@@ -39,7 +40,7 @@ export const FormalReportPrint = React.forwardRef<
         pageBreakAfter: 'always',
       }}
     >
-      {/* إعدادات الطباعة */}
+      {/* ================= PRINT SETTINGS ================= */}
       <style type="text/css">
         {`
           @media print {
@@ -56,7 +57,7 @@ export const FormalReportPrint = React.forwardRef<
         `}
       </style>
 
-      {/* الخط العلوي */}
+      {/* ================= TOP LINE ================= */}
       <div
         className="absolute left-0 top-0 z-20 h-[6px] w-full"
         style={{
@@ -190,11 +191,13 @@ export const FormalReportPrint = React.forwardRef<
         className="
           relative
           z-10
+          box-border
           flex
+          min-h-0
           w-full
           flex-1
           flex-col
-          min-h-0
+          pb-[20px]
         "
       >
         {/* ================= SCHOOL + TITLE ================= */}
@@ -462,7 +465,6 @@ export const FormalReportPrint = React.forwardRef<
                       min-w-0
                       bg-transparent
                       p-0
-                      p-6
                       text-[25px]
                       font-bold
                       !border-0
@@ -479,7 +481,16 @@ export const FormalReportPrint = React.forwardRef<
         </section>
 
         {/* ================= OBJECTIVES ================= */}
-        <section className="mb-5 flex flex-1 flex-col px-[13mm] pt-[6mm]">
+        <section
+          className="
+            flex
+            min-h-0
+            flex-1
+            flex-col
+            px-[13mm]
+            pt-[6mm]
+          "
+        >
           <PrintSectionHeading
             title="أهداف التقرير"
             theme={theme}
@@ -489,6 +500,7 @@ export const FormalReportPrint = React.forwardRef<
             className="
               mt-[4mm]
               flex
+              min-h-0
               flex-1
               flex-col
               overflow-hidden
@@ -519,6 +531,7 @@ export const FormalReportPrint = React.forwardRef<
                   flex
                   h-[9mm]
                   w-[9mm]
+                  shrink-0
                   items-center
                   justify-center
                   rounded-[3px]
@@ -542,7 +555,16 @@ export const FormalReportPrint = React.forwardRef<
             </div>
 
             {/* محتوى الأهداف */}
-            <div className="flex flex-1 flex-col bg-white px-[5mm] py-[4mm]">
+            <div
+              className="
+                min-h-0
+                flex-1
+                overflow-hidden
+                bg-white
+                px-[5mm]
+                py-[4mm]
+              "
+            >
               <PrintField
                 theme={theme}
                 value={data.objectives}
@@ -550,9 +572,10 @@ export const FormalReportPrint = React.forwardRef<
                 type="textarea"
                 align="right"
                 className="
-                  flex-1
+                  h-full
                   w-full
                   resize-none
+                  overflow-hidden
                   bg-transparent
                   p-0
                   text-[22px]
@@ -570,32 +593,27 @@ export const FormalReportPrint = React.forwardRef<
         </section>
       </main>
 
-      {/* ================= FOOTER ================= x
+      {/* ================= FOOTER ================= */}
       <footer
         className="
-          absolute top-bottom left-0 w-full
+          absolute
+          bottom-0
+          left-0
           z-20
-          mt-auto
-          flex
           h-[10px]
           w-full
-          shrink-0
-          items-center
-          justify-between
-          px-[13mm]
-        "
+      "
         style={{
           background: theme.headerGradient,
         }}
       >
         <div
-          className="h-[2px] "
+          className="h-[5px] w-full"
           style={{
             backgroundColor: theme.titleBorder,
           }}
         />
       </footer>
-      */}
     </div>
   );
 });
@@ -620,6 +638,7 @@ function PrintSectionHeading({
           flex
           h-[9mm]
           w-[9mm]
+          shrink-0
           items-center
           justify-center
           rounded-[3px]
