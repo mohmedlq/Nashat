@@ -115,7 +115,8 @@ export const CyanGalleryStylePrint = React.forwardRef<HTMLDivElement, CyanGaller
               <span className="ml-1 opacity-80">المنفذ: </span>
               <PrintHeaderText value={data.implementer} className="!text-inherit inline w-auto text-white" />
             </div>
-
+              
+              
             <div
               className="shrink-0 rounded-xl p-3 text-center font-bold text-white"
               style={{ backgroundColor: theme.darkAccent }}

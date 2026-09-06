@@ -2482,7 +2482,7 @@ export default function Report({
        * ===================================================== */}
 
       <section
-        className="mx-auto mt-6 w-full max-w-[950px]"
+        className="mx-auto justify-center mt-6 w-full max-w-[950px]"
         data-pdf-ignore
       >
         <div className="rounded-[24px] border border-[#29332D] bg-[#171E1A] p-4 shadow-[0_18px_50px_rgba(0,0,0,0.25)] sm:p-5">
@@ -2496,7 +2496,7 @@ export default function Report({
             </p>
           </div>
 
-          <div className="flex w-full flex-col gap-2 sm:flex-row sm:items-center sm:justify-end">
+          <div className="flex w-full flex-col gap-2 sm:flex-row sm:items-center sm:justify-center">
             {/* PRINT */}
 
             <button

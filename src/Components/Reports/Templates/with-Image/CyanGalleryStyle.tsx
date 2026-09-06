@@ -64,13 +64,11 @@ export function CyanGalleryStyle({
         {/* الشعار + وزارة التعليم */}
         <div className="flex flex-col items-center gap-1">
           <MinistryLogo src={logoSrc} />
-          <span className="text-[13px] font-bold" style={{ color: theme.labelColor }}>
-            وزارة التعليم
-          </span>
+         
         </div>
 
         {/* المنطقة */}
-        <div className="w-full text-center text-[12px] font-bold leading-6 text-[#4b5563] sm:w-1/3 sm:text-left">
+        <div className="w-full text-center text-[19px] font-bold leading-6 text-[#4b5563] sm:w-1/3 sm:text-left">
           <p>المملكة العربية السعودية</p>
           <p>وزارة التعليم</p>
           <EditableHeaderText
@@ -153,6 +151,17 @@ export function CyanGalleryStyle({
             />
           </div>
 
+          {/* اسم مدير المدرسة 
+          <div className="rounded-xl p-3 text-center font-bold text-white" style={{ backgroundColor: theme.darkAccent }}>
+            <span className="ml-1 opacity-80">مدير المدرسة:</span>
+            <EditableHeaderText
+              name="implementer"
+              value={formData.implementer}
+              onChange={onChange}
+              placeholder="أدخل اسم مدير المدرسة"
+              className="!text-inherit inline w-auto text-white"
+            />
+          </div>*/}
           {/* مكان التنفيذ */}
           <div className="rounded-xl p-3 text-center font-bold text-white" style={{ backgroundColor: theme.darkAccent }}>
             <span className="ml-1 opacity-80">مكان التنفيذ:</span>
