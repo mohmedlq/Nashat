@@ -7,7 +7,7 @@ type GeneratorMode = "broadcast" | "report";
 const AIGenerator: React.FC = () => {
   const navigate = useNavigate();
 
-  const [mode, setMode] = useState<GeneratorMode>("broadcast");
+  const [mode, setMode] = useState<GeneratorMode>("report");
   const [prompt, setPrompt] = useState("");
 
   const examples =
