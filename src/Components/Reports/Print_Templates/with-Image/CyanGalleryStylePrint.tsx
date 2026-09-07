@@ -116,7 +116,16 @@ export const CyanGalleryStylePrint = React.forwardRef<HTMLDivElement, CyanGaller
               <PrintHeaderText value={data.implementer} className="!text-inherit inline w-auto text-white" />
             </div>
               
-              
+              <div
+  className="shrink-0 rounded-xl p-3 text-center font-bold text-white"
+  style={{ backgroundColor: theme.darkAccent }}
+>
+  <span className="ml-1 opacity-80">مدير المدرسة: </span>
+  <PrintHeaderText
+    value={data.managerName}
+    className="!text-inherit inline w-auto text-white"
+  />
+</div>
             <div
               className="shrink-0 rounded-xl p-3 text-center font-bold text-white"
               style={{ backgroundColor: theme.darkAccent }}

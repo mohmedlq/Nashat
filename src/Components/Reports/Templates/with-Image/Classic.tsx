@@ -270,6 +270,18 @@ export function ClasicStyle({
             className="col-start-1 row-start-1"
           />
 
+          {/* اسم المدير */}
+          <EditableField
+            theme={theme}
+            name="managerName"
+            value={formData.managerName}
+            onChange={onChange}
+            error={errors.managerName}
+            label="مدير المدرسة:"
+            placeholder='ادخل اسم مدير المدرسة'
+            className="col-start-2 row-start-1"
+          />
+
           {/* مكان التنفيذ */}
           <EditableField
             theme={theme}
@@ -278,7 +290,7 @@ export function ClasicStyle({
             onChange={onChange}
             error={errors.location}
             label="مكان التنفيذ:"
-            className="col-start-2 row-start-1"
+            className="col-start-2 row-start-2"
           />
 
           {/* المستهدفون */}
@@ -327,8 +339,8 @@ export function ClasicStyle({
             align="right"
             className="
               col-start-2
-              row-start-2
-              row-span-3
+              row-start-3
+              row-span-2
               min-h-[205px]
               sm:min-h-[237px]
             "

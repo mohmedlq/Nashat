@@ -477,6 +477,35 @@ export function FormalReport({
                 />
               </InfoCard>
 
+              {/* MANAGER */}
+
+              <InfoCard
+                icon={<UserRound className="size-[18px]" />}
+                label="مدير المدرسة"
+                theme={theme}
+              >
+                <EditableField
+                  label=""
+                  name="managerName"
+                  value={formData.managerName}
+                  onChange={onChange}
+                  error={errors?.managerName}
+                  theme={theme}
+                  variant="default"
+                  align="right"
+                  placeholder="أدخل اسم مدير المدرسة"
+                  className="
+                    w-full
+                    border-0
+                    bg-transparent
+                    px-0
+                    py-0
+                    text-sm
+                    font-bold
+                  "
+                />
+              </InfoCard>
+
               {/* BENEFICIARIES */}
 
               <InfoCard
@@ -512,10 +541,8 @@ export function FormalReport({
                 icon={<CalendarDays className="size-[18px]" />}
                 label="تاريخ التنفيذ"
                 theme={theme}
-                fullWidth
                 dateField
               >
-                <div className="date-field-container relative z-50">
                   <EditableField
                     label=""
                     name="date"
@@ -537,7 +564,6 @@ export function FormalReport({
                       font-bold
                     "
                   />
-                </div>
               </InfoCard>
             </div>
           </section>
@@ -708,16 +734,12 @@ export function FormalReport({
             }}
           >
             <div className="relative flex flex-col items-center justify-between gap-2 text-center sm:flex-row sm:text-right">
-            
-
               <div
                 className="h-px w-20 sm:hidden"
                 style={{
                   backgroundColor: theme.titleBorder,
                 }}
               />
-
-            
             </div>
           </footer>
         </div>

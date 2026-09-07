@@ -753,9 +753,11 @@ export default function Report({
   const {
     schoolName,
     teacherName,
+    managerName,
     region,
     setSchoolName,
     setTeacherName,
+    setManagerName,
     setRegion,
     reports,
     setNewReport,
@@ -846,6 +848,9 @@ export default function Report({
 
     implementer:
       teacherName || '',
+
+          managerName:
+      managerName || '',
 
     location:
       'الفصل الدراسي',
@@ -1008,6 +1013,9 @@ export default function Report({
     setRegion(
       formData.region
     );
+    setManagerName(
+      formData.managerName
+    )
   };
 
   /* =========================================================

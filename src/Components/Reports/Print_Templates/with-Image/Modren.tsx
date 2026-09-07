@@ -337,7 +337,17 @@ export const ModernStylePrint = React.forwardRef<
                     text-right
                   "
                 />
-
+<PrintField
+  theme={theme}
+  value={data.managerName}
+  label="مدير المدرسة:"
+  align="right"
+  className="
+    text-[17px]
+    leading-[1.8]
+    text-right
+  "
+/>
                 <PrintField
                   theme={theme}
                   value={data.target}

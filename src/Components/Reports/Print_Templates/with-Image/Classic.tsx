@@ -193,87 +193,97 @@ pb-[40px]
           "
         >
           {/* ================= FIELDS ================= */}
-          <div
-            className="
-              grid
-              shrink-0
-              grid-cols-[1.3fr_1fr]
-              gap-x-4
-              gap-y-4
-            "
-          >
-            <PrintField
-              theme={theme}
-              value={data.implementer}
-              label="المنفذ:"
-              className="
-                col-start-1
-                row-start-1
-                min-h-0
-              "
-            />
+     <div
+  className="
+    grid
+    shrink-0
+    grid-cols-[1.3fr_1fr]
+    gap-x-4
+    gap-y-4
+  "
+>
+  <PrintField
+    theme={theme}
+    value={data.implementer}
+    label="المنفذ:"
+    className="
+      col-start-1
+      row-start-1
+      min-h-0
+    "
+  />
 
-            <PrintField
-              theme={theme}
-              value={data.location}
-              label="مكان التنفيذ:"
-              className="
-                col-start-2
-                row-start-1
-                min-h-0
-              "
-            />
+  <PrintField
+    theme={theme}
+    value={data.location}
+    label="مكان التنفيذ:"
+    className="
+      col-start-2
+      row-start-1
+      min-h-0
+    "
+  />
 
-            <PrintField
-              theme={theme}
-              value={data.target}
-              label="المستهدفون:"
-              className="
-                col-start-1
-                row-start-2
-                min-h-0
-              "
-            />
+  {/* ================= MANAGER ================= */}
+  <PrintField
+    theme={theme}
+    value={data.managerName}
+    label="مدير المدرسة:"
+    className="
+      col-start-1
+      row-start-2
+      min-h-0
+    "
+  />
 
-            <PrintField
-              theme={theme}
-              value={data.beneficiaries}
-              label="عدد المستفيدين:"
-              className="
-                col-start-1
-                row-start-3
-                min-h-0
-              "
-            />
+  <PrintField
+    theme={theme}
+    value={data.target}
+    label="المستهدفون:"
+    className="
+      col-start-1
+      row-start-3
+      min-h-0
+    "
+  />
 
-            <PrintField
-              theme={theme}
-              value={data.date}
-              label="تاريخ التنفيذ:"
-              className="
-                col-start-1
-                row-start-4
-                min-h-0
-              "
-            />
+  <PrintField
+    theme={theme}
+    value={data.beneficiaries}
+    label="عدد المستفيدين:"
+    className="
+      col-start-1
+      row-start-4
+      min-h-0
+    "
+  />
 
-            {/* ================= OBJECTIVES ================= */}
-            <PrintField
-              theme={theme}
-              value={data.objectives}
-              label="الأهداف:"
-              type="textarea"
-              align="right"
-              className="
-                col-start-2
-                row-start-2
-                row-span-3
-                min-h-0
-              "
-            />
-          </div>
+  <PrintField
+    theme={theme}
+    value={data.date}
+    label="تاريخ التنفيذ:"
+    className="
+      col-start-1
+      row-start-5
+      min-h-0
+    "
+  />
 
-          {/* ================= EVIDENCE ================= */}
+  {/* ================= OBJECTIVES ================= */}
+  <PrintField
+    theme={theme}
+    value={data.objectives}
+    label="الأهداف:"
+    type="textarea"
+    align="right"
+    className="
+      col-start-2
+      row-start-2
+      row-span-4
+      min-h-0
+    "
+  />
+</div>        {/* ================= EVIDENCE ================= */}
           <div
             className="
               min-h-0

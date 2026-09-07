@@ -378,6 +378,33 @@ export const FormalReportPrint = React.forwardRef<
               />
             </PrintInfoCard>
 
+            {/* مدير المدرسة */}
+            <PrintInfoCard
+              label="مدير المدرسة"
+              theme={theme}
+              icon={<UserIcon />}
+            >
+              <PrintField
+                theme={theme}
+                value={data.managerName}
+                label=""
+                align="right"
+                className="
+                  w-full
+                  min-w-0
+                  bg-transparent
+                  p-0
+                  text-[19px]
+                  font-bold
+                  !border-0
+                  !outline-none
+                  focus:!border-0
+                  focus:!outline-none
+                  focus:!ring-0
+                "
+              />
+            </PrintInfoCard>
+
             {/* عدد المستفيدين */}
             <PrintInfoCard
               label="عدد المستفيدين"
@@ -408,7 +435,7 @@ export const FormalReportPrint = React.forwardRef<
             {/* تاريخ التنفيذ */}
             <div
               className="
-                col-span-2
+                min-w-0
                 rounded-[5px]
                 border-[2px]
                 bg-white
@@ -420,18 +447,18 @@ export const FormalReportPrint = React.forwardRef<
               <div
                 className="
                   flex
-                  min-h-[21mm]
+                  min-h-[16mm]
                   items-center
-                  gap-[4mm]
-                  px-[5mm]
-                  py-[3mm]
+                  gap-[3mm]
+                  px-[4mm]
+                  py-[2mm]
                 "
               >
                 <div
                   className="
                     flex
-                    h-[11mm]
-                    w-[11mm]
+                    h-[9mm]
+                    w-[9mm]
                     shrink-0
                     items-center
                     justify-center
@@ -447,7 +474,7 @@ export const FormalReportPrint = React.forwardRef<
 
                 <div className="min-w-0 flex-1">
                   <div
-                    className="mb-1 text-[19px] font-black"
+                    className="mb-1 text-[12px] font-black"
                     style={{
                       color: theme.labelColor,
                     }}
@@ -465,7 +492,7 @@ export const FormalReportPrint = React.forwardRef<
                       min-w-0
                       bg-transparent
                       p-0
-                      text-[25px]
+                      text-[18px]
                       font-bold
                       !border-0
                       !outline-none
@@ -488,7 +515,7 @@ export const FormalReportPrint = React.forwardRef<
             flex-1
             flex-col
             px-[13mm]
-            pt-[6mm]
+            pt-[4mm]
           "
         >
           <PrintSectionHeading
@@ -498,7 +525,7 @@ export const FormalReportPrint = React.forwardRef<
 
           <div
             className="
-              mt-[4mm]
+              mt-[3mm]
               flex
               min-h-0
               flex-1

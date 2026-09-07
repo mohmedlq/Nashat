@@ -64,7 +64,6 @@ export function CyanGalleryStyle({
         {/* الشعار + وزارة التعليم */}
         <div className="flex flex-col items-center gap-1">
           <MinistryLogo src={logoSrc} />
-         
         </div>
 
         {/* المنطقة */}
@@ -125,6 +124,7 @@ export function CyanGalleryStyle({
               label="عدد المستفيدين"
               align="center"
             />
+
             <EditableField
               theme={theme}
               variant="card"
@@ -140,8 +140,12 @@ export function CyanGalleryStyle({
           </div>
 
           {/* المنفذ */}
-          <div className="rounded-xl p-3 text-center font-bold text-white" style={{ backgroundColor: theme.darkAccent }}>
+          <div
+            className="rounded-xl p-3 text-center font-bold text-white"
+            style={{ backgroundColor: theme.darkAccent }}
+          >
             <span className="ml-1 opacity-80">المنفذ:</span>
+
             <EditableHeaderText
               name="implementer"
               value={formData.implementer}
@@ -151,20 +155,29 @@ export function CyanGalleryStyle({
             />
           </div>
 
-          {/* اسم مدير المدرسة 
-          <div className="rounded-xl p-3 text-center font-bold text-white" style={{ backgroundColor: theme.darkAccent }}>
+          {/* اسم مدير المدرسة */}
+          <div
+            className="rounded-xl p-3 text-center font-bold text-white"
+            style={{ backgroundColor: theme.darkAccent }}
+          >
             <span className="ml-1 opacity-80">مدير المدرسة:</span>
+
             <EditableHeaderText
-              name="implementer"
-              value={formData.implementer}
+              name="managerName"
+              value={formData.managerName}
               onChange={onChange}
               placeholder="أدخل اسم مدير المدرسة"
               className="!text-inherit inline w-auto text-white"
             />
-          </div>*/}
+          </div>
+
           {/* مكان التنفيذ */}
-          <div className="rounded-xl p-3 text-center font-bold text-white" style={{ backgroundColor: theme.darkAccent }}>
+          <div
+            className="rounded-xl p-3 text-center font-bold text-white"
+            style={{ backgroundColor: theme.darkAccent }}
+          >
             <span className="ml-1 opacity-80">مكان التنفيذ:</span>
+
             <EditableHeaderText
               name="location"
               value={formData.location}
@@ -186,6 +199,7 @@ export function CyanGalleryStyle({
               >
                 المستهدفون
               </span>
+
               <EditableHeaderText
                 name="target"
                 value={formData.target}
@@ -202,6 +216,7 @@ export function CyanGalleryStyle({
               >
                 الأهداف
               </span>
+
               <EditableField
                 theme={theme}
                 name="objectives"
@@ -223,8 +238,13 @@ export function CyanGalleryStyle({
         className="flex items-center justify-between px-4 py-3 text-white sm:px-8 sm:py-4"
         style={{ backgroundColor: theme.darkAccent }}
       >
-        <span className="text-[13px] font-bold sm:text-[15px]">{formData.schoolName || 'اسم المدرسة'}</span>
-        <span className="text-[11px] opacity-70">وزارة التعليم</span>
+        <span className="text-[13px] font-bold sm:text-[15px]">
+          {formData.schoolName || 'اسم المدرسة'}
+        </span>
+
+        <span className="text-[11px] opacity-70">
+          وزارة التعليم
+        </span>
       </footer>
     </div>
   );

@@ -424,6 +424,25 @@ export function ModernReportEditForm({
               align="right"
             />
 
+            {/* اسم مدير المدرسة */}
+            <EditableField
+              label="مدير المدرسة:"
+              name="managerName"
+              value={formData.managerName}
+              onChange={onChange}
+              error={errors?.managerName}
+              theme={theme}
+              variant="card"
+              icon={
+                <UserRound
+                  className="size-7"
+                  strokeWidth={2}
+                />
+              }
+              placeholder="أدخل اسم مدير المدرسة"
+              align="right"
+            />
+
             <EditableField
               label="المستهدفون:"
               name="target"

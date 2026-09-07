@@ -7,7 +7,10 @@ import {
 } from "react";
 
 import type { Broadcast } from "../types/BroadcastTypes";
-import type { MockReport, ReportFormData as ReportData } from "../types/ReportsTypes";
+import type {
+  MockReport,
+  ReportFormData as ReportData,
+} from "../types/ReportsTypes";
 
 interface UserContextType {
   chatHistory: Message[];
@@ -25,11 +28,17 @@ interface UserContextType {
     React.SetStateAction<string>
   >;
 
+  managerName: string;
+  setManagerName: React.Dispatch<
+    React.SetStateAction<string>
+  >;
+
   region: string;
   setRegion: React.Dispatch<
     React.SetStateAction<string>
   >;
-   reports: MockReport[];
+
+  reports: MockReport[];
   setNewReport: React.Dispatch<
     React.SetStateAction<MockReport[]>
   >;
@@ -49,7 +58,8 @@ interface UserProviderProps {
 
 const STORAGE_KEY = "school_ai_chat_history";
 const USER_INFO_KEY = "school_ai_user_info";
-const SAVEDREPORTS_KEY="saved_reports";
+const SAVEDREPORTS_KEY = "saved_reports";
+
 export const UserContext =
   createContext<UserContextType | null>(null);
 
@@ -105,6 +115,18 @@ export function UserProvider({
       return data.teacherName ?? "";
     });
 
+  const [managerName, setManagerName] =
+    useState<string>(() => {
+      const saved =
+        localStorage.getItem(USER_INFO_KEY);
+
+      if (!saved) return "";
+
+      const data = JSON.parse(saved);
+
+      return data.managerName ?? "";
+    });
+
   const [region, setRegion] =
     useState<string>(() => {
       const saved =
@@ -127,33 +149,44 @@ export function UserProvider({
       JSON.stringify({
         schoolName,
         teacherName,
+        managerName,
         region,
       })
     );
   }, [
     schoolName,
     teacherName,
+    managerName,
     region,
   ]);
-  const [reports, setNewReport] = useState<MockReport[]>(() => {
-  const saved = localStorage.getItem(SAVEDREPORTS_KEY);
 
-  if (!saved || saved === "undefined") {
-    return [];
-  }
+  /* =========================
+     Reports
+  ========================= */
 
-  try {
-    return JSON.parse(saved);
-  } catch {
-    return [];
-  }
-});
-   useEffect(() => {
-  localStorage.setItem(
-    SAVEDREPORTS_KEY,
-    JSON.stringify(reports)
-  );
-}, [reports]);
+  const [reports, setNewReport] =
+    useState<MockReport[]>(() => {
+      const saved =
+        localStorage.getItem(SAVEDREPORTS_KEY);
+
+      if (!saved || saved === "undefined") {
+        return [];
+      }
+
+      try {
+        return JSON.parse(saved);
+      } catch {
+        return [];
+      }
+    });
+
+  useEffect(() => {
+    localStorage.setItem(
+      SAVEDREPORTS_KEY,
+      JSON.stringify(reports)
+    );
+  }, [reports]);
+
   /* =========================
      Provider
   ========================= */
@@ -170,8 +203,12 @@ export function UserProvider({
         teacherName,
         setTeacherName,
 
+        managerName,
+        setManagerName,
+
         region,
         setRegion,
+
         reports,
         setNewReport,
       }}
@@ -180,7 +217,6 @@ export function UserProvider({
     </UserContext.Provider>
   );
 }
-
 
 export function useUser() {
   const context = useContext(UserContext);

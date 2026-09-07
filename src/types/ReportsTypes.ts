@@ -11,6 +11,7 @@ export type ReportFormData = {
   region: string;
   reportTitle: string;
   implementer: string;
+  managerName:string
   location: string;
   target: string;
   beneficiaries: string;

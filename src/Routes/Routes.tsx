@@ -9,6 +9,7 @@ import { UserProvider } from "../context/Context";
 import NotFound from "../Pages/NotFound";
 import Certificate from "../Pages/certificates/certificate"
 import AboutMe from "../Components/AboutMe";
+import UserDataBox from "../Components/UserDataBox";
 function AppRoutes() {
   return (
     <UserProvider>

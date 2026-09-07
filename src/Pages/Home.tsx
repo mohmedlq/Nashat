@@ -20,6 +20,7 @@ import { FaGithubSquare } from "react-icons/fa";
 import Dvld from "../assets/Dvld.png";
 import NashatImg from "../assets/nashat.png";  
 import TrainingImg from "../assets/training.png";
+import UserDataBox from "../Components/UserDataBox";
 
 const Home: React.FC = () => {
   return (
@@ -73,7 +74,10 @@ const Home: React.FC = () => {
               أنشئ الإذاعات والتقارير والمحتوى المدرسي، عدّلها كما تريد، واحصل
               على نسخة جاهزة للطباعة — كل ذلك من مكان واحد.
             </p>
-
+            {/*User Data Box*/}
+            <div className="flex  justify-center">
+              <UserDataBox/>
+            </div>
             {/* CTA */}
             <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <a
