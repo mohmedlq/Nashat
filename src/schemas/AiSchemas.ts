@@ -65,6 +65,9 @@ export const reportSchema = {
     implementer: {
       type: "string",
     },
+      managerName: {
+      type: "string",
+    },
 
     location: {
       type: "string",
@@ -92,6 +95,7 @@ export const reportSchema = {
     "region",
     "reportTitle",
     "implementer",
+    "managerName",
     "location",
     "target",
     "beneficiaries",

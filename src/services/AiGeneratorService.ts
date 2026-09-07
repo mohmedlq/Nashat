@@ -22,6 +22,7 @@ interface GenerateParams {
   mode: GeneratorMode;
   schoolName?: string;
   teacherName?: string;
+  managerName?: string;
   region?: string;
 }
 
@@ -85,6 +86,7 @@ export async function generateAiContent({
   mode,
   schoolName,
   teacherName,
+  managerName,
   region,
 }: GenerateParams): Promise<GenerateResponse> {
   const instruction =
@@ -94,6 +96,7 @@ export async function generateAiContent({
           prompt,
           schoolName ?? "",
           teacherName ?? "",
+          managerName ?? "",
           region ?? ""
         );
 
@@ -169,60 +172,67 @@ export async function generateAiContent({
      Report
   ======================================================= */
 
- const report = result as ReportFormData;
+  const report = result as ReportFormData;
 
-if (!report.reportTitle) {
-  throw new Error("بيانات التقرير غير مكتملة");
-}
+  if (!report.reportTitle) {
+    throw new Error(
+      "بيانات التقرير غير مكتملة"
+    );
+  }
 
-return {
-  report: {
-    ...report,
+  return {
+    report: {
+      ...report,
 
-    schoolName:
-      report.schoolName?.trim() ||
-      schoolName?.trim() ||
-      "",
+      schoolName:
+        report.schoolName?.trim() ||
+        schoolName?.trim() ||
+        "",
 
-    region:
-      report.region?.trim() ||
-      "",
+      managerName:
+        report.managerName?.trim() ||
+        managerName?.trim() ||
+        "",
 
-    reportTitle:
-      report.reportTitle?.trim() ||
-      "",
+      region:
+        report.region?.trim() ||
+        "",
 
-    implementer:
-      report.implementer?.trim() ||
-      teacherName?.trim() ||
-      "",
+      reportTitle:
+        report.reportTitle?.trim() ||
+        "",
 
-    location:
-      report.location?.trim() ||
-      "",
+      implementer:
+        report.implementer?.trim() ||
+        teacherName?.trim() ||
+        "",
 
-    target:
-      report.target?.trim() ||
-      "",
+      location:
+        report.location?.trim() ||
+        "",
 
-    beneficiaries:
-      report.beneficiaries?.trim()||"33",
-    
+      target:
+        report.target?.trim() ||
+        "",
 
-    date:
-      report.date?.trim() ||
-      "",
+      beneficiaries:
+        report.beneficiaries?.trim() ||
+        "33",
 
-    objectives:
-      report.objectives?.trim() ||
-      "",
+      date:
+        report.date?.trim() ||
+        "",
 
-    evidences: [
-      null,
-      null,
-      null,
-      null,
-    ],
-  },
-};
+      objectives:
+        report.objectives?.trim() ||
+        "",
+
+      evidences: [
+        null,
+        null,
+        null,
+        null,
+      ],
+    },
+  };
 }
