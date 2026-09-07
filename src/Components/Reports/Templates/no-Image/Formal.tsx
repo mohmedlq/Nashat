@@ -549,7 +549,7 @@ export function FormalReport({
                     value={formData.date}
                     onChange={onChange}
                     error={errors?.date}
-                    type="date"
+                    type="text"
                     theme={theme}
                     variant="default"
                     align="right"

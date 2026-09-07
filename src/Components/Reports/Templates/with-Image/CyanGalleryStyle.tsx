@@ -130,7 +130,7 @@ export function CyanGalleryStyle({
               variant="card"
               icon={<CalendarIcon />}
               name="date"
-              type="date"
+              type="text"
               value={formData.date}
               onChange={onChange}
               error={errors.date}

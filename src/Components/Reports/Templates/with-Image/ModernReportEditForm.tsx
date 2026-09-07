@@ -485,7 +485,7 @@ export function ModernReportEditForm({
               value={formData.date}
               onChange={onChange}
               error={errors?.date}
-              type="date"
+              type="text"
               theme={theme}
               variant="card"
               icon={

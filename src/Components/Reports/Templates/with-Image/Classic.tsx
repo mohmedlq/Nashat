@@ -319,7 +319,7 @@ export function ClasicStyle({
           <EditableField
             theme={theme}
             name="date"
-            type="date"
+            type="text"
             value={formData.date}
             onChange={onChange}
             error={errors.date}
