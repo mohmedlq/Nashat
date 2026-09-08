@@ -252,7 +252,8 @@ const UserDataBox: React.FC<SchoolInfoFormProps> = ({
         <div className="relative mb-9">
           <div className="mb-4 inline-flex items-center gap-2 rounded-lg border border-[#B39A63]/15 bg-[#B39A63]/[0.06] px-3 py-1.5 text-[11px] font-bold tracking-wide text-[#BDA66F]">
             <span className="h-1.5 w-1.5 rounded-full bg-[#B39A63] shadow-[0_0_8px_rgba(179,154,99,0.5)]" />
-            معلومات أساسية
+             معلومات (اختيارية)
+
           </div>
 
           <h3 className="text-2xl font-bold tracking-tight text-[#ECEFEA] sm:text-[28px]">
