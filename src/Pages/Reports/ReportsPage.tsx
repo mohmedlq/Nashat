@@ -1,8 +1,8 @@
 import React, { useMemo, useState } from "react";
-import { ArrowLeft, FileText, Plus, ClipboardList } from "lucide-react";
+import { ArrowLeft, FileText, Plus, ClipboardList,Wand2, Sparkles} from "lucide-react";
 import { useUser } from "../../context/Context";
 import Report from "./Report";
-import { MOCK_REPORTS } from "../../data/ReportsData";
+import { createMockReports  } from "../../data/ReportsData";
 import { useNavigate, useParams } from "react-router-dom";
 
 const CATEGORY_FILTERS = [
@@ -17,7 +17,13 @@ interface ReportsPageProps {
 }
 
 const ReportsPage: React.FC<ReportsPageProps> = ({ onBack }) => {
-  const { reports } = useUser();
+  const {
+    reports,
+    schoolName,
+    teacherName,
+    managerName,
+    region,
+  } = useUser();
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
 
@@ -27,10 +33,26 @@ const ReportsPage: React.FC<ReportsPageProps> = ({ onBack }) => {
   /* =========================================================
      All Reports
   ========================================================= */
-  const allReports = useMemo(
-    () => [...MOCK_REPORTS, ...reports],
-    [reports]
-  );
+ const mockReports = useMemo(
+  () =>
+    createMockReports({
+      schoolName,
+      teacherName,
+      managerName,
+      region,
+    }),
+  [
+    schoolName,
+    teacherName,
+    managerName,
+    region,
+  ],
+);
+
+const allReports = useMemo(
+  () => [...mockReports, ...reports],
+  [mockReports, reports],
+);
 
   /* =========================================================
      Selected Report
@@ -86,7 +108,7 @@ const ReportsPage: React.FC<ReportsPageProps> = ({ onBack }) => {
       </div>
     );
   }
-
+  
   /* =========================================================
      Selected Report View
   ========================================================= */
@@ -106,7 +128,11 @@ const ReportsPage: React.FC<ReportsPageProps> = ({ onBack }) => {
       </div>
     );
   }
-
+ function openGenerator()
+ {
+   return navigate("/generator");
+  
+ }
   /* =========================================================
      Main List View
   ========================================================= */
@@ -159,33 +185,58 @@ const ReportsPage: React.FC<ReportsPageProps> = ({ onBack }) => {
           </p>
         </header>
 
-        {/* New Report Trigger */}
-        <div className="mb-10">
-          <button
-            type="button"
-            onClick={() => setIsCreatingNew(true)}
-            className="group flex w-full cursor-pointer items-center justify-center gap-4 rounded-2xl border border-[#3A463F] bg-[#171E1A] px-6 py-6 text-center shadow-[0_10px_35px_rgba(0,0,0,0.10)] transition-all duration-300 hover:-translate-y-0.5 hover:border-[#4A574F] hover:bg-[#1A221E] hover:shadow-[0_15px_40px_rgba(0,0,0,0.15)] sm:py-7"
-          >
-            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-[#354039] bg-[#202923] text-[#B39A63] transition-all duration-300 group-hover:border-[#4A574F] group-hover:bg-[#29352E]">
-              <Plus size={21} strokeWidth={1.7} />
-            </span>
+<div className="mb-10 flex flex-col gap-4">
+  
+  <button
+    type="button"
+    onClick={openGenerator}
+    className="group flex w-full cursor-pointer items-center justify-center gap-4 rounded-2xl border border-[#3A463F] bg-[#171E1A] px-6 py-6 text-center shadow-[0_10px_35px_rgba(0,0,0,0.10)] transition-all duration-300 hover:-translate-y-0.5 hover:border-[#4A574F] hover:bg-[#1A221E] hover:shadow-[0_15px_40px_rgba(0,0,0,0.15)] sm:py-7"
+  >
+    <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-[#354039] bg-[#202923] text-[#B39A63] transition-all duration-300 group-hover:border-[#4A574F] group-hover:bg-[#29352E]">
+      <Wand2 size={21} strokeWidth={1.7} />
+    </span>
 
-            <span className="flex flex-col items-start">
-              <span className="text-base font-bold text-[#E1E6E2] sm:text-lg">
-                تقرير جديد
-              </span>
-              <span className="mt-1 text-xs font-medium text-[#68756D]">
-                إنشاء تقرير نشاط جديد
-              </span>
-            </span>
+    <span className="flex flex-col items-start">
+      <span className="text-base font-bold text-[#E1E6E2] sm:text-lg">
+        المساعد الذكي
+      </span>
+      <span className="mt-1 text-xs font-medium text-[#68756D]">
+        إنشاء التقرير آلياً بخطوة واحدة
+      </span>
+    </span>
 
-            <ArrowLeft
-              size={15}
-              className="mr-auto hidden text-[#68756D] transition-transform duration-200 group-hover:-translate-x-1 sm:block"
-            />
-          </button>
-        </div>
+    <ArrowLeft
+      size={15}
+      className="mr-auto hidden text-[#68756D] transition-transform duration-200 group-hover:-translate-x-1 sm:block"
+    />
+  </button>
 
+  {/* 2. زر تقرير جديد (اليدوي - بالأسفل) */}
+  <button
+    type="button"
+    onClick={() => setIsCreatingNew(true)} 
+    className="group flex w-full cursor-pointer items-center justify-center gap-4 rounded-2xl border border-[#3A463F] bg-[#171E1A] px-6 py-6 text-center shadow-[0_10px_35px_rgba(0,0,0,0.10)] transition-all duration-300 hover:-translate-y-0.5 hover:border-[#4A574F] hover:bg-[#1A221E] hover:shadow-[0_15px_40px_rgba(0,0,0,0.15)] sm:py-7"
+  >
+    <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-[#354039] bg-[#202923] text-[#B39A63] transition-all duration-300 group-hover:border-[#4A574F] group-hover:bg-[#29352E]">
+      <Plus size={21} strokeWidth={1.7} />
+    </span>
+
+    <span className="flex flex-col items-start">
+      <span className="text-base font-bold text-[#E1E6E2] sm:text-lg">
+        تقرير يَدَوي
+      </span>
+      <span className="mt-1 text-xs font-medium text-[#68756D]">
+        إنشاء تقرير نشاط جديد من الصفر
+      </span>
+    </span>
+
+    <ArrowLeft
+      size={15}
+      className="mr-auto hidden text-[#68756D] transition-transform duration-200 group-hover:-translate-x-1 sm:block"
+    />
+  </button>
+
+</div>
         {/* Category Filter Chips */}
         <div className="mb-8 flex gap-2 overflow-x-auto pb-2">
           {CATEGORY_FILTERS.map((category) => {

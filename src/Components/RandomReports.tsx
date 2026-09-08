@@ -6,8 +6,9 @@ import {
 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 
-import { MOCK_REPORTS } from "../data/ReportsData";
+import { createMockReports } from "../data/ReportsData";
 import type { MockReport } from "../types/ReportsTypes";
+import { useUser } from "../context/Context";
 
 const getReportPreview = (
   report: MockReport
@@ -17,10 +18,19 @@ const getReportPreview = (
     "تقرير جاهز للاستخدام والتعديل."
   );
 };
-
 const pickRandomThree = (): MockReport[] => {
-  return [...MOCK_REPORTS]
-    .sort(() => Math.random() - 0.5)
+const {
+  schoolName,
+  teacherName,
+  managerName,
+  region,
+} = useUser();
+  return createMockReports({
+     schoolName,
+      teacherName,
+      managerName,
+      region,
+}).sort(() => Math.random() - 0.5)
     .slice(0, 3);
 };
 
