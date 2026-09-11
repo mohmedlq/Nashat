@@ -875,22 +875,41 @@ export default function Report({
     ],
   };
 
-  const [formData, setFormData] =
-    useState<ReportFormData>(
-      () => ({
-        ...DEFAULT_FORM_DATA,
+ const [formData, setFormData] =
+  useState<ReportFormData>(() => ({
+    ...DEFAULT_FORM_DATA,
 
-        ...(report?.formData ??
-          initialData ??
-          {}),
+    ...(report?.formData ?? initialData ?? {}),
 
-        evidences:
-          report?.formData
-            ?.evidences ??
-          initialData?.evidences ??
-          DEFAULT_FORM_DATA.evidences,
-      })
-    );
+    schoolName:
+      report?.formData?.schoolName ||
+      initialData?.schoolName ||
+      schoolName ||
+      '',
+
+    region:
+      report?.formData?.region ||
+      initialData?.region ||
+      region ||
+      '',
+
+    implementer:
+      report?.formData?.implementer ||
+      initialData?.implementer ||
+      teacherName ||
+      '',
+
+    managerName:
+      report?.formData?.managerName ||
+      initialData?.managerName ||
+      managerName ||
+      '',
+
+    evidences:
+      report?.formData?.evidences ??
+      initialData?.evidences ??
+      DEFAULT_FORM_DATA.evidences,
+  }));
 
   const [
     processedLogoSrc,
@@ -942,37 +961,87 @@ export default function Report({
    * ========================================================= */
 
   React.useEffect(() => {
-    if (report) {
-      setFormData((prev) => ({
-        ...prev,
+  if (report) {
+    setFormData((prev) => ({
+      ...prev,
 
-        ...report.formData,
+      ...report.formData,
 
-        evidences:
-          report.formData
-            .evidences ??
-          prev.evidences,
-      }));
+      schoolName:
+        report.formData.schoolName ||
+        prev.schoolName ||
+        schoolName ||
+        '',
 
-      return;
-    }
+      region:
+        report.formData.region ||
+        prev.region ||
+        region ||
+        '',
 
-    if (initialData) {
-      setFormData((prev) => ({
-        ...prev,
+      implementer:
+        report.formData.implementer ||
+        prev.implementer ||
+        teacherName ||
+        '',
 
-        ...initialData,
+      managerName:
+        report.formData.managerName ||
+        prev.managerName ||
+        managerName ||
+        '',
 
-        evidences:
-          initialData.evidences ??
-          prev.evidences,
-      }));
-    }
-  }, [
-    report,
-    initialData,
-  ]);
+      evidences:
+        report.formData.evidences ??
+        prev.evidences,
+    }));
 
+    return;
+  }
+
+  if (initialData) {
+    setFormData((prev) => ({
+      ...prev,
+
+      ...initialData,
+
+      schoolName:
+        initialData.schoolName ||
+        prev.schoolName ||
+        schoolName ||
+        '',
+
+      region:
+        initialData.region ||
+        prev.region ||
+        region ||
+        '',
+
+      implementer:
+        initialData.implementer ||
+        prev.implementer ||
+        teacherName ||
+        '',
+
+      managerName:
+        initialData.managerName ||
+        prev.managerName ||
+        managerName ||
+        '',
+
+      evidences:
+        initialData.evidences ??
+        prev.evidences,
+    }));
+  }
+}, [
+  report,
+  initialData,
+  schoolName,
+  teacherName,
+  managerName,
+  region,
+]);
   /* =========================================================
    * THEME
    * ========================================================= */
@@ -1001,22 +1070,13 @@ export default function Report({
    * USER VALUES
    * ========================================================= */
 
-  const updateUserValue = () => {
-    setSchoolName(
-      formData.schoolName
-    );
-
-    setTeacherName(
-      formData.implementer
-    );
-
-    setRegion(
-      formData.region
-    );
-    setManagerName(
-      formData.managerName
-    )
-  };
+    const updateUserValue = () => {
+  setSchoolName(formData.schoolName);
+  setTeacherName(formData.implementer);
+  setRegion(formData.region);
+  setManagerName(formData.managerName);
+};
+  
 
   /* =========================================================
    * SAVE
