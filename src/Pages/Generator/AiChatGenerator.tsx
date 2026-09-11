@@ -436,18 +436,6 @@ const AiGenerator: React.FC = () => {
     return (
   <div dir="rtl" className="min-h-screen bg-[#111714]">
   <div className="mx-auto max-w-7xl px-4 pt-6 sm:px-8">
-    {/* زر العودة فوق التقرير مباشرة */}
-    <div className="-mb-0 flex items-center justify-start print:hidden">
-      <button
-        type="button"
-        onClick={() => setActiveReport(null)}
-        className="inline-flex items-center gap-2 rounded-lg border border-[#3A463F] bg-[#171E1A] px-3.5 py-2 text-xs font-semibold text-[#C4CCC6] transition hover:border-[#4A574F] hover:bg-[#202923] hover:text-[#E2E7E3]"
-      >
-        <ArrowLeft size={13} className="rotate-180" />
-        العودة للمحادثة
-      </button>
-    </div>
-
     {/* مكون التقرير */}
     <Report initialData={activeReport} />
   </div>

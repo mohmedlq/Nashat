@@ -168,25 +168,7 @@ const Navbar: React.FC = () => {
 {/* ================= RIGHT ACTIONS ================= */}
           <div className="flex items-center gap-2.5">
             {/* Desktop CTA */}
-            <Link
-              to="/"
-              className="group hidden items-center gap-2 rounded-lg border border-[#354039] bg-[#1A211D] px-3.5 py-2 text-[12px] font-bold text-[#E5E9E5] transition-all duration-200 hover:-translate-y-0.5 hover:border-[#4A574F] hover:bg-[#202923] md:inline-flex"
-            >
-              <span className="flex h-5 w-5 items-center justify-center rounded-md bg-[#29332D] text-[#B39A63] transition-colors group-hover:bg-[#303D35]">
-                <BookOpen
-                  size={13}
-                  strokeWidth={1.8}
-                  className="transition-transform duration-300 group-hover:rotate-6"
-                />
-              </span>
-
-              الرئيسية
-
-              <ArrowLeft
-                size={13}
-                className="text-[#89938C] transition-transform duration-200 group-hover:-translate-x-0.5 group-hover:text-[#D5DBD6]"
-              />
-            </Link>
+           
 
             {/* Mobile Menu Button */}
             <button

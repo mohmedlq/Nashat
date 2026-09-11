@@ -95,14 +95,7 @@ const allReports = useMemo(
   if (isCreatingNew) {
     return (
       <div dir="rtl" className="relative min-h-screen bg-[#111714]">
-        <button
-          type="button"
-          onClick={() => setIsCreatingNew(false)}
-          className="fixed right-4 top-4 z-50 mt-15 inline-flex items-center gap-2 rounded-lg border border-[#3A463F] bg-[#171E1A] px-4 py-1.5 text-xs font-bold text-[#C8D0CA] shadow-xl transition-all duration-200 hover:border-[#4A574F] hover:bg-[#202923] hover:text-[#E4E8E5] print:hidden"
-        >
-          <ArrowLeft size={14} className="rotate-180" />
-          العودة للقائمة
-        </button>
+       
 
         <Report />
       </div>
@@ -115,14 +108,7 @@ const allReports = useMemo(
   if (id && selectedReport) {
     return (
       <div dir="rtl" className="relative min-h-screen bg-[#111714]">
-        <button
-          type="button"
-          onClick={() => navigate("/reports")}
-          className="fixed right-4 top-4 z-50 inline-flex items-center gap-2 rounded-lg border border-[#3A463F] bg-[#171E1A] px-4 py-2.5 text-xs font-bold text-[#C8D0CA] shadow-xl transition-all duration-200 hover:border-[#4A574F] hover:bg-[#202923] hover:text-[#E4E8E5] print:hidden"
-        >
-          <ArrowLeft size={14} className="rotate-180" />
-          العودة للقائمة
-        </button>
+     
 
         <Report initialData={selectedReport.formData} />
       </div>

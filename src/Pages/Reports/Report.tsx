@@ -9,7 +9,7 @@ import { useUser } from '../../context/Context.tsx';
 
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
-
+import { useNavigate } from 'react-router-dom';
 import {
   getTodayHijri,
   stripWhiteBackground,
@@ -750,6 +750,7 @@ export default function Report({
   onChange,
   onSubmit,
 }: ReportProps) {
+  const navigate = useNavigate();
   const {
     schoolName,
     teacherName,
@@ -1932,6 +1933,8 @@ export default function Report({
         !activeReportDesign
       ) {
         return (
+
+          
           <div className="mx-auto w-full max-w-[950px] rounded-[28px] border border-dashed border-[#46534B] bg-[#171E1A] p-12 text-center">
             <h2 className="text-lg font-black text-[#D8C18E]">
               لا يوجد تصميم
@@ -2030,6 +2033,21 @@ export default function Report({
         }
       `}</style>
 
+          <div className="mx-auto mt-2 flex w-full max-w-[950px] justify-start">
+  <button
+    type="button"
+    onClick={() => navigate(-1)}
+    className="group flex items-center gap-2 rounded-xl border border-[#29332D] bg-[#171E1A] px-4 py-2.5 text-xs font-bold text-[#8F9992] shadow-[0_8px_25px_rgba(0,0,0,0.12)] transition-all duration-200 hover:border-[#B39A63]/50 hover:bg-[#202923] hover:text-[#D8C18E]"
+  >
+    <span className="text-base leading-none transition-transform duration-200 group-hover:-translate-x-0.5">
+      →
+    </span>
+
+    <span>
+      العودة
+    </span>
+  </button>
+</div>
       {/* =====================================================
        * TOAST
        * ===================================================== */}
