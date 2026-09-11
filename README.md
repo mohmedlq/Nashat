@@ -1,529 +1,121 @@
-# 🎓 نَشَاط | Nashat
+# 🎓 Nashat (نَشَاط)
 
-**نَشَاط (Nashat)** منصة ويب لإنشاء وتنسيق المحتوى المدرسي، تتيح للمستخدم إنشاء **التقارير والإذاعات المدرسية** بمساعدة الذكاء الاصطناعي، ثم مراجعة المحتوى وتعديله وتنسيقه قبل طباعته.
+**Nashat** is an AI-powered platform that helps teachers create and format school content — automatically.
 
-بدل التعامل مع كتابة المحتوى وتنسيقه من البداية، يكتب المستخدم وصفًا لما يريد، ويتولى النظام تحويله إلى محتوى منظم وفق بنية محددة مسبقًا، ثم يعرضه داخل محررات قابلة للتعديل.
+Originally built as a freelance project for a school, it's now used by real teachers on a daily basis.
 
----
-
-## 🌐 تجربة المنصة
-
-**[🔗 https://nashat-seven.vercel.app/generator)**
+🔗 **Live app:** https://nashat-seven.vercel.app
 
 ---
 
-# 💡 فكرة المشروع
+## 💡 The Problem It Solves
 
-إعداد المحتوى المدرسي لا يقتصر على كتابة النص؛ غالبًا يتطلب أيضًا تنظيم المعلومات، إدخال بيانات النشاط، تنسيق التقرير، إضافة الشواهد، وتجهيز المستند للطباعة.
+Every week, teachers manually write activity reports and school broadcast scripts — then format them, add photos, and prepare them for printing. It's repetitive work that has nothing to do with actual teaching.
 
-جاءت نَشَاط لتوحيد هذه العملية داخل واجهة واحدة.
+**Nashat automates it.** A teacher describes what they need in a sentence, and the platform generates a ready-to-edit, print-ready document in seconds.
 
-يبدأ المستخدم بوصف المحتوى الذي يحتاجه:
-
-```text
-"إنشاء إذاعة مدرسية عن الانضباط المدرسي لطلاب المرحلة الثانوية"
 ```
-
-ثم تمر العملية عبر:
-
-```text
-طلب المستخدم
-     ↓
-بناء Prompt مخصص
-     ↓
-AI API
-     ↓
-نموذج الذكاء الاصطناعي
-     ↓
-Structured JSON
-     ↓
-واجهة قابلة للتعديل
-     ↓
-المراجعة والتنسيق
-     ↓
-الطباعة / التصدير
-```
-
-الهدف ليس فقط توليد النص، وإنما تحويله إلى **بيانات منظمة يمكن للواجهة التعامل معها مباشرة**.
-
----
-
-# ✨ الميزات
-
-## 🤖 توليد المحتوى بالذكاء الاصطناعي
-
-يمكن للمستخدم وصف المحتوى المطلوب باستخدام اللغة الطبيعية، بينما يتولى النظام بناء الطلب المناسب وإرساله إلى واجهة الذكاء الاصطناعي.
-
-### الإذاعات المدرسية
-
-يمكن للنظام إنشاء إذاعة مدرسية منظمة تتضمن مجموعة من الفقرات مثل:
-
-* المقدمة
-* القرآن الكريم
-* الحديث الشريف
-* كلمة الصباح
-* هل تعلم
-* الخاتمة
-
-كما يتم تمرير المرحلة الدراسية ضمن الطلب حتى يتم توليد محتوى مناسب للفئة المستهدفة.
-
-مثال:
-
-```text
-أريد إذاعة مدرسية عن الانضباط المدرسي
-لطلاب المرحلة الثانوية
+"Create a school broadcast about school discipline for high school students"
+        ↓
+        AI generates structured content
+        ↓
+        Teacher reviews, edits, prints
 ```
 
 ---
 
-## 📋 إنشاء التقارير
+## ✨ What It Generates
 
-يتم إنشاء التقرير وفق بنية ثابتة بدل الحصول على نص غير منظم.
+| Content Type | Status |
+|---|---|
+| 📻 School Broadcasts | ✅ Available |
+| 📋 Activity Reports | ✅ Available |
+| 🏅 Certificates of Appreciation | 🔜 Coming soon |
 
-يشمل التقرير:
+### 📻 Broadcasts
+Full scripts with intro, Quran recitation, Hadith, morning word, "did you know" facts, and closing — tailored to the target grade level.
 
-| الحقل         | الاستخدام                    |
-| ------------- | ---------------------------- |
-| اسم المدرسة   | المدرسة المنفذة للنشاط       |
-| المنطقة       | الإدارة أو المنطقة التعليمية |
-| عنوان التقرير | عنوان النشاط                 |
-| المنفذ        | المسؤول عن تنفيذ النشاط      |
-| مكان التنفيذ  | موقع تنفيذ النشاط            |
-| المستهدفون    | الفئة المستهدفة              |
-| المستفيدون    | عدد المستفيدين               |
-| التاريخ       | تاريخ تنفيذ النشاط           |
-| الأهداف       | أهداف النشاط                 |
-| الشواهد       | صور ومرفقات النشاط           |
+### 📋 Reports
+Structured activity reports covering school name, region, title, implementer, location, target audience, beneficiaries, date, objectives, and evidence photos — all editable, not just a wall of text.
 
-جميع البيانات الناتجة قابلة للتعديل قبل اعتماد التقرير.
+### 🏅 Certificates *(next up)*
+Auto-generated certificates of appreciation and recognition, styled to match the same themes as reports.
 
 ---
 
-# 📝 محرر التقارير
+## 📝 The Editor
 
-بعد إنشاء التقرير، يتم عرضه داخل محرر يسمح بتعديل البيانات قبل الطباعة.
+Every generated document opens in an editor before printing. Teachers can:
 
-يمكن للمستخدم تعديل:
-
-* بيانات المدرسة
-* المنطقة
-* عنوان التقرير
-* المنفذ
-* مكان التنفيذ
-* الفئة المستهدفة
-* عدد المستفيدين
-* التاريخ الهجري
-* أهداف النشاط
-* الشواهد والصور
-
-كما يمكن:
-
-* إضافة صور متعددة
-* حذف الصور
-* معاينة التقرير
-* تغيير التصميم
-* تجهيز التقرير للطباعة
-
-### توزيع الشواهد
-
-يتعامل النظام مع عدد الصور المضافة ديناميكيًا، بحيث يتم توزيعها داخل التقرير وفق العدد المتاح بدل الاعتماد على تخطيط ثابت.
+- ✏️ Edit any field (school info, dates, objectives, etc.)
+- 🖼️ Add or remove evidence photos — layout adjusts automatically to however many are added
+- 🎨 Switch between design themes
+- 🖨️ Print directly (A4-ready) or export as PDF
 
 ---
 
-# 🎨 نظام الثيمات
+## 🎨 Themes
 
-يدعم محرر التقارير عدة تصاميم جاهزة، مع فصل تعريف الألوان والخصائص البصرية عن مكونات React.
+| Theme | Style |
+|---|---|
+| 🌿 Emerald Teal | Default |
+| 👑 Royal Navy | Navy & gold |
+| 🍷 Burgundy Luxury | Burgundy tones |
 
-الثيمات الحالية:
+Themes are defined as reusable objects, so new ones can be added without touching the report layout itself.
 
-| الثيم              | الوصف             |
-| ------------------ | ----------------- |
-| 🌿 Emerald Teal    | التصميم الافتراضي |
-| 👑 Royal Navy      | تصميم كحلي وذهبي  |
-| 🍷 Burgundy Luxury | تصميم عنابي       |
+---
 
-يتم تعريف خصائص الثيم في كائن موحد:
+## 👥 Who Uses It
 
-```ts
-type Theme = {
-  id: string;
-  name: string;
-  headerGradient: string;
-  darkAccent: string;
-  primaryBorder: string;
-  labelColor: string;
-  titleBorder: string;
-  btnBg: string;
-  swatches: string[];
-};
+| User | Use Case |
+|---|---|
+| 👩‍🏫 Teachers | Generate reports and broadcasts instead of writing them by hand |
+| 🏫 Activity Coordinators | Standardized, submission-ready reports every time |
+| 📻 Broadcast Committees | Full scripts ready in seconds |
+
+---
+
+## 🏗️ How It's Built
+
+The frontend never talks to the AI model directly — it goes through an independent backend API:
+
+```
+React (TypeScript) → ASP.NET Core API → AI Model → Structured JSON → back to React
 ```
 
-وبذلك يمكن إضافة ثيم جديد دون إعادة توزيع الألوان داخل مكونات الواجهة.
+This keeps the AI provider swappable and the UI decoupled from how content actually gets generated. The AI is constrained to a fixed schema (not free text), so the output maps directly onto the app's data types — no parsing loose text on the frontend.
 
 ---
 
-# 🖨️ الطباعة والتصدير
+## 🛠️ Tech Stack
 
-تم تصميم التقارير بحيث تكون مناسبة للطباعة على ورق **A4** مباشرة من المتصفح.
-
-تستخدم المنصة قواعد CSS مخصصة للطباعة لعزل واجهة التحكم عن المستند النهائي:
-
-```css
-@page {
-  size: A4 portrait;
-  margin: 0;
-}
-```
-
-أثناء الطباعة يتم إخفاء عناصر التحكم غير المطلوبة في النسخة المطبوعة، مع الحفاظ على تخطيط التقرير.
-
-كما يدعم المشروع التصدير باستخدام:
-
-* `html2canvas`
-* `jsPDF`
+| Layer | Tech |
+|---|---|
+| Frontend | ⚛️ React, 📘 TypeScript, 🎨 Tailwind CSS, ⚡ Vite |
+| Backend / AI | 🟣 ASP.NET Core, 🤖 Generative AI, 📋 JSON Schema |
+| Export | 🖼️ html2canvas, 📄 jsPDF |
+| Storage | 💾 LocalStorage *(migrating to cloud DB — see roadmap)* |
 
 ---
 
-# 🏗️ المعمارية
+## 📌 Roadmap
 
-تم فصل الواجهة عن منطق التعامل مع الذكاء الاصطناعي من خلال API مستقلة.
-
-```text
-┌──────────────────────┐
-│      React App       │
-│      TypeScript      │
-└──────────┬───────────┘
-           │ HTTP
-           ▼
-┌──────────────────────┐
-│       AI API         │
-│    ASP.NET Core      │
-└──────────┬───────────┘
-           │
-           ▼
-┌──────────────────────┐
-│   Generative AI      │
-│        Model         │
-└──────────┬───────────┘
-           │
-           │ Structured JSON
-           ▼
-┌──────────────────────┐
-│       AI API         │
-└──────────┬───────────┘
-           │
-           ▼
-┌──────────────────────┐
-│      React App       │
-│  Render / Edit / Print│
-└──────────────────────┘
-```
-
-هذا الفصل يجعل واجهة المستخدم غير مرتبطة مباشرة بمزود الذكاء الاصطناعي.
-
-وبالتالي يمكن مستقبلًا:
-
-* تغيير مزود النموذج
-* إضافة نماذج أخرى
-* استخدام الـAPI من تطبيق مختلف
-* إضافة طبقات معالجة أو تحقق إضافية
-
-دون الحاجة إلى إعادة بناء الواجهة.
+- 🏅 Certificates of appreciation & recognition
+- 🔐 User accounts & login
+- ☁️ Cloud database (replacing LocalStorage)
+- 📚 Library of past reports & broadcasts, with search
+- 👥 Multi-user support per school
+- 🌐 Multi-language support
 
 ---
 
-# 🧠 Structured AI Responses
+## 👨‍💻 Developer
 
-بدل الاعتماد على رد نصي حر من النموذج، يعتمد النظام على **Schema محددة** لتنظيم المخرجات.
+**Mohmed** — Software Developer
 
-مثلًا، يتم تمثيل الإذاعة بهذا الشكل:
+## 📄 License
 
-```text
-Broadcast
-├── title
-├── type
-├── level
-└── content[]
-    ├── section
-    └── content
-```
-
-بينما التقرير يحتوي على:
-
-```text
-Report
-├── schoolName
-├── region
-├── reportTitle
-├── implementer
-├── location
-├── target
-├── beneficiaries
-├── date
-└── objectives
-```
-
-هذا يجعل البيانات الناتجة قابلة للربط مباشرة مع الـTypes الموجودة في تطبيق React بدل الحاجة إلى تحليل نص طويل في الواجهة.
-
----
-
-# 🔌 تدفق توليد المحتوى
-
-عملية التوليد تمر بعدة طبقات:
-
-### 1. User Input
-
-المستخدم يكتب طلبًا باللغة الطبيعية.
-
-```text
-إنشاء تقرير عن نشاط اليوم الوطني
-```
-
-### 2. Prompt Construction
-
-يقوم التطبيق ببناء Prompt مناسب حسب نوع المحتوى المطلوب.
-
-```text
-User Request
-      +
-Content Type
-      +
-Required Structure
-      ↓
-Generated Prompt
-```
-
-### 3. AI API
-
-يتم إرسال الطلب إلى API مبنية باستخدام ASP.NET Core.
-
-### 4. Structured Generation
-
-يتم طلب إخراج متوافق مع الـSchema المحددة.
-
-### 5. Validation / Mapping
-
-تصل البيانات إلى الواجهة بالشكل المتوقع للـTypes.
-
-### 6. Rendering
-
-تقوم React بعرض البيانات داخل واجهة التقرير أو الإذاعة.
-
-### 7. User Editing
-
-يمكن للمستخدم تعديل البيانات قبل استخدامها.
-
----
-
-# 📁 بنية المشروع
-
-```text
-src/
-├── Api/
-│   └── AiApi.ts
-│
-├── context/
-│   └── Context.tsx
-│
-├── Pages/
-│   └── Reports/
-│       └── Report.tsx
-│
-├── prompts/
-│   └── AiPrompts.ts
-│
-├── schemas/
-│   └── AiSchemas.ts
-│
-├── services/
-│   └── AiGeneratorService.ts
-│
-├── types/
-│   ├── BroadcastTypes.ts
-│   └── ReportsTypes.ts
-│
-└── assets/
-```
-
-### مسؤولية الطبقات
-
-| المجلد     | المسؤولية                                 |
-| ---------- | ----------------------------------------- |
-| `Api`      | التعامل مع HTTP وواجهة الـBackend         |
-| `context`  | إدارة الحالة المشتركة                     |
-| `Pages`    | صفحات وواجهات التطبيق                     |
-| `prompts`  | بناء تعليمات الذكاء الاصطناعي             |
-| `schemas`  | تعريف بنية مخرجات الذكاء الاصطناعي        |
-| `services` | منطق توليد المحتوى                        |
-| `types`    | تعريف أنواع البيانات المستخدمة في التطبيق |
-| `assets`   | الصور والموارد الثابتة                    |
-
-الهدف من هذا التنظيم هو إبقاء **UI وBusiness Logic وAPI Integration وData Definitions** منفصلة قدر الإمكان.
-
----
-
-# 🛠️ التقنيات المستخدمة
-
-## Frontend
-
-| التقنية                    | الاستخدام                      |
-| -------------------------- | ------------------------------ |
-| ⚛️ React                   | بناء واجهة المستخدم            |
-| 📘 TypeScript              | Type Safety وتعريف البيانات    |
-| 🎨 Tailwind CSS            | التصميم والاستجابة             |
-| ⚡ Vite                     | Build Tool وDevelopment Server |
-| 📅 react-multi-date-picker | اختيار التاريخ الهجري          |
-| 💾 LocalStorage            | التخزين المحلي للبيانات        |
-
-## Backend / AI
-
-| التقنية          | الاستخدام                    |
-| ---------------- | ---------------------------- |
-| 🟣 ASP.NET Core  | بناء AI API                  |
-| 🔌 REST API      | الاتصال بين الواجهة والخلفية |
-| 🤖 Generative AI | توليد المحتوى                |
-| 📋 JSON Schema   | تنظيم وضبط المخرجات          |
-
-## Export
-
-| التقنية       | الاستخدام                      |
-| ------------- | ------------------------------ |
-| `html2canvas` | تحويل واجهة التقرير إلى Canvas |
-| `jsPDF`       | إنشاء ملفات PDF                |
-
----
-
-# 🚀 طريقة الاستخدام
-
-### 1. اختيار نوع المحتوى
-
-يحدد المستخدم ما إذا كان يريد إنشاء:
-
-* تقرير
-* إذاعة مدرسية
-
-### 2. كتابة الطلب
-
-يصف المستخدم المحتوى الذي يحتاجه.
-
-```text
-إنشاء تقرير عن نشاط اليوم الوطني
-```
-
-### 3. توليد المحتوى
-
-يقوم التطبيق ببناء Prompt وإرساله إلى الـAI API.
-
-### 4. استلام البيانات
-
-يعيد الـAPI محتوى منظمًا وفق الـSchema المطلوبة.
-
-### 5. المراجعة والتعديل
-
-تظهر البيانات داخل محرر قابل للتعديل.
-
-### 6. التنسيق
-
-يمكن للمستخدم اختيار التصميم وإضافة الشواهد والصور.
-
-### 7. الطباعة أو التصدير
-
-يتم تجهيز التقرير للطباعة أو تصديره كملف PDF.
-
----
-
-# 🔐 ملاحظات حول التصميم
-
-تم تصميم النظام بحيث لا تتعامل واجهة React مباشرة مع نموذج الذكاء الاصطناعي.
-
-```text
-React
-  │
-  │ HTTP
-  ▼
-ASP.NET Core API
-  │
-  │ API Request
-  ▼
-AI Provider
-```
-
-وجود طبقة API مستقلة يوفر نقطة تحكم مركزية في:
-
-* بناء الطلبات
-* التعامل مع مزود الذكاء الاصطناعي
-* إدارة الاستجابات
-* إضافة التحقق من البيانات
-* حماية مفاتيح API
-* تغيير مزود النموذج مستقبلًا
-
----
-
-# 📌 التطوير المستقبلي
-
-هناك عدة اتجاهات يمكن تطوير المنصة من خلالها:
-
-* 🔐 إضافة نظام تسجيل دخول وحسابات مستخدمين
-* ☁️ نقل التخزين من `LocalStorage` إلى قاعدة بيانات وسحابة
-* 📚 إنشاء مكتبة للتقارير والإذاعات السابقة
-* 🔎 البحث والتصفية داخل المحتوى السابق
-* 📊 إضافة لوحة إحصائيات للاستخدام
-* 👥 دعم عدة مستخدمين ضمن المدرسة نفسها
-* ⚡ إضافة caching لتقليل طلبات الذكاء الاصطناعي المتكررة
-* 📄 تحسين محرك تصدير PDF
-* 🌐 إضافة دعم تعدد اللغات
-* 🔄 توسيع الـAI API لدعم أنواع إضافية من المحتوى المدرسي
-
----
-
-# 📚 الجوانب التقنية في المشروع
-
-يجمع نَشَاط بين عدة جوانب من تطوير البرمجيات في مشروع واحد:
-
-```text
-Frontend Architecture
-        +
-TypeScript
-        +
-State Management
-        +
-REST API
-        +
-ASP.NET Core
-        +
-Generative AI
-        +
-Prompt Engineering
-        +
-Structured JSON
-        +
-JSON Schema
-        +
-Responsive UI
-        +
-Print CSS
-        +
-PDF / Image Export
-        +
-Local Storage
-        +
-Git / GitHub
-        +
-Deployment
-```
-
-ويهدف التصميم إلى إبقاء كل مسؤولية في طبقتها المناسبة بدل وضع منطق التطبيق بالكامل داخل مكونات الواجهة.
-
----
-
-# 👨‍💻 المطوّر
-
-**Mohmed**
-
-Software Developer
-
----
-
-# 📄 الترخيص
-
-هذا المشروع مخصص للأغراض التعليمية  
+© Mohmed. All Rights Reserved.
+ 
+This project is proprietary. No part of this codebase may be copied, forked, redistributed, or used to build derivative products without prior written permission from the author.
