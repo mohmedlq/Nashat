@@ -65,127 +65,126 @@ export const FormalReportPrint = React.forwardRef<
         }}
       />
 
-      {/* ================= HEADER ================= */}
-      <header
-        className="
-          relative
-          z-10
-          w-full
-          shrink-0
-          px-[13mm]
-          pb-[9mm]
-          pt-[12mm]
-        "
+   {/* ================= HEADER ================= */}
+<header
+  className="
+    relative
+    z-10
+    w-full
+    shrink-0
+    px-[13mm]
+    pb-[9mm]
+    pt-[12mm]
+  "
+>
+  <div
+    className="
+      flex
+      w-full
+      items-center
+      justify-between
+      gap-[8mm]
+    "
+  >
+    {/* الوزارة — يمين */}
+    <div className="w-[38%] text-right">
+      <div
+        className="text-[20px] font-black"
+        style={{
+          color: theme.labelColor,
+        }}
       >
-        <div
-          className="
-            flex
-            w-full
-            items-center
-            justify-between
-            gap-[8mm]
-          "
-        >
-          {/* الإدارة */}
-          <div className="w-[38%] text-right">
-            <div
-              className="mb-2 text-[16px] font-bold"
-              style={{
-                color: theme.labelColor,
-              }}
-            >
-              الإدارة العامة للتعليم
-            </div>
+        وزارة التعليم
+      </div>
 
-            <PrintHeaderText
-              value={data.region}
-              className="
-                w-full
-                min-w-0
-                justify-start
-                bg-transparent
-                text-right
-                text-[20px]
-                font-black
-                !border-0
-                !outline-none
-                focus:!border-0
-                focus:!outline-none
-                focus:!ring-0
-              "
-            />
-          </div>
+      <div
+        className="mt-1 text-[12px] font-medium tracking-wide"
+        style={{
+          color: theme.labelColor,
+          opacity: 0.7,
+        }}
+      >
+        Ministry of Education
+      </div>
+    </div>
 
-          {/* الشعار */}
-          <div className="flex w-[24%] justify-center">
-            <div
-              className="
-                flex
-                h-[27mm]
-                w-[27mm]
-                items-center
-                justify-center
-                rounded-full
-                border-[2.5px]
-                bg-white
-                p-[3.5mm]
-              "
-              style={{
-                borderColor: theme.titleBorder,
-              }}
-            >
-              <MinistryLogo src={logoSrc} />
-            </div>
-          </div>
+    {/* الشعار — الوسط */}
+    <div className="flex w-[24%] justify-center">
+      <div
+        className="
+          flex
+          h-[27mm]
+          w-[27mm]
+          items-center
+          justify-center
+          rounded-full
+          border-[2.5px]
+          bg-white
+          p-[3.5mm]
+        "
+        style={{
+          borderColor: theme.titleBorder,
+        }}
+      >
+        <MinistryLogo src={logoSrc} />
+      </div>
+    </div>
 
-          {/* الوزارة */}
-          <div className="w-[38%] text-left">
-            <div
-              className="text-[20px] font-black"
-              style={{
-                color: theme.labelColor,
-              }}
-            >
-              وزارة التعليم
-            </div>
+    {/* المنطقة — يسار */}
+    <div className="w-[38%] text-center">
+      <div
+        className="mb-2 text-[16px] font-bold"
+        style={{
+          color: theme.labelColor,
+        }}
+      >
+        الإدارة العامة للتعليم
+      </div>
 
-            <div
-              className="mt-1 text-[12px] font-medium tracking-wide"
-              style={{
-                color: theme.labelColor,
-                opacity: 0.7,
-              }}
-            >
-              Ministry of Education
-            </div>
-          </div>
-        </div>
+      <PrintHeaderText
+        value={data.region}
+        className="
+          w-full
+          min-w-0
+          justify-center
+          bg-transparent
+          text-center
+          text-[20px]
+          font-black
+          !border-0
+          !outline-none
+          focus:!border-0
+          focus:!outline-none
+          focus:!ring-0
+        "
+      />
+    </div>
+  </div>
 
-        {/* الفاصل */}
-        <div className="mt-[7mm] flex items-center gap-3">
-          <div
-            className="h-[1.5px] flex-1"
-            style={{
-              backgroundColor: `${theme.primaryBorder}60`,
-            }}
-          />
+  {/* الفاصل */}
+  <div className="mt-[7mm] flex items-center gap-3">
+    <div
+      className="h-[1.5px] flex-1"
+      style={{
+        backgroundColor: `${theme.primaryBorder}60`,
+      }}
+    />
 
-          <div
-            className="h-[7px] w-[7px] rotate-45"
-            style={{
-              backgroundColor: theme.titleBorder,
-            }}
-          />
+    <div
+      className="h-[7px] w-[7px] rotate-45"
+      style={{
+        backgroundColor: theme.titleBorder,
+      }}
+    />
 
-          <div
-            className="h-[1.5px] flex-1"
-            style={{
-              backgroundColor: `${theme.primaryBorder}60`,
-            }}
-          />
-        </div>
-      </header>
-
+    <div
+      className="h-[1.5px] flex-1"
+      style={{
+        backgroundColor: `${theme.primaryBorder}60`,
+      }}
+    />
+  </div>
+</header>
       {/* ================= MAIN ================= */}
       <main
         className="
@@ -508,116 +507,118 @@ export const FormalReportPrint = React.forwardRef<
         </section>
 
         {/* ================= OBJECTIVES ================= */}
-        <section
-          className="
-            flex
-            min-h-0
-            flex-1
-            flex-col
-            px-[13mm]
-            pt-[4mm]
-          "
-        >
-          <PrintSectionHeading
-            title="أهداف التقرير"
-            theme={theme}
-          />
+      {/* ================= OBJECTIVES ================= */}
+<section
+  className="
+    flex
+    min-h-0
+    flex-1
+    flex-col
+    px-[13mm]
+    pt-[4mm]
+  "
+>
+  <PrintSectionHeading
+    title="أهداف التقرير"
+    theme={theme}
+  />
 
-          <div
-            className="
-              mt-[3mm]
-              flex
-              min-h-0
-              flex-1
-              flex-col
-              overflow-hidden
-              rounded-[5px]
-              border-[2px]
-            "
-            style={{
-              borderColor: theme.primaryBorder,
-            }}
-          >
-            {/* عنوان الأهداف */}
-            <div
-              className="
-                flex
-                shrink-0
-                items-center
-                gap-[3mm]
-                px-[5mm]
-                py-[3mm]
-              "
-              style={{
-                backgroundColor: `${theme.primaryBorder}0D`,
-                borderBottom: `1px solid ${theme.primaryBorder}25`,
-              }}
-            >
-              <div
-                className="
-                  flex
-                  h-[9mm]
-                  w-[9mm]
-                  shrink-0
-                  items-center
-                  justify-center
-                  rounded-[3px]
-                "
-                style={{
-                  backgroundColor: theme.primaryBorder,
-                  color: '#ffffff',
-                }}
-              >
-                <TargetIcon />
-              </div>
+  <div
+    className="
+      mt-[3mm]
+      flex
+      min-h-0
+      flex-1
+      flex-col
+      overflow-hidden
+      rounded-[5px]
+      border-[2px]
+    "
+    style={{
+      borderColor: theme.primaryBorder,
+    }}
+  >
+    {/* عنوان الأهداف */}
+    <div
+      className="
+        flex
+        shrink-0
+        items-center
+        gap-[3mm]
+        px-[5mm]
+        py-[3mm]
+      "
+      style={{
+        backgroundColor: `${theme.primaryBorder}0D`,
+        borderBottom: `1px solid ${theme.primaryBorder}25`,
+      }}
+    >
+      <div
+        className="
+          flex
+          h-[9mm]
+          w-[9mm]
+          shrink-0
+          items-center
+          justify-center
+          rounded-[3px]
+        "
+        style={{
+          backgroundColor: theme.primaryBorder,
+          color: "#ffffff",
+        }}
+      >
+        <TargetIcon />
+      </div>
 
-              <span
-                className="text-[19px] font-black"
-                style={{
-                  color: theme.labelColor,
-                }}
-              >
-                الأهداف والنتائج المتوقعة
-              </span>
-            </div>
+      <span
+        className="text-[19px] font-black"
+        style={{
+          color: theme.labelColor,
+        }}
+      >
+        الأهداف والنتائج المتوقعة
+      </span>
+    </div>
 
-            {/* محتوى الأهداف */}
-            <div
-              className="
-                min-h-0
-                flex-1
-                overflow-hidden
-                bg-white
-                px-[5mm]
-                py-[4mm]
-              "
-            >
-              <PrintField
-                theme={theme}
-                value={data.objectives}
-                label=""
-                type="textarea"
-                align="right"
-                className="
-                  h-full
-                  w-full
-                  resize-none
-                  overflow-hidden
-                  bg-transparent
-                  p-0
-                  text-[22px]
-                  font-medium
-                  leading-[2]
-                  !border-0
-                  !outline-none
-                  focus:!border-0
-                  focus:!outline-none
-                  focus:!ring-0
-                "
-              />
-            </div>
-          </div>
-        </section>
+    {/* محتوى الأهداف */}
+    <div
+      className="
+        min-h-0
+        flex-1
+        overflow-hidden
+        bg-white
+        px-[5mm]
+        pt-[2mm]
+        pb-[3mm]
+      "
+    >
+      <PrintField
+        theme={theme}
+        value={data.objectives}
+        label=""
+        type="textarea"
+        align="right"
+        className="
+          h-full
+          w-full
+          resize-none
+          overflow-hidden
+          bg-transparent
+          p-0
+          text-[22px]
+          font-medium
+          leading-[2]
+          !border-0
+          !outline-none
+          focus:!border-0
+          focus:!outline-none
+          focus:!ring-0
+        "
+      />
+    </div>
+  </div>
+</section>
       </main>
 
       {/* ================= FOOTER ================= */}

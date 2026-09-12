@@ -133,136 +133,124 @@ export function FormalReport({
           {/* =================================================
               HEADER
           ================================================= */}
+<header className="px-5 pb-6 pt-7 sm:px-10 sm:pb-8 sm:pt-9">
+  <div
+    className="
+      grid
+      grid-cols-1
+      items-center
+      gap-6
+      sm:grid-cols-3
+      sm:gap-10
+    "
+  >
+    {/* RIGHT — MINISTRY NAME */}
+    <div className="text-center sm:text-right">
+      <div
+        className="text-[13px] font-black sm:text-base"
+        style={{
+          color: theme.labelColor,
+        }}
+      >
+        وزارة التعليم
+      </div>
 
-          <header className="px-5 pb-6 pt-7 sm:px-10 sm:pb-8 sm:pt-9">
-            <div
-              className="
-                grid
-                grid-cols-1
-                items-center
-                gap-6
-                sm:grid-cols-[1fr_auto_1fr]
-                sm:gap-8
-              "
-            >
-              {/* ---------------------------------------------
-                  RIGHT — EDUCATION ADMINISTRATION
-              --------------------------------------------- */}
+      <div
+        className="mt-1 text-[8px] font-medium tracking-wide sm:text-[10px]"
+        style={{
+          color: theme.labelColor,
+          opacity: 0.7,
+        }}
+      >
+        Ministry of Education
+      </div>
+    </div>
 
-              <div className="order-2 text-center sm:order-1 sm:text-right">
-                <div
-                  className="mb-2 text-[11px] font-bold sm:text-sm"
-                  style={{
-                    color: theme.labelColor,
-                  }}
-                >
-                  الإدارة العامة للتعليم
-                </div>
+    {/* CENTER — MINISTRY LOGO */}
+    <div className="flex justify-center">
+      <div
+        className="
+          flex
+          size-[82px]
+          items-center
+          justify-center
+          rounded-full
+          border-[3px]
+          bg-white
+          p-3
+          shadow-sm
+          sm:size-[96px]
+        "
+        style={{
+          borderColor: theme.titleBorder,
+        }}
+      >
+        <MinistryLogo src={logoSrc} />
+      </div>
+    </div>
 
-                <EditableHeaderText
-                  name="region"
-                  value={formData.region}
-                  onChange={onChange}
-                  placeholder="أدخل المنطقة"
-                  className="
-                    formal-header-input
-                    w-full
-                    rounded-md
-                    border-b-[3px]
-                    border-transparent
-                    bg-transparent
-                    px-2
-                    py-1
-                    text-center
-                    text-base
-                    font-black
-                    outline-none
-                    sm:text-right
-                    sm:text-lg
-                  "
-                />
-              </div>
+    {/* LEFT — EDUCATION ADMINISTRATION + REGION */}
+    <div className="text-center sm:text-left">
+      <div
+        className="text-[11px] font-bold sm:text-sm"
+        style={{
+          color: theme.labelColor,
+        }}
+      >
+        الإدارة العامة للتعليم
+      </div>
 
-              {/* ---------------------------------------------
-                  CENTER — LOGO
-              --------------------------------------------- */}
+      <EditableHeaderText
+        name="region"
+        value={formData.region}
+        onChange={onChange}
+        placeholder="أدخل المنطقة"
+        className="
+          formal-header-input
+          mt-1
+          w-full
+          rounded-md
+          border-b-[3px]
+          border-transparent
+          bg-transparent
+          px-2
+          py-1
+          text-center
+          text-base
+          font-black
+          outline-none
+          sm:text-left
+          sm:text-lg
+        "
+      />
+    </div>
+  </div>
 
-              <div className="order-1 flex justify-center sm:order-2">
-                <div
-                  className="
-                    flex
-                    size-[82px]
-                    items-center
-                    justify-center
-                    rounded-full
-                    border-[3px]
-                    bg-white
-                    p-3
-                    shadow-sm
-                    sm:size-[96px]
-                  "
-                  style={{
-                    borderColor: theme.titleBorder,
-                  }}
-                >
-                  <MinistryLogo src={logoSrc} />
-                </div>
-              </div>
+  {/* HEADER DIVIDER */}
+  <div className="mt-7 flex items-center gap-3">
+    <div
+      className="h-[2px] flex-1"
+      style={{
+        backgroundColor: `${theme.primaryBorder}45`,
+      }}
+    />
 
-              {/* ---------------------------------------------
-                  LEFT — MINISTRY
-              --------------------------------------------- */}
+    <div
+      className="size-2.5 rotate-45"
+      style={{
+        backgroundColor: theme.titleBorder,
+      }}
+    />
 
-              <div className="order-3 text-center sm:text-left">
-                <div
-                  className="text-[13px] font-black sm:text-base"
-                  style={{
-                    color: theme.labelColor,
-                  }}
-                >
-                  وزارة التعليم
-                </div>
-
-                <div
-                  className="mt-1 text-[8px] font-medium tracking-wide sm:text-[10px]"
-                  style={{
-                    color: theme.labelColor,
-                    opacity: 0.7,
-                  }}
-                >
-                  Ministry of Education
-                </div>
-              </div>
-            </div>
-
-            {/* ---------------------------------------------
-                HEADER DIVIDER
-            --------------------------------------------- */}
-
-            <div className="mt-7 flex items-center gap-3">
-              <div
-                className="h-[2px] flex-1"
-                style={{
-                  backgroundColor: `${theme.primaryBorder}45`,
-                }}
-              />
-
-              <div
-                className="size-2.5 rotate-45"
-                style={{
-                  backgroundColor: theme.titleBorder,
-                }}
-              />
-
-              <div
-                className="h-[2px] flex-1"
-                style={{
-                  backgroundColor: `${theme.primaryBorder}45`,
-                }}
-              />
-            </div>
-          </header>
-
+    <div
+      className="h-[2px] flex-1"
+      style={{
+        backgroundColor: `${theme.primaryBorder}45`,
+      }}
+    />
+  </div>
+</header>
+         
           {/* =================================================
               SCHOOL NAME
           ================================================= */}

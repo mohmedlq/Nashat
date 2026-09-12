@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { ArrowLeft, FileText, Mic2, Sparkles } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-
+import { useUser } from "../context/Context";
 type GeneratorMode = "broadcast" | "report";
 
 const AIGenerator: React.FC = () => {
@@ -9,16 +9,21 @@ const AIGenerator: React.FC = () => {
 
   const [mode, setMode] = useState<GeneratorMode>("report");
   const [prompt, setPrompt] = useState("");
-
+const{
+managerName,
+schoolName,
+teacherName,
+region,
+}=useUser();
   const examples =
     mode === "broadcast"
       ? [
-          "إذاعة عن أهمية القراءة",
+           "إذاعة عن أهمية القراءة",
           "إذاعة عن بر الوالدين",
           "إذاعة عن المحافظة على الوقت",
         ]
       : [
-          "تقرير عن حملة القراءة",
+`تقرير عن الذكاء الاصطناعي، المعلم: ${teacherName}، المدرسة: ${schoolName}، المدير: ${managerName}، المنطقة: ${region}`,
           "تقرير عن اليوم الوطني",
           "تقرير عن النشاط الرياضي",
         ];
@@ -64,17 +69,16 @@ const AIGenerator: React.FC = () => {
                 <FileText size={20} />
               )}
             </div>
+<h3 className="text-2xl font-bold leading-tight text-[#E9ECE8]">
+  اكتب ما تريد،
+  <br />
+  وحدد التفاصيل.
+</h3>
 
-            <h3 className="text-2xl font-bold leading-tight text-[#E9ECE8]">
-              حوّل فكرتك
-              <br />
-              إلى محتوى جاهز.
-            </h3>
-
-            <p className="mt-4 max-w-sm text-sm leading-7 text-[#929C95]">
-              اكتب الموضوع أو الفكرة التي تريد العمل عليها، وسنساعدك في
-              تجهيز المحتوى المدرسي المناسب.
-            </p>
+<p className="mt-4 max-w-sm text-sm leading-7 text-[#929C95]">
+  اذكر الموضوع، وأضف التفاصيل والتعليمات التي تهمك،
+  وسيتم إعداد المحتوى وفق طلبك.
+</p>
 
             <div className="mt-8 space-y-3">
               {[
@@ -139,11 +143,11 @@ const AIGenerator: React.FC = () => {
               value={prompt}
               onChange={(event) => setPrompt(event.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder={
-                mode === "broadcast"
-                  ? "مثال: أريد إذاعة مدرسية عن أهمية القراءة..."
-                  : "مثال: أريد تقريرًا عن حملة القراءة في المدرسة..."
-              }
+            placeholder={
+  mode === "broadcast"
+    ? "مثال: إذاعة عن القراءة، أضف حديثًا واجعلها مناسبة للمرحلة الثانوية..."
+    : "مثال: تقرير عن الذكاء الاصطناعي، باسم المعلم والمدرسة ومدير المدرسة..."
+}
               className="min-h-[190px] w-full resize-none bg-transparent p-5 text-sm leading-8 text-[#E4E8E4] outline-none placeholder:text-[#5F6962]"
             />
 
