@@ -9,6 +9,7 @@ import { UserProvider } from "../context/Context";
 import NotFound from "../Pages/NotFound";
 import Certificate from "../Pages/certificates/certificate"
 import AboutMe from "../Components/AboutMe";
+import ActivityPlansPage from "../Pages/ActivityPlans/ActivityPlansPage";
 import UserDataBox from "../Components/UserDataBox";
 function AppRoutes() {
   return (
@@ -22,7 +23,7 @@ function AppRoutes() {
           <Route path="/generator" element={<AiChatGenerator />} />
           <Route path="/reports" element={<ReportsPage />} />
           <Route path="/reports/:id" element={<ReportsPage />} />
-          <Route path="/certificates" element={<Certificate />} />
+          <Route path="/ActivityPlans" element={<ActivityPlansPage />} />
           <Route path="/AboutMe" element={<AboutMe/>} />
           <Route path="*" element={<NotFound />} />
         </Routes>
