@@ -18,30 +18,51 @@ const getReportPreview = (
     "تقرير جاهز للاستخدام والتعديل."
   );
 };
-const pickRandomThree = (): MockReport[] => {
-const {
-  schoolName,
-  teacherName,
-  managerName,
-  region,
-} = useUser();
+const pickRandomThree = (
+  schoolName: string,
+  teacherName: string,
+  managerName: string,
+  region: string
+): MockReport[] => {
   return createMockReports({
-     schoolName,
-      teacherName,
-      managerName,
-      region,
-}).sort(() => Math.random() - 0.5)
+    schoolName,
+    teacherName,
+    managerName,
+    region,
+  })
+    .sort(() => Math.random() - 0.5)
     .slice(0, 3);
 };
 
 const RandomReports: React.FC = () => {
-  const navigate = useNavigate();
+   const navigate = useNavigate();
+
+  const {
+    schoolName,
+    teacherName,
+    managerName,
+    region,
+  } = useUser();
 
   const [featured, setFeatured] =
-    useState<MockReport[]>(pickRandomThree);
+    useState<MockReport[]>(() =>
+      pickRandomThree(
+        schoolName,
+        teacherName,
+        managerName,
+        region
+      )
+    );
 
   const refreshReports = (): void => {
-    setFeatured(pickRandomThree());
+    setFeatured(
+      pickRandomThree(
+        schoolName,
+        teacherName,
+        managerName,
+        region
+      )
+    );
   };
 
   return (
